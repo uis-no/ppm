@@ -13,55 +13,53 @@ export interface project{
 
 }
 */
-
-import mongoose from 'mongoose'
-
+var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
 var project = new Schema({
+  // ISSUE : ObjectId is not recognized as a valid type, will use number until resolved
+  _id : {
+    type : Number,
+    auto: true
+  },
+
   title : {
-    type : String,
-    default : 'project title'
+    type : String
+
   },
   advisors : {
-    type : String,
-    default : 'advisor'
+    type : String
+
   },
   proposer : {
-    type : String,
-    default : 'proposer'
+    type : String
+
   },
   important_courses : {
-    type : String,
-    default : 'none'
+    type : String
+
   },
   background : {
-    type : String,
-    default : ''
+    type : String
+
   },
   motivation : {
-    type : String,
-    default: ''
+    type : String
+
   },
   methods : {
-    type : String,
-    default: ''
+    type : String
+
   },
   objectives : {
-    type : String, 
-    default : ''
+    type : String
+
   },
   students_assigned : {
-    type : String,
-    default : ''
+    type : String
   }
 });
 
 
 module.exports = mongoose.model('Project', project);
-
-
-
-
-

@@ -13,11 +13,11 @@ import { PostsService } from './posts.service';
 const ROUTES = [
   {
     path: '',
-    redirectTo: 'posts',
+    redirectTo: 'projects',
     pathMatch: 'full'
   },
   {
-    path: 'posts',
+    path: 'projects',
     component: PostsComponent
   }
 ];

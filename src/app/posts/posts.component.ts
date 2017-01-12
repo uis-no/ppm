@@ -8,14 +8,14 @@ import { PostsService } from '../posts.service';
 })
 export class PostsComponent implements OnInit {
   // instantiate posts to an empty object
-  posts: any = [];
+  projects: any = [];
 
   constructor(private postsService: PostsService) { }
 
   ngOnInit() {
     // Retrieve posts from the API
-    this.postsService.getAllPosts().subscribe(posts => {
-      this.posts = posts;
+    this.postsService.getAllProjects().subscribe(projects => {
+      this.projects = projects;
     });
   }
 }

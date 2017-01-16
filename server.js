@@ -3,6 +3,9 @@ const express = require('express');
 const path = require('path');
 const http = require('http');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+
+var url = 'mongodb://admin:admin@ds061196.mlab.com:61196/ppm';
 
 // Get our API routes
 const api = require('./server/routes/api');
@@ -15,6 +18,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // Point static path to dist
 app.use(express.static(path.join(__dirname, 'dist')));
+
+var db = mongoose.connect(url, (err) => {
+  if (err) {
+    console.log('Could not connect to database. Reason: ');
+    console.log(err);
+  }
+  console.log('Connected to database!');
+});
 
 // Set our api routes
 app.use('/api', api);

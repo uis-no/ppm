@@ -1,26 +1,89 @@
 const express = require('express');
 const router = express.Router();
 
-// declare axios for making http requests
-const axios = require('axios');
-const API = 'https://jsonplaceholder.typicode.com';
+const mongoose = require('mongoose');
+
+// we'll authenticate users from here
+router.use((req, res, next) => {
+  console.log('A request has been made.');
+  next();
+});
 
 /* GET api listing. */
 router.get('/', (req, res) => {
-  res.send('api works');
+  res.json('Successfully connected to API');
 });
 
-// Get all posts
-router.get('/posts', (req, res) => {
-  // Get posts from the mock api
-  // This should ideally be replaced with a service that connects to MongoDB
-  axios.get(`${API}/posts`)
-    .then(posts => {
-      res.status(200).json(posts.data);
-    })
-    .catch(error => {
-      res.status(500).send(error)
+var Project = require('../models/project.ts');
+
+router.route('/projects')
+  // create new project
+  .post((req, res) => {
+    var project = new Project();
+
+    project.title = req.body.title;
+    projec.advisors = req.body.advisors;
+    project.proposer = req.body.proposer;
+    project.important_courses = req.body.important_courses;
+    project.background = req.body.background;
+    project.motivation = req.body.motivation;
+    project.objectives = req.body.objectives;
+    project.students_assigned = req.body.students_assigned;
+
+    project.save((err) => {
+      if (err) {
+        res.status(500).send(err);
+      }
+      res.status(200).json({ message: 'Your project has been created.'});
     });
-});
+  })
+
+  // get all projects
+  .get((req, res) => {
+    Project.find((err, projects) => {
+      if (err) {
+        res.status(500).send(err);
+      }
+      res.status(200).json(projects);
+    });
+  });
+
+  router.route('/projects/:id')
+    // get a project by id
+    .get((req, res) => {
+      Project.find({ _id : req.params.id }, (err, project) => {
+        if (err) {
+          res.status(500).send(err);
+        }
+        res.status(200).json(project);
+      });
+    })
+
+      // update a project by id
+      .put((req, res) => {
+        var obj = req.body;
+
+        Project.findOneAndUpdate({ _id : req.params.id },
+          { title : obj.title, advisors : obj.advisors, proposer : obj.proposer,
+            important_courses : obj.important_courses, background : obj.background,
+            motivation : obj.motivation, methods : obj.methods,
+            objectives : obj.objectives, students_assigned : obj.students_assigned },
+            (err, project) =>{
+          if (err) {
+            res.status(500).send(err);
+          }
+          res.status(200).json({ message: 'Your project has been updated.'});
+        });
+      })
+
+      // delete a project by id
+      .delete((req, res) => {
+        Project.findOneAndRemove({ _id : req.params.id }, (err, project) => {
+          if (err) {
+            res.status(500).send(err);
+          }
+          res.status(200).json({ message: 'Your project has been deleted.'});
+        });
+      });
 
 module.exports = router;

@@ -18,4 +18,13 @@ export class PostsComponent implements OnInit {
       this.posts = posts;
     });
   }
+
+  submitForm() {
+    document.forms[0].submit();
+  };
+
+  spInitSSO(binding) {
+    window.location.href = '/sso/spinitsso-' + (binding === 0 ? 'redirect' : 'post');
+  }
+
 }

@@ -13,9 +13,13 @@ module.exports = function (config) {
     ],
     files: [
       { pattern: './src/test.ts', watched: false }
+      //'./src/app/app.component.spec.ts'
     ],
     preprocessors: {
       './src/test.ts': ['angular-cli']
+    },
+    mime: {
+      'text/x-typescript': ['ts','tsx']
     },
     remapIstanbulReporter: {
       reports: {

@@ -9,8 +9,8 @@ var url = 'mongodb://admin:admin@ds061196.mlab.com:61196/ppm';
 
 // Get our routes
 const api = require('./server/routes/api');
-const routes = require('./feide/index.js'); // Feide
-const sso = require('./feide/sso.js'); // Feide
+const routes = require('./feide/index'); // Feide
+const sso = require('./feide/sso'); // Feide
 
 const app = express();
 

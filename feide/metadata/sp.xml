@@ -5,13 +5,16 @@
             protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
         <SingleLogoutService
             Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
-            Location="http://localhost:3000/feide/slo.php"/>
+            Location="http://localhost:3000/sso/slo"/>
+        <SingleLogoutService
+            Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+            Location="http://localhost:3000/sso/slo"/>
         <NameIDFormat>
             urn:oasis:names:tc:SAML:2.0:nameid-format:transient
         </NameIDFormat>
         <AssertionConsumerService 
             index="0" 
             Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" 
-            Location="http://localhost:3000/feide/acs.php"/>
+            Location="http://localhost:3000/sso/acs"/>
     </SPSSODescriptor>
 </EntityDescriptor>

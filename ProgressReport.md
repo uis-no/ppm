@@ -14,3 +14,15 @@
   - Implemented a basic routing for CRUD on back-end
   - Started working on Feide log-in, found a potentially viable library we can use
   - Started on front-end http communication
+
+** Week 3
+
+  - Untested front-end communication not yet pushed to master branch
+  - Implemented Feide log-in, ready for testing.
+  - Started working on karma testing.
+  - Started working on creating an ERM.
+
+** Week 4
+
+  - First draft of an ERM.
+  - ´ng test´ finds and runs tests properly.

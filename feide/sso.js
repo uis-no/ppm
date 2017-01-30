@@ -15,7 +15,7 @@ var spSetting = {
 };
 
 var idp = saml.IdentityProvider('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/feide/metadata/idp.xml');
-var sp = saml.ServiceProvider(spSetting);
+var sp = saml.ServiceProvider('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/feide/metadata/sp_md.xml');
 
 sp.exportMetadata('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/feide/metadata/sp_md.xml');
 
@@ -30,6 +30,7 @@ router.get('/spinitsso-redirect', function(req, res) {
 });
 
 router.post('/acs', function(req, res, next) {
+    console.log(req);
     sp.parseLoginResponse(idp, 'redirect', req, function(parseResult) {
         // Use the parseResult can do customized action
     res.send('Validate the SAML Response successfully !');

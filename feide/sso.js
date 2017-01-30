@@ -15,7 +15,7 @@ var spSetting = {
 };
 
 var idp = saml.IdentityProvider('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/feide/metadata/idp.xml');
-var sp = saml.ServiceProvider('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/feide/metadata/sp_md.xml');
+var sp = saml.ServiceProvider(spSetting);
 
 sp.exportMetadata('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/feide/metadata/sp_md.xml');
 

@@ -9,8 +9,9 @@ var url = 'mongodb://admin:admin@ds061196.mlab.com:61196/ppm';
 
 // Get our routes
 const api = require('./server/routes/api');
-const routes = require('./feide/index'); // Feide
-const sso = require('./feide/sso'); // Feide
+//const routes = require('./feide/index'); // Feide
+//const sso = require('./feide/sso'); // Feide
+const routes = require('./feide/passport-saml');
 
 const app = express();
 
@@ -31,8 +32,9 @@ var db = mongoose.connect(url, (err) => {
 
 // Set our routes
 app.use('/api', api);
+//app.use('/', routes);
+//app.use('/sso', sso);
 app.use('/', routes);
-app.use('/sso', sso);
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');

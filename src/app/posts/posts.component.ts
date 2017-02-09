@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PostsService } from '../posts.service';
+import user = require('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/feide/passport-saml.js');
 
 @Component({
   selector: 'app-posts',

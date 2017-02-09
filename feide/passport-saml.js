@@ -13,18 +13,12 @@ var strategy = new SamlStrategy(
     logoutCallbackUrl: 'http://localhost:3000/logout'
   },
   function(profile, done) {
-    return done(null, 
-      {
-        name: profile.norEduPersonLegalName,
-        role: profile.eduPersonAfflication,
-        id: profile.eduPersonPrincipalName,
-        mail: profile.mail,
-        mobile: profile.mobile
-      });
+    exports.user = profile;
+    return done(null, profile);
   })
 
 var metadata = strategy.generateServiceProviderMetadata();
-console.log(metadata);
+// console.log(metadata);
 
   passport.serializeUser(function (user, done) {
     done(null, user);
@@ -38,10 +32,23 @@ passport.use(strategy);
 
 router.use(passport.initialize());
 
-router.get('/projects', function(req, res, next) {
-  if(req.isAuthenticated())
-    res.render('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/src/app/posts/posts.component.html', { id: req.user.id});
-});
+router.get('/', function (req, res) {
+    if (req.isAuthenticated()) {
+      res.render('posts.component.ts',
+        {
+          user: req.user
+        });
+    } 
+  });
+
+  router.get('/projects', function (req, res) {
+    if (req.isAuthenticated()) {
+      res.render('posts.component.ts',
+        {
+          user: req.user
+        });
+    } 
+  });
 
 router.post('/login/callback',
   passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),

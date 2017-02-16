@@ -10,15 +10,23 @@ var strategy = new SamlStrategy(
     entryPoint: 'https://idp-test.feide.no/simplesaml/saml2/idp/SSOService.php',
     issuer: 'http://localhost:3000/feide/metadata',
     logoutUrl: 'https://idp-test.feide.no/simplesaml/saml2/idp/SingleLogoutService.php',
-    logoutCallbackUrl: 'http://localhost:3000/logout'
+    logoutCallbackUrl: 'http://localhost:3000/logout',
+    identifierFormat: 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient'
   },
+
+/*  module.exports.Profile = (profile, done) => { 
+      return done(null, profile);
+  } );*/
+  
   function(profile, done) {
-    exports.user = profile;
+    //exports.user = profile.mail;
+    //module.exports.profile;
+    //console.log(profile);
     return done(null, profile);
   })
 
 var metadata = strategy.generateServiceProviderMetadata();
-// console.log(metadata);
+console.log(metadata);
 
   passport.serializeUser(function (user, done) {
     done(null, user);
@@ -32,6 +40,7 @@ passport.use(strategy);
 
 router.use(passport.initialize());
 
+// kjøres ikke ved login
 router.get('/', function (req, res) {
     if (req.isAuthenticated()) {
       res.render('posts.component.ts',
@@ -41,35 +50,23 @@ router.get('/', function (req, res) {
     } 
   });
 
-  router.get('/projects', function (req, res) {
-    if (req.isAuthenticated()) {
-      res.render('posts.component.ts',
-        {
-          user: req.user
-        });
-    } 
-  });
-
+// kjøres ved login
 router.post('/login/callback',
   passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),
   function(req, res) {
-    console.log(req);
     res.redirect('/');
   }
 );
 
+// kjøres ikke ved login
 router.get('/login',
   passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),
   function(req, res) {
-    console.log(req);
     res.redirect('/');
   }
 );
 
 router.get('/logout', function(req, res) {
-  if (req.user == null) {
-    return res.redirect('/');
-  }
   return strategy.logout(req, function(err, uri) {
     return res.redirect(uri);
   });

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PostsService } from '../posts.service';
-import user = require('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/feide/passport-saml.js');
+var profile = require('passport-saml').SAML.prototype.processValidlySignedAssertion;
+//var user = System.import('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/feide/passport-saml.js');
 
 @Component({
   selector: 'app-posts',
@@ -10,6 +11,8 @@ import user = require('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/feide/pass
 export class PostsComponent implements OnInit {
   // instantiate posts to an empty object
   projects: any = [];
+  user: any = profile.profile;
+  
 
   constructor(private postsService: PostsService) { }
 
@@ -17,6 +20,7 @@ export class PostsComponent implements OnInit {
     // Retrieve posts from the API
     this.postsService.getAllProjects().subscribe(projects => {
       this.projects = projects;
+      //this.user = strategy;
     });
   }
 

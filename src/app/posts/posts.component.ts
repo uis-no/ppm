@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { PostsService } from '../posts.service';
-var profile = require('passport-saml').SAML.prototype.processValidlySignedAssertion;
+var SAML = require('passport-saml').SAML;
+//var SAML = require('passport-saml').Strategy;
+//var SAML = require('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/feide/passport-saml.js').router;
 //var user = System.import('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/feide/passport-saml.js');
 
 @Component({
@@ -11,8 +13,8 @@ var profile = require('passport-saml').SAML.prototype.processValidlySignedAssert
 export class PostsComponent implements OnInit {
   // instantiate posts to an empty object
   projects: any = [];
-  user: any = profile.profile;
-  
+  saml: any = SAML;
+  profile: any;
 
   constructor(private postsService: PostsService) { }
 
@@ -21,6 +23,16 @@ export class PostsComponent implements OnInit {
     this.postsService.getAllProjects().subscribe(projects => {
       this.projects = projects;
     });
+    this.saml.prototype.processValidlySignedAssertion({}, {}, this.callback);
+    //this.profile = this.saml.profile.email;
+    //this.profile = this.saml.profile;
+}
+  callback(err: any, profile: any) {
+    if (!err) {
+      this.profile = profile.email;
+    } else {
+        alert(err);
+    }
   }
 
   submitForm() {

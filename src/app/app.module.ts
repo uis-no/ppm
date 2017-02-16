@@ -8,6 +8,10 @@ import { AppComponent } from './app.component';
 import { PostsComponent } from './posts/posts.component';
 
 import { PostsService } from './posts.service';
+import { TestfolderComponent } from './testfolder/testfolder.component';
+import { DisplayProjectComponent } from './display-project/display-project.component';
+import { DisplayAllProjectsComponent } from './display-all-projects/display-all-projects.component';
+
 
 
 const ROUTES = [
@@ -19,13 +23,28 @@ const ROUTES = [
   {
     path: 'projects',
     component: PostsComponent
+  },
+  {
+    path: 'app-testfolder',
+    component: TestfolderComponent
+  },
+  {
+    path: 'app-display-project',
+    component: DisplayProjectComponent
+  },
+  {
+    path: 'app-display-all-projects',
+    component: DisplayAllProjectsComponent
   }
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
-    PostsComponent
+    PostsComponent,
+    TestfolderComponent,
+    DisplayProjectComponent,
+    DisplayAllProjectsComponent
   ],
   imports: [
     BrowserModule,

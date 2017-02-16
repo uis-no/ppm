@@ -1,0 +1,78 @@
+/*header*/
+header{
+	background-color: #424242;
+	height: 60px;
+	z-index: 2000;
+    color: white;
+    padding-left: 5px;
+}
+
+button{
+    height: 60px;
+    background-color: #424242;
+    color: white;
+    border: #424242;
+}
+
+.header-cont{
+	width: 100%;
+	position: relative;
+	top: 0px;
+	z-index: 2000;
+    margin-bottom: 5px;
+}
+
+ul li{
+	display: inline-block;
+	list-style: none;
+	margin-right: 10px;
+	z-index: 10;
+    color: white;
+}
+
+nav{
+	text-align: right;
+	margin-right: 5%;
+	margin-top: -53px;
+	line-height: 60px;
+	min-width: 600px;
+}
+
+router-outlet {
+  position: absolute;
+  min-height: 100%;
+  margin: 0 0 60;
+}
+
+html, body {
+    /* make sure the body does not have a margin */
+    margin: 0;
+    /* this forces the body tag to fill the height of the window */
+    height: 100%;
+}
+
+header-main,
+router-outlet,
+{
+  display: table-row;
+}
+
+router-outlet {
+  position: absolute;
+}
+
+/*footer*/
+.app {
+    min-height: 100%;
+    width: 100%;
+    margin-bottom: 60px; /* bottom = footer height */
+    display: table;
+}
+footer {
+    bottom: 0;
+    left: 0;
+    height: 60px;
+    width: 100%;
+    background-color: #424242;
+    padding-left: 5px;
+}

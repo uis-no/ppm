@@ -20,7 +20,6 @@ export class PostsComponent implements OnInit {
     // Retrieve posts from the API
     this.postsService.getAllProjects().subscribe(projects => {
       this.projects = projects;
-      //this.user = strategy;
     });
   }
 

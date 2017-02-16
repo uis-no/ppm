@@ -19,22 +19,16 @@ var Project = require('../models/project.ts');
 router.route('/projects')
   // create new project
   .post((req, res) => {
-    var project = new Project();
+    var obj = req.body;
+    var project = new Project(obj);
 
-    project.title = req.body.title;
-    projec.advisors = req.body.advisors;
-    project.proposer = req.body.proposer;
-    project.important_courses = req.body.important_courses;
-    project.background = req.body.background;
-    project.motivation = req.body.motivation;
-    project.objectives = req.body.objectives;
-    project.students_assigned = req.body.students_assigned;
-
+    
     project.save((err) => {
       if (err) {
         res.status(500).send(err);
-      }
+      } else {
       res.status(200).json({ message: 'Your project has been created.'});
+      }
     });
   })
 

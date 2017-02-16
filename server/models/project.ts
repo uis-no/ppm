@@ -1,18 +1,3 @@
-/*import mongodb = require('mongodb');
-
-export interface project{
-    title: string;
-    advisors: string;
-    proposer: string;
-    important_courses: string;
-    background: string;
-    motivation: string;
-    methods: string;
-    objectives: string;
-    students_assigned: string;
-
-}
-*/
 var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;

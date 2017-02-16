@@ -1,0 +1,52 @@
+<div *ngIf="project" class="row">
+  <div>
+    <h2>New Project</h2>
+  </div>
+</div>
+
+<div *ngIf="project" class="row">
+  <form class="col-md-12">
+    <div class="form-group">
+      <label for="id">id</label>
+      <input class="form-control" name="id" [(ngModel)]="project._id" />
+    </div>
+    <div class="form-group">
+      <label for="project-title">title</label>
+      <input class="form-control" name="project-title" [(ngModel)]="project.title" placeholder="Title" />
+    </div>
+    <div class="form-group">
+      <label for="project-advisors">advisors</label>
+      <input class="form-control" name="project-advisors" [(ngModel)]="project.advisors" placeholder="Advisors"/>
+    </div>
+    <div class="form-group">
+      <label for="project-proposer">proposer</label>
+      <input class="form-control" name="project-proposer" [(ngModel)]="project.proposer" placeholder="Proposer" />
+    </div>
+    <div class="form-group">
+      <label for="project-importantCourses">Important courses</label>
+      <input class="form-control"name="project-importantCourses" [(ngModel)]="project.important_courses" placeholder="important courses" />
+    </div>
+    <div class="form-group">
+      <label for="project-background">background</label>
+      <input class="form-control" name="project-background" [(ngModel)]="project.background" placeholder="background"/>
+    </div>
+    <div class="form-group">
+      <label for="project-motivation">motivation</label>
+      <input class="form-control" name="project-motivation" [(ngModel)]="project.motivation" placeholder="motivation"/>
+    </div>
+    <div class="form-group">
+      <label for="project-methods">methods</label>
+      <input class="form-control" name="project-methods" [(ngModel)]="project.methods" placeholder="methods"/>
+    </div>
+    <div class="form-group">
+      <label for="project-objectives">objectives</label>
+      <input class="form-control" name="project-objectives" [(ngModel)]="project.objectives" placeholder="objectives"/>
+    </div>
+    <div class="form-group">
+      <label for="project-students-assigned">advisors</label>
+      <input class="form-control" name="project-students-assigned" [(ngModel)]="project.students_assigned" placeholder="students assigned"/>
+    </div>
+
+  </form>
+  <button (click)="createProject(project)">Create Project</button>
+</div>

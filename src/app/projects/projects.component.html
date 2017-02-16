@@ -1,0 +1,10 @@
+<div class="container">
+  <div class="row" *ngFor="let project of projects" (click)="selectProject(project)" [class.active]="project === selectedProject">
+    <div class="card card-block" >
+      <h4 class="card-title">{{ project.title }}</h4>
+      <p class="card-text">{{ project.background }}</p>
+      <p> {{ project.advisors }} </p>
+      <button (click)="updateProject(project._id)" class="card-link">Edit Project</button>
+    </div>
+  </div>
+</div>

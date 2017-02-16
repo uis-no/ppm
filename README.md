@@ -32,6 +32,13 @@ $ npm install
 ```
 
 Run the app
+You need to open two clis, in the first one enter:
 ```bash
 $ npm run build
 ```
+and in the second one enter:
+```bash
+$ npm start
+```
+
+Then go to localhost:4200, this port allows for live updates (from code to browser).

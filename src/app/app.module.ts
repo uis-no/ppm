@@ -11,13 +11,14 @@ import { PostsService } from './posts.service';
 import { TestfolderComponent } from './testfolder/testfolder.component';
 import { DisplayProjectComponent } from './display-project/display-project.component';
 import { DisplayAllProjectsComponent } from './display-all-projects/display-all-projects.component';
+import { HomepageComponent } from './homepage/homepage.component';
 
 
 
 const ROUTES = [
   {
     path: '',
-    redirectTo: 'projects',
+    redirectTo: 'app-homepage',
     pathMatch: 'full'
   },
   {
@@ -29,12 +30,16 @@ const ROUTES = [
     component: TestfolderComponent
   },
   {
-    path: 'app-display-project',
+    path: 'app-display-project/:id',
     component: DisplayProjectComponent
   },
   {
     path: 'app-display-all-projects',
     component: DisplayAllProjectsComponent
+  },
+  {
+    path: 'app-homepage',
+    component: HomepageComponent
   }
 ];
 
@@ -44,7 +49,8 @@ const ROUTES = [
     PostsComponent,
     TestfolderComponent,
     DisplayProjectComponent,
-    DisplayAllProjectsComponent
+    DisplayAllProjectsComponent,
+    HomepageComponent
   ],
   imports: [
     BrowserModule,

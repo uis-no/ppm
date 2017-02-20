@@ -16,11 +16,10 @@ h3{
     font-size: 1em;
 }
 
-/*p{
+p{
     position: relative;
-    margin-left: 150px;
-    margin-top: -27px;
-}*/
+    margin-top: -4px;
+}
 
 table{
     margin-top: 15px;
@@ -28,10 +27,13 @@ table{
 
 td{
     vertical-align: top;
+    min-height: 100px;
 }
 
 #h3col{
     width: 150px;
+    text-align: right;
+    padding-right: 10px;
 }
 
 button{

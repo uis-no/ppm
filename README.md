@@ -4,7 +4,7 @@
 
 ## Set up.
 
-Make sure your Node version is up to date (3.10.10 works).
+Make sure your Node version is up to date (6.9.3 works).
 To check version:
 ```bash
 $ npm -v

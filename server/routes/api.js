@@ -42,10 +42,10 @@ router.route('/projects')
     });
   });
 
-  router.route('/projects/:id')
+  router.route('/projects/:_id')
     // get a project by id
     .get((req, res) => {
-      Project.find({ _id : req.params._id }, (err, project) => {
+      Project.findOne({ _id : req.params._id }, (err, project) => {
         if (err) {
           res.status(500).send(err);
         } else {

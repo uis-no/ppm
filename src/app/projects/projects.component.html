@@ -4,7 +4,7 @@
       <h4 class="card-title">{{ project.title }}</h4>
       <p class="card-text">{{ project.background }}</p>
       <p> {{ project.advisors }} </p>
-      <button (click)="updateProject(project._id)" class="card-link">Edit Project</button>
+      <button [routerLink]="['project-details/', project._id]" class="card-link">See details</button>
     </div>
   </div>
 </div>

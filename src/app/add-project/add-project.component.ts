@@ -9,6 +9,8 @@ import { Project } from '../project.interface';
 })
 export class AddProjectComponent{
 
+  submitted: boolean = false;
+
   project: Project = {
     title: '',
     advisors: '',
@@ -22,10 +24,10 @@ export class AddProjectComponent{
   };
 
   constructor(private projectsService: ProjectsService) { }
-
+  
   createProject(project: Project) {
     this.projectsService.createProject(project).then(() => {
-      console.log("Project created!");
+      this.submitted = true;
     });
   }
 }

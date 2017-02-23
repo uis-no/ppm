@@ -1,0 +1,12 @@
+<h1 *ngIf="project">Project Details for {{ project.title }}</h1>
+<div class="container" *ngIf="project">
+  <div class="row">
+    <div class="card card-block">
+      <h4 class="card-title">{{ project.title }}</h4>
+      <p class="card-text">{{ project.background }}</p>
+      <p> {{ project.advisors }} </p>
+      <a href="#" class="card-link">Card link</a>
+      <a href="#" class="card-link">Another link</a>
+    </div>
+  </div>
+</div>

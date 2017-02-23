@@ -9,6 +9,7 @@ import { ProjectsComponent } from './projects/projects.component';
 
 import { ProjectsService } from './projects.service';
 import { AddProjectComponent } from './add-project/add-project.component';
+import { ProjectDetailsComponent } from './project-details/project-details.component';
 
 const ROUTES = [
   {
@@ -23,6 +24,10 @@ const ROUTES = [
   {
     path: 'new-project',
     component: AddProjectComponent
+  },
+  {
+    path: 'projects/project-details/:id',
+    component: ProjectDetailsComponent
   }
 ];
 
@@ -31,6 +36,7 @@ const ROUTES = [
     AppComponent,
     ProjectsComponent,
     AddProjectComponent,
+    ProjectDetailsComponent
   ],
   imports: [
     BrowserModule,

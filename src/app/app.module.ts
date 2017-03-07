@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
+import { AUTH_PROVIDERS }      from 'angular2-jwt';
+
 import { AppComponent } from './app.component';
 import { PostsComponent } from './posts/posts.component';
 
@@ -58,7 +60,7 @@ const ROUTES = [
     HttpModule,
     RouterModule.forRoot(ROUTES)
   ],
-  providers: [PostsService],
+  providers: [PostsService, AUTH_PROVIDERS],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -4,4 +4,7 @@
     <p>Project proposal manager for Universitet i Stavanger</p>
   <button>Logg på med Feide</button>
   </div>
+   <a class="navbar-brand" href="#">Auth0 - Angular 2</a>
+  <button class="btn btn-primary btn-margin" (click)="auth.login()" *ngIf="!auth.authenticated()">Log In</button>
+  <button class="btn btn-primary btn-margin" (click)="auth.logout()" *ngIf="auth.authenticated()">Log Out</button>
 </div>

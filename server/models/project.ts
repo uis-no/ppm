@@ -1,64 +1,30 @@
-/*import mongodb = require('mongodb');
-
-export interface project{
-    title: string;
-    advisors: string;
-    proposer: string;
-    important_courses: string;
-    background: string;
-    motivation: string;
-    methods: string;
-    objectives: string;
-    students_assigned: string;
-
-}
-*/
 var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
 var project = new Schema({
   // ISSUE : ObjectId is not recognized as a valid type, will use number until resolved
-  _id : {
-    type : Number,
-    auto: true
-  },
+  _id : Number,
 
-  title : {
-    type : String
+  course : { type: String, ref: 'Course' },
 
-  },
-  advisors : {
-    type : String
+  title : String,
 
-  },
-  proposer : {
-    type : String
+  description : String,
 
-  },
-  important_courses : {
-    type : String
+  proposer : { type: Number, ref: 'Proposer' },
 
-  },
-  background : {
-    type : String
+  approved : Boolean,
 
-  },
-  motivation : {
-    type : String
+  responsible : { type: Number, ref: 'Responsible' },
 
-  },
-  methods : {
-    type : String
+  advisor : { type: Number, ref: 'Advisor' },
 
-  },
-  objectives : {
-    type : String
+  examiner : { type: Number, ref: 'Examiner' },
 
-  },
-  students_assigned : {
-    type : String
-  }
+  student : [ { type: Number, ref: 'Student' } ],
+
+  time_limits : Array
 });
 
 

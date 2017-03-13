@@ -44,9 +44,18 @@ router.use(passport.initialize());
 // kjøres ikke ved login
 router.get('/', function (req, res) {
     if (req.isAuthenticated()) {
-      res.render('posts.component.ts',
+      res.render('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/src/app/posts/posts.component.html',
         {
-          user: req.user
+          user: req.user.mail
+        });
+    } 
+  });
+
+  router.get('/projects', function (req, res) {
+    if (req.isAuthenticated()) {
+      res.render('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/src/app/posts/posts.component.html',
+        {
+          user: req.user.mail
         });
     } 
   });

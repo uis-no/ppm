@@ -2,12 +2,17 @@
   <div class="row" *ngFor="let project of projects">
     <div class="card card-block">
       <h4 class="card-title">{{ project.title }}</h4>
-      <p class="card-text">{{ project.background }}</p>
-      <p> {{ project.advisors }} </p>
-      <a href="#" class="card-link">Card link</a>
-      <a href="#" class="card-link">Another link</a>
+      <p class="card-text">{{ project.description }}</p>
+      <p> Course: {{ project.course._id }} </p>
+      <p> Year: {{ project.course.year }} </p>
+      <p> Proposer: {{ project.proposer.name }} </p>
+      <p> Approved: {{ project.approved }} </p>
+      <p>Responsible: {{ project.responsible.name }} </p>
+      <p> Advisor: {{ project.advisor.name }} </p>
+      <p> Examiner: {{ project.examiner.name }} </p>
+      <p *ngFor="let student of project.student"> Student: {{ student.name }} </p>
     </div>
   </div>
 </div>
 
-<a href="http://localhost:3000/logout">Logout {{profile}} from Feide?</a>
+<a href="http://localhost:3000/logout">Logout {{ user }} from Feide?</a>

@@ -15,6 +15,12 @@ router.get('/', (req, res) => {
 });
 
 var Project = require('../models/project.ts');
+var Course = require('../models/course.ts');
+var Proposer = require('../models/proposer.ts');
+var Responsible = require('../models/responsible.ts');
+var Advisor = require('../models/advisor.ts');
+var Examiner = require('../models/examiner.ts');
+var Student = require('../models/student.ts');
 
 router.route('/projects')
   // create new project
@@ -32,15 +38,25 @@ router.route('/projects')
     });
   })
 
+
   // get all projects
   .get((req, res) => {
-    Project.find((err, projects) => {
+
+    Project
+    .find((err, projects) => {
       if (err) {
         res.status(500).send(err);
       }
       res.status(200).json(projects);
-    });
+    })
+    .populate('course')
+    .populate('proposer')
+    .populate('responsible')
+    .populate('advisor')
+    .populate('examiner')
+    .populate('student')
   });
+
 
   router.route('/projects/:id')
     // get a project by id

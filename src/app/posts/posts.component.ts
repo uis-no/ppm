@@ -23,13 +23,14 @@ export class PostsComponent implements OnInit {
     this.postsService.getAllProjects().subscribe(projects => {
       this.projects = projects;
     });
-    this.saml.prototype.processValidlySignedAssertion({}, {}, this.callback);
+    //this.saml.prototype.processValidlySignedAssertion({}, {}, this.callback);
     //this.profile = this.saml.profile.email;
     //this.profile = this.saml.profile;
-}
+  }
+
   callback(err: any, profile: any) {
     if (!err) {
-      this.profile = profile.email;
+      this.profile = profile;
     } else {
         alert(err);
     }

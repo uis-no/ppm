@@ -11,7 +11,7 @@ router.use((req, res, next) => {
 
 /* GET api listing. */
 router.get('/', (req, res) => {
-  res.json('Successfully connected to API');
+  res.status(200).json('Successfully connected to API');
 });
 
 var Project = require('../models/project.ts');
@@ -37,7 +37,7 @@ router.route('/projects')
       }
     });
   })
-
+  
 
   // get all projects
   .get((req, res) => {
@@ -46,6 +46,8 @@ router.route('/projects')
     .find((err, projects) => {
       if (err) {
         res.status(500).send(err);
+      } else {
+          res.status(200).json({ message: 'Your project has been created.'});
       }
       res.status(200).json(projects);
     })
@@ -58,41 +60,44 @@ router.route('/projects')
   });
 
 
-  router.route('/projects/:id')
+  router.route('/projects/:_id')
     // get a project by id
     .get((req, res) => {
-      Project.find({ _id : req.params.id }, (err, project) => {
+      Project.findOne({ _id : req.params._id }, (err, project) => {
         if (err) {
           res.status(500).send(err);
+        } else {
+          res.status(200).json(project);
         }
-        res.status(200).json(project);
       });
     })
 
       // update a project by id
       .put((req, res) => {
         var obj = req.body;
+        var project = new Project(obj);
 
-        Project.findOneAndUpdate({ _id : req.params.id },
-          { title : obj.title, advisors : obj.advisors, proposer : obj.proposer,
-            important_courses : obj.important_courses, background : obj.background,
-            motivation : obj.motivation, methods : obj.methods,
-            objectives : obj.objectives, students_assigned : obj.students_assigned },
-            (err, project) =>{
+        Project.findOneAndUpdate({ _id : project._id }, project,
+            (err) =>{
           if (err) {
             res.status(500).send(err);
-          }
+          } else {
           res.status(200).json({ message: 'Your project has been updated.'});
+          }
         });
       })
 
       // delete a project by id
       .delete((req, res) => {
-        Project.findOneAndRemove({ _id : req.params.id }, (err, project) => {
+        var obj = req.body;
+        var project = new Project(obj);
+
+        Project.findOneAndRemove({ _id : project._id }, project, (err) => {
           if (err) {
             res.status(500).send(err);
+          } else {
+            res.status(200).json({ message: 'Your project has been deleted.'});
           }
-          res.status(200).json({ message: 'Your project has been deleted.'});
         });
       });
 

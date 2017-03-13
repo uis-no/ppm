@@ -5,10 +5,11 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
-import { PostsComponent } from './posts/posts.component';
+import { ProjectsComponent } from './projects/projects.component';
 
-import { PostsService } from './posts.service';
-
+import { ProjectsService } from './projects.service';
+import { AddProjectComponent } from './add-project/add-project.component';
+import { ProjectDetailsComponent } from './project-details/project-details.component';
 
 const ROUTES = [
   {
@@ -18,14 +19,24 @@ const ROUTES = [
   },
   {
     path: 'projects',
-    component: PostsComponent
+    component: ProjectsComponent
+  },
+  {
+    path: 'new-project',
+    component: AddProjectComponent
+  },
+  {
+    path: 'projects/project-details/:id',
+    component: ProjectDetailsComponent
   }
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
-    PostsComponent
+    ProjectsComponent,
+    AddProjectComponent,
+    ProjectDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -33,7 +44,7 @@ const ROUTES = [
     HttpModule,
     RouterModule.forRoot(ROUTES)
   ],
-  providers: [PostsService],
+  providers: [ProjectsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

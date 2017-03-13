@@ -1,4 +1,12 @@
-<h1>
-  {{title}}
-</h1>
-<router-outlet></router-outlet>
+<header>
+  <h1><a [routerLink]="['/']">{{title}}</a></h1>
+  <nav>
+    <ul>
+      <li><button [routerLink]="['/new-project']">New project</button></li>
+    </ul>
+  </nav>
+</header>
+<!-- BUG: karma testsuite does not regconize the element and fails all tests because of it -->
+<div class="container">
+  <router-outlet></router-outlet>
+</div>

@@ -2,8 +2,16 @@
   <div class="row" *ngFor="let project of projects" (click)="selectProject(project)" [class.active]="project === selectedProject">
     <div class="card card-block" >
       <h4 class="card-title">{{ project.title }}</h4>
-      <p class="card-text">{{ project.background }}</p>
-      <p> {{ project.advisors }} </p>
+      <p class="card-text">{{ project.description }}</p>
+      <p> Course: {{ project.course._id }} </p>
+      <p> Year: {{ project.course.year }} </p>
+      <p> Proposer: {{ project.proposer.name }} </p>
+      <p> Approved: {{ project.approved }} </p>
+      <p>Responsible: {{ project.responsible.name }} </p>
+      <p> Advisor: {{ project.advisor.name }} </p>
+      <p *ngIf="project.examiner"> Examiner: {{ project.examiner.name }} </p>
+      <p *ngIf="!project.examiner"> Examiner: None </p>
+      <p *ngFor="let student of project.student"> Student: {{ student.name }} </p>
       <button [routerLink]="['project-details/', project._id]" class="card-link">See details</button>
     </div>
   </div>

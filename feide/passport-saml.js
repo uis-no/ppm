@@ -21,13 +21,13 @@ var strategy = new SamlStrategy(
   function(profile, done) {
     //exports.user = profile.mail;
     //module.exports.profile;
-    console.log(profile);
+    //console.log(profile);
     router.profile;
     return done(null, profile);
   })
 
 var metadata = strategy.generateServiceProviderMetadata();
-console.log(metadata);
+//console.log(metadata);
 
   passport.serializeUser(function (user, done) {
     done(null, user);

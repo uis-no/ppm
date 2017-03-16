@@ -12,21 +12,24 @@ export class AddProjectComponent{
   submitted: boolean = false;
 
   project: Project = {
+    course: '',
     title: '',
-    advisors: '',
-    proposer: '',
-    important_courses: '',
-    background: '',
-    motivation: '',
-    methods: '',
-    objectives: '',
-    students_assigned: ''
+    description: '',
+    proposer: 0,
+    approved: false,
+    responsible: 0,
+    advisor: 0,
+    examiner: 0,
+    student: [],
+    time_limits: []
   };
 
   constructor(private projectsService: ProjectsService) { }
   
   createProject(project: Project) {
     this.projectsService.createProject(project).then(() => {
+      console.log("project" + project);
+      console.log("this-project" + this.project);
       this.submitted = true;
     });
   }

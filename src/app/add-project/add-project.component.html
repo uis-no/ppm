@@ -8,44 +8,52 @@
 <div *ngIf="project" class="row">
   <form class="col-md-12">
     <div class="form-group">
-      <label for="id">id</label>
-      <input class="form-control" name="id" [(ngModel)]="project._id" />
+      <label for="project-id">id</label>
+      <input class="form-control" name="project-id" [(ngModel)]="project._id" placeholder="Title" />
     </div>
     <div class="form-group">
-      <label for="project-title">title</label>
+      <select class="form-control" name="project-course" [(ngModel)]="project.course">
+        <label for="project-course">Course</label>
+        <option value="DATBAC">DATBAC</option>
+      </select>
+    </div>
+
+<!--    <div class="form-group">
+      <select class="form-control" name="project-year" [(ngModel)]="project.course.year">
+        <label for="project-title">Year</label>
+        <option value="2017">2017</option>
+        <option value="2018">2018</option>
+      </select>
+    </div>-->
+
+    <div class="form-group">
+      <label for="project-title">Title</label>
       <input class="form-control" name="project-title" [(ngModel)]="project.title" placeholder="Title" />
     </div>
+
     <div class="form-group">
-      <label for="project-advisors">advisors</label>
-      <input class="form-control" name="project-advisors" [(ngModel)]="project.advisors" placeholder="Advisors"/>
+      <label for="project-advisors">Description</label>
+      <input class="form-control" name="project-description" [(ngModel)]="project.description" placeholder="Description"/>
     </div>
+
     <div class="form-group">
-      <label for="project-proposer">proposer</label>
-      <input class="form-control" name="project-proposer" [(ngModel)]="project.proposer" placeholder="Proposer" />
+      <label for="project-proposer">Proposer (Employee no.)</label>
+      <input type="number" class="form-control" name="project-proposer" [(ngModel)]="project.proposer" placeholder="Proposer" />
     </div>
+
     <div class="form-group">
-      <label for="project-importantCourses">Important courses</label>
-      <input class="form-control"name="project-importantCourses" [(ngModel)]="project.important_courses" placeholder="important courses" />
+      <label for="project-importantCourses">Responsible (Employee no.)</label>
+      <input type="number" class="form-control"name="project-responsible" [(ngModel)]="project.responsible" placeholder="Responsible" />
     </div>
+
     <div class="form-group">
-      <label for="project-background">background</label>
-      <input class="form-control" name="project-background" [(ngModel)]="project.background" placeholder="background"/>
+      <label for="project-background">Advisor (Employee no.)</label>
+      <input type="number" class="form-control" name="project-advisor" [(ngModel)]="project.advisor" placeholder="Advisor"/>
     </div>
+
     <div class="form-group">
-      <label for="project-motivation">motivation</label>
-      <input class="form-control" name="project-motivation" [(ngModel)]="project.motivation" placeholder="motivation"/>
-    </div>
-    <div class="form-group">
-      <label for="project-methods">methods</label>
-      <input class="form-control" name="project-methods" [(ngModel)]="project.methods" placeholder="methods"/>
-    </div>
-    <div class="form-group">
-      <label for="project-objectives">objectives</label>
-      <input class="form-control" name="project-objectives" [(ngModel)]="project.objectives" placeholder="objectives"/>
-    </div>
-    <div class="form-group">
-      <label for="project-students-assigned">advisors</label>
-      <input class="form-control" name="project-students-assigned" [(ngModel)]="project.students_assigned" placeholder="students assigned"/>
+      <label for="project-motivation">Student(s) (Student no.)</label>
+      <input type="number" class="form-control" name="project-student" [(ngModel)]="project.student" placeholder="Student(s)"/>
     </div>
 
   </form>

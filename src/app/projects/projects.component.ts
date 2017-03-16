@@ -23,6 +23,7 @@ export class ProjectsComponent implements OnInit {
       .getAllProjects()
       .then((projects: Project[]) => {
         this.projects = projects.map((project) => {
+          console.log(project);
           return project;
         });
       });
@@ -40,15 +41,16 @@ export class ProjectsComponent implements OnInit {
 
   createNewProject() {
     var project: Project = {
-      title: '',
-      advisors: '',
-      proposer: '',
-      important_courses: '',
-      background: '',
-      motivation: '',
-      methods: '',
-      objectives: '',
-      students_assigned: ''
+    course: '',
+    title: '',
+    description: '',
+    proposer: 0,
+    approved: false,
+    responsible: 0,
+    advisor: 0,
+    examiner: 0,
+    student: [],
+    time_limits: []
     };
     this.selectProject(project);
   }

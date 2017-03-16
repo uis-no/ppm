@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+/*import { Component, OnInit } from '@angular/core';
 import { PostsService } from '../posts.service';
 var SAML = require('passport-saml').SAML;
 //var SAML = require('passport-saml').Strategy;
@@ -45,3 +45,4 @@ export class PostsComponent implements OnInit {
   }
 
 }
+*/

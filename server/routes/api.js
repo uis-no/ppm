@@ -22,23 +22,8 @@ var Advisor = require('../models/advisor.ts');
 var Examiner = require('../models/examiner.ts');
 var Student = require('../models/student.ts');
 
+
 router.route('/projects')
-  // create new project
-  .post((req, res) => {
-    var obj = req.body;
-    var project = new Project(obj);
-
-    
-    project.save((err) => {
-      if (err) {
-        res.status(500).send(err);
-      } else {
-      res.status(200).json({ message: 'Your project has been created.'});
-      }
-    });
-  })
-  
-
   // get all projects
   .get((req, res) => {
 
@@ -46,8 +31,6 @@ router.route('/projects')
     .find((err, projects) => {
       if (err) {
         res.status(500).send(err);
-      } else {
-          res.status(200).json({ message: 'Your project has been created.'});
       }
       res.status(200).json(projects);
     })
@@ -57,9 +40,23 @@ router.route('/projects')
     .populate('advisor')
     .populate('examiner')
     .populate('student')
+  })
+  // create new project
+  .post((req, res) => {
+    var obj = req.body;
+    var project = new Project(obj);
+    console.log(project);
+    
+    project.save((err) => {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+      res.status(200).json({ message: 'Your project has been created.'});
+      }
+    });
   });
-
-
+  
+  
   router.route('/projects/:_id')
     // get a project by id
     .get((req, res) => {

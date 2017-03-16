@@ -1,14 +1,15 @@
 export class Project {
   _id?: number;
+  course: string;
   title: string;
-  advisors: string;
-  proposer: string;
-  important_courses: string;
-  background: string;
-  motivation: string;
-  methods: string;
-  objectives: string;
-  students_assigned: string;
+  description: string;
+  proposer: number;
+  approved: boolean;
+  responsible: number;
+  advisor: number;
+  examiner: number;
+  student: Array<number>;
+  time_limits: Array<string>;
 
   /*constructor(obj?: any) {
     this.id = obj && Number(obj.id) || null;

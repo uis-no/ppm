@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
-var responsible = new Schema({
+var company = new Schema({
   _id : {
     type : Number,
     auto: true
@@ -22,4 +22,4 @@ var responsible = new Schema({
 });
 
 
-module.exports = mongoose.model('Responsible', responsible);
+module.exports = mongoose.model('Company', company);

@@ -5,12 +5,12 @@
       <p class="card-text">{{ project.description }}</p>
       <p> Course: {{ project.course._id }} </p>
       <p> Year: {{ project.course.year }} </p>
-      <p> Proposer: {{ project.proposer.name }} </p>
+      <p *ngFor="let proposer of project.proposer"> Proposer: {{ proposer.value.name }} </p>
       <p> Approved: {{ project.approved }} </p>
-      <p>Responsible: {{ project.responsible.name }} </p>
-      <p> Advisor: {{ project.advisor.name }} </p>
-      <p *ngIf="project.examiner"> Examiner: {{ project.examiner.name }} </p>
-      <p *ngIf="!project.examiner"> Examiner: None </p>
+      <p *ngFor="let responsible of project.responsible">Responsible: {{ responsible.value.name }} </p>
+      <p *ngFor="let advisor of project.advisor"> Advisor: {{ advisor.value.name }} </p>
+      <p *ngIf="project.examiner.value"> Examiner: {{ examiner.value.name }} </p>
+      <p *ngIf="!project.examiner.value"> Examiner: None </p>
       <p *ngFor="let student of project.student"> Student: {{ student.name }} </p>
       <button [routerLink]="['project-details/', project._id]" class="card-link">See details</button>
     </div>

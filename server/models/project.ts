@@ -12,19 +12,19 @@ var project = new Schema({
 
   description : String,
 
-  proposer : { type: Number, ref: 'Proposer' },
+  proposer : [ { role: String, value: { type: Number, refPath: 'proposer.role' } } ],
 
   approved : Boolean,
 
-  responsible : { type: Number, ref: 'Responsible' },
+  responsible : [ { role: String, value: { type: Number, refPath: 'responsible.role' } } ],
 
-  advisor : { type: Number, ref: 'Advisor' },
+  advisor : [ { role: String, value: { type: Number, refPath: 'advisor.role' } } ],
 
-  examiner : { type: Number, ref: 'Examiner' },
+  examiner : [ { role: String, value: { type: Number, refPath: 'examiner.role' } } ],
 
   student : [ { type: Number, ref: 'Student' } ],
 
-  time_limits : Array
+  //time_limits : Array
 });
 
 

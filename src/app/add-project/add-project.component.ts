@@ -15,13 +15,13 @@ export class AddProjectComponent{
     course: '',
     title: '',
     description: '',
-    proposer: 0,
+    proposer: [],
     approved: false,
-    responsible: 0,
-    advisor: 0,
-    examiner: 0,
+    responsible: [],
+    advisor: [],
+    examiner: [],
     student: [],
-    time_limits: []
+//    time_limits: []
   };
 
   constructor(private projectsService: ProjectsService) { }

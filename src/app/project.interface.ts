@@ -3,13 +3,13 @@ export class Project {
   course: string;
   title: string;
   description: string;
-  proposer: number;
+  proposer: Array<Object>;
   approved: boolean;
-  responsible: number;
-  advisor: number;
-  examiner: number;
+  responsible: Array<Object>;
+  advisor: Array<Object>;
+  examiner: Array<Object>;
   student: Array<number>;
-  time_limits: Array<string>;
+ // time_limits: Array<string>;
 
   /*constructor(obj?: any) {
     this.id = obj && Number(obj.id) || null;

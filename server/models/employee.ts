@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
-var proposer = new Schema({
+var employee = new Schema({
   _id : {
     type : Number,
     auto: true
@@ -22,4 +22,4 @@ var proposer = new Schema({
 });
 
 
-module.exports = mongoose.model('Proposer', proposer);
+module.exports = mongoose.model('Employee', employee);

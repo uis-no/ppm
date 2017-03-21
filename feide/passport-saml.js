@@ -3,6 +3,9 @@ var saml = require('passport-saml');
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
+var session = require('express-session');
+
+var fs = require('fs');
 
 var strategy = new SamlStrategy(
   {
@@ -14,20 +17,12 @@ var strategy = new SamlStrategy(
     identifierFormat: 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient'
   },
 
-/*  module.exports.Profile = (profile, done) => { 
-      return done(null, profile);
-  } );*/
-  
   function(profile, done) {
-    //exports.user = profile.mail;
-    //module.exports.profile;
-    //console.log(profile);
     router.profile;
     return done(null, profile);
   })
 
 var metadata = strategy.generateServiceProviderMetadata();
-//console.log(metadata);
 
   passport.serializeUser(function (user, done) {
     done(null, user);
@@ -39,25 +34,32 @@ var metadata = strategy.generateServiceProviderMetadata();
 
 passport.use(strategy);
 
+router.use(session({
+  secret: 'social justice cat',
+  resave: false,
+  saveUninitialized: true
+}));
 router.use(passport.initialize());
+router.use(passport.session());
+
 
 // kjøres ikke ved login
 router.get('/', function (req, res) {
-    if (req.isAuthenticated()) {
-      res.render('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/src/app/posts/posts.component.html',
+    if (req.user.isAuthenticated()) {
+      res.render('../../src/app/projects/projects.component.html',
         {
           user: req.user.mail
         });
-    } 
+    }
   });
 
   router.get('/projects', function (req, res) {
     if (req.isAuthenticated()) {
-      res.render('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/src/app/posts/posts.component.html',
+      res.render('../../src/app/projects/projects.component.html',
         {
           user: req.user.mail
         });
-    } 
+    }
   });
 
 // kjøres ved login

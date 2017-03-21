@@ -22,4 +22,4 @@ var examiner = new Schema({
 });
 
 
-module.exports = mongoose.model('Examiner', examiner);
+module.exports = mongoose.model('Ext_examiner', ext_examiner);

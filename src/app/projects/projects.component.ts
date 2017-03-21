@@ -3,7 +3,7 @@ import { ProjectsService } from '../projects.service';
 import { Project } from '../project.interface';
 import { ProjectDetailsComponent } from '../project-details/project-details.component';
 import 'rxjs/add/operator/map';
-
+//require('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/feide/passport-saml');
 
 @Component({
   selector: 'project-list',
@@ -44,13 +44,13 @@ export class ProjectsComponent implements OnInit {
     course: '',
     title: '',
     description: '',
-    proposer: 0,
+    proposer: [],
     approved: false,
-    responsible: 0,
-    advisor: 0,
-    examiner: 0,
+    responsible: [],
+    advisor: [],
+    examiner: [],
     student: [],
-    time_limits: []
+//    time_limits: []
     };
     this.selectProject(project);
   }

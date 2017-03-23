@@ -5,6 +5,8 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
 import { AUTH_PROVIDERS }      from 'angular2-jwt';
+import { AuthGuard } from './auth.guard';
+import { Auth } from './auth.service';
 
 import { AppComponent } from './app.component';
 import { PostsComponent } from './posts/posts.component';
@@ -25,7 +27,7 @@ const ROUTES = [
   },
   {
     path: 'projects',
-    component: PostsComponent
+    component: PostsComponent, canActivate: [AuthGuard]
   },
   {
     path: 'app-testfolder',
@@ -60,7 +62,7 @@ const ROUTES = [
     HttpModule,
     RouterModule.forRoot(ROUTES)
   ],
-  providers: [PostsService, AUTH_PROVIDERS],
+  providers: [PostsService, AUTH_PROVIDERS, AuthGuard, Auth],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

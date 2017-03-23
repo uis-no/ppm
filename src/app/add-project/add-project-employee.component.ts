@@ -1,18 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ProjectsService } from '../projects.service';
 import { Project } from '../project.interface';
+import { Course } from '../course.interface';
+import 'rxjs/add/operator/map';
 
 @Component({
   selector: 'new-project',
-  templateUrl: './add-project.component.html',
-  styleUrls: ['./add-project.component.css']
+  templateUrl: './add-project-employee.component.html',
+  styleUrls: ['./add-project.component.css'],
+  providers: [ProjectsService]
 })
-export class AddProjectComponent{
+export class AddProjectComponent implements OnInit {
 
   submitted: boolean = false;
 
   project: Project = {
-    course: '',
+    course: null,
     title: '',
     description: '',
     proposer: [],
@@ -24,7 +27,19 @@ export class AddProjectComponent{
 //    time_limits: []
   };
 
+  courses: Course[];
+
   constructor(private projectsService: ProjectsService) { }
+
+    ngOnInit() {
+    this.projectsService
+      .getAllCourses()
+      .then((courses: Course[]) => {
+        this.courses = courses.map((course) => {
+          return course;
+        });
+      });
+  }
   
   createProject(project: Project) {
     this.projectsService.createProject(project).then(() => {

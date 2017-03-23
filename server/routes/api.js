@@ -31,10 +31,10 @@ router.route('/projects')
       res.status(200).json(projects);
     })
     .populate('course')
-    .populate('proposer.value')
-    .populate('responsible.value')
-    .populate('advisor.value')
-    .populate('examiner.value')
+    .populate('proposer.user')
+    .populate('responsible.user')
+    .populate('advisor.user')
+    .populate('examiner.user')
     .populate('student')
   })
 
@@ -64,10 +64,10 @@ router.route('/projects')
         }
       })
     .populate('course')
-    .populate('proposer.value')
-    .populate('responsible.value')
-    .populate('advisor.value')
-    .populate('examiner.value')
+    .populate('proposer.user')
+    .populate('responsible.user')
+    .populate('advisor.user')
+    .populate('examiner.user')
     .populate('student')
     })
 
@@ -100,6 +100,17 @@ router.route('/projects')
         });
       });
 
+router.route('/course')
+  // get all courses
+  .get((req, res) => {
+    Course
+    .find((err, courses) => {
+      if (err) {
+        res.status(500).send(err);
+      }
+      res.status(200).json(courses);
+    })
+  });
 
 router.route('/advisor')
   // get all advisors

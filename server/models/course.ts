@@ -3,14 +3,13 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var course = new Schema({
-  _id : {
-    type : String,
-    auto: true
-  },
+  
+  _id : String,
 
-  year : {
-    type : String
-  }
+  course : String,
+
+  year : Number
+
 });
 
 

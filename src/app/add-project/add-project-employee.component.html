@@ -1,0 +1,61 @@
+<div *ngIf="project" class="row">
+  <div>
+    <h2>New Project</h2>
+    <h3 *ngIf="submitted">Your project has been recorded.</h3>
+  </div>
+</div>
+
+<div *ngIf="project" class="row">
+  <form class="col-md-12">
+    
+    <div class="form-group">
+      <label for="project-id">id</label>
+      <input class="form-control" name="id" [(ngModel)]="project._id" placeholder="Title" />
+    </div>
+
+    <div class="form-group">
+      <select class="form-control" name="course" [(ngModel)]="project.course">
+        <label for="project-course">Course</label>
+        <option *ngFor="let course of courses">{{course._id}}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Title</label>
+      <input class="form-control" name="title" [(ngModel)]="project.title" placeholder="Title"/>
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <input class="form-control" name="description" [(ngModel)]="project.description" placeholder="Description"/>
+    </div>
+
+    <div class="form-group">
+      <label>Proposer</label> <br>
+      <input #proposername (keyup)="0" type="text" class="person" name="proposer-name" [(ngModel)]="project.proposer.name" placeholder="Name"/>
+      <input #proposermobile (keyup)="0" type="text" class="person" name="proposer-mobile" [(ngModel)]="project.proposer.mobile" placeholder="Mobile"/>
+      <input #proposermail (keyup)="0" type="text" class="person" name="proposer-mail" [(ngModel)]="project.proposer.mail" placeholder="Mail"/>
+    </div> <br>
+
+    <div class="form-group">
+      <label>Responsible</label> <br>
+      <input #responsiblename value="{{proposername.value}}" (keyup)="0" type="text" class="person" name="responsible-name"  [(ngModel)]="project.responsible.name" placeholder="Name"/>
+      <input #responsiblemobile value="{{proposermobile.value}}" (keyup)="0" type="text" class="person" name="responsible-mobile" [(ngModel)]="project.responsible.mobile" placeholder="Mobile"/>
+      <input #responsiblemail value="{{proposermail.value}}" (keyup)="0" type="text" class="person" name="responsible-mail" [(ngModel)]="project.responsible.mail" placeholder="Mail"/>
+    </div> <br>
+
+    <div class="form-group">
+      <label>Advisor</label> <br>
+      <input #advisorname value="{{proposername.value}}" type="text" class="person" name="advisor-name" [(ngModel)]="project.advisor.name" placeholder="Name"/>
+      <input #advisormobile value="{{proposermobile.value}}" type="text" class="person" name="advisor-mobile" [(ngModel)]="project.advisor.mobile" placeholder="Mobile"/>
+      <input #advisormail value="{{proposermail.value}}" type="text" class="person" name="advisor-mail" [(ngModel)]="project.advisor.mail" placeholder="Mail"/>
+    </div> <br>
+
+    <div class="form-group">
+      <label>Student(s) (Student no.)</label>
+      <input type="number" class="form-control" name="student" [(ngModel)]="project.student" placeholder="Student(s)"/>
+    </div>
+
+  </form>
+  <button (click)="createProject(project)">Create Project</button>
+</div>

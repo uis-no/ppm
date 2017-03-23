@@ -5,20 +5,30 @@ import 'rxjs/add/operator/toPromise';
 //import 'rxjs/add/operator/map';
 //import 'rxjs/add/operator/catch';
 import { Project } from './project.interface';
+import { Course } from './course.interface';
 
 @Injectable()
 export class ProjectsService {
 
   constructor(private http: Http) { }
 
-  // Get all posts from the API
+  // Get all projects
   getAllProjects(): Promise<Project[]> {
     return this.http.get('/api/projects')
-                .toPromise()
-                .then(res => res.json() as Project[])
-                .catch(this.handleError);
+                    .toPromise()
+                    .then(res => res.json() as Project[])
+                    .catch(this.handleError);
 
   }
+
+  // Get all courses
+  getAllCourses(): Promise<Course[]> {
+    return this.http.get('/api/course')
+                    .toPromise()
+                    .then(res => res.json() as Course[])
+                    .catch(this.handleError);
+  }
+
 //TODO: add observables to accommodate for many requests
 
   //Get a project by id

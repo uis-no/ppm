@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { ProjectsComponent } from './projects/projects.component';
 
 import { ProjectsService } from './projects.service';
-import { AddProjectComponent } from './add-project/add-project.component';
+import { AddProjectComponent } from './add-project/add-project-employee.component';
 import { ProjectDetailsComponent } from './project-details/project-details.component';
 
 const ROUTES = [

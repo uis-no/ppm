@@ -7,6 +7,8 @@ var session = require('express-session');
 
 var fs = require('fs');
 
+// TODO: store mail, eduPersonAffiliation, and name if one is found in profile or another easily accessible object
+
 var strategy = new SamlStrategy(
   {
     callbackUrl: 'http://localhost:3000/login/callback',
@@ -44,20 +46,28 @@ router.use(passport.session());
 
 
 // kjøres ikke ved login
+
 router.get('/', function (req, res) {
+    console.log("on /: " + req.user);
     if (req.user.isAuthenticated()) {
-      res.render('../../src/app/projects/projects.component.html',
+      res.render('/projects',
         {
           user: req.user.mail
         });
     }
   });
 
-  router.get('/projects', function (req, res) {
+  router.get('/user', function (req, res, err) {
+    console.log("on user: " + req.user);
+    if(err) {
+      return res.status(500).send(err);
+    }
+
     if (req.isAuthenticated()) {
-      res.render('../../src/app/projects/projects.component.html',
+      console.log("user is authenticated");
+      return res.send(
         {
-          user: req.user.mail
+          user: req.user
         });
     }
   });
@@ -70,7 +80,7 @@ router.post('/login/callback',
   }
 );
 
-// kjøres ikke ved login
+// Part of the login process, /login/callback uses this route to redirect to feide's login site
 router.get('/login',
   passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),
   function(req, res) {
@@ -79,7 +89,8 @@ router.get('/login',
 );
 
 router.get('/logout', function(req, res) {
-  return strategy.logout(req, function(err, uri) {
+  console.log("on logout: " + req.user);
+  strategy.logout(req.user, function(err, uri) {
     return res.redirect(uri);
   });
 });

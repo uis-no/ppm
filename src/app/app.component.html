@@ -1,17 +1,15 @@
-<div class = "app">
-<div class = "header-cont">
+
 <header>
-  <h1>{{title}}</h1>
+  <h1><a [routerLink]="['/']">{{title}}</a></h1>
   <nav>
     <ul>
-      <li><button [routerLink]="['/']">About</button></li>
       <li><button [routerLink]="['/app-homepage']">Home</button></li>
-      <li><button [routerLink]="['/projects']">New project</button></li>
+      <li><button [routerLink]="['/new-project']">New project</button></li>
     </ul>
   </nav>
 </header>
+<!-- BUG: karma testsuite does not regconize the element and fails all tests because of it -->
+<div class="container">
+  <router-outlet></router-outlet>
 </div>
-<router-outlet></router-outlet>
-</div>
-<footer>
-</footer>
+

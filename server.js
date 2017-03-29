@@ -3,12 +3,15 @@ const express = require('express');
 const path = require('path');
 const http = require('http');
 const bodyParser = require('body-parser');
+const exphbs  = require('express-handlebars');
 const mongoose = require('mongoose');
-
 var url = 'mongodb://admin:admin@ds061196.mlab.com:61196/ppm';
 
-// Get our API routes
+// Get our routes
 const api = require('./server/routes/api');
+//const routes = require('./feide/index'); // Feide
+//const sso = require('./feide/sso'); // Feide
+const routes = require('./feide/passport-saml');
 
 const app = express();
 
@@ -27,8 +30,14 @@ var db = mongoose.connect(url, (err) => {
   console.log('Connected to database!');
 });
 
-// Set our api routes
+// Set our routes
 app.use('/api', api);
+//app.use('/', routes);
+//app.use('/sso', sso);
+app.use('/', routes);
+
+app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
 
 // Catch all other routes and return the index file
 app.get('*', (req, res) => {

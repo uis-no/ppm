@@ -7,17 +7,13 @@ import { RouterModule } from '@angular/router';
 import { AUTH_PROVIDERS }      from 'angular2-jwt';
 import { AuthGuard } from './auth.guard';
 import { Auth } from './auth.service';
+import { ProjectsService } from './projects.service';
 
 import { AppComponent } from './app.component';
-import { PostsComponent } from './posts/posts.component';
-
-import { PostsService } from './posts.service';
-import { TestfolderComponent } from './testfolder/testfolder.component';
-import { DisplayProjectComponent } from './display-project/display-project.component';
-import { DisplayAllProjectsComponent } from './display-all-projects/display-all-projects.component';
 import { HomepageComponent } from './homepage/homepage.component';
-
-
+import { ProjectsComponent } from './projects/projects.component';
+import { AddProjectComponent } from './add-project/add-project.component';
+import { ProjectDetailsComponent } from './project-details/project-details.component';
 
 const ROUTES = [
   {
@@ -27,34 +23,30 @@ const ROUTES = [
   },
   {
     path: 'projects',
-    component: PostsComponent, canActivate: [AuthGuard]
-  },
-  {
-    path: 'app-testfolder',
-    component: TestfolderComponent
-  },
-  {
-    path: 'app-display-project/:id',
-    component: DisplayProjectComponent
-  },
-  {
-    path: 'app-display-all-projects',
-    component: DisplayAllProjectsComponent
+
+    component: ProjectsComponent, canActivate: [AuthGuard]
   },
   {
     path: 'app-homepage',
     component: HomepageComponent
+  },
+  {
+    path: 'new-project',
+    component: AddProjectComponent
+  },
+  {
+    path: 'projects/project-details/:id',
+    component: ProjectDetailsComponent
   }
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
-    PostsComponent,
-    TestfolderComponent,
-    DisplayProjectComponent,
-    DisplayAllProjectsComponent,
-    HomepageComponent
+    HomepageComponent,
+    ProjectsComponent,
+    AddProjectComponent,
+    ProjectDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -62,7 +54,8 @@ const ROUTES = [
     HttpModule,
     RouterModule.forRoot(ROUTES)
   ],
-  providers: [PostsService, AUTH_PROVIDERS, AuthGuard, Auth],
+
+  providers: [ProjectsService, AUTH_PROVIDERS, AuthGuard, Auth],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

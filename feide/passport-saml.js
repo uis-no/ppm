@@ -1,0 +1,87 @@
+var SamlStrategy = require('passport-saml').Strategy;
+var saml = require('passport-saml');
+var express = require('express');
+var router = express.Router();
+var passport = require('passport');
+var session = require('express-session');
+
+var fs = require('fs');
+
+var strategy = new SamlStrategy(
+  {
+    callbackUrl: 'http://localhost:3000/login/callback',
+    entryPoint: 'https://idp-test.feide.no/simplesaml/saml2/idp/SSOService.php',
+    issuer: 'http://localhost:3000/feide/metadata',
+    logoutUrl: 'https://idp-test.feide.no/simplesaml/saml2/idp/SingleLogoutService.php',
+    logoutCallbackUrl: 'http://localhost:3000/logout',
+    identifierFormat: 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient'
+  },
+
+  function(profile, done) {
+    router.profile;
+    return done(null, profile);
+  })
+
+var metadata = strategy.generateServiceProviderMetadata();
+
+  passport.serializeUser(function (user, done) {
+    done(null, user);
+  });
+
+  passport.deserializeUser(function (user, done) {
+    done(null, user);
+  });
+
+passport.use(strategy);
+
+router.use(session({
+  secret: 'social justice cat',
+  resave: false,
+  saveUninitialized: true
+}));
+router.use(passport.initialize());
+router.use(passport.session());
+
+
+// kjøres ikke ved login
+router.get('/', function (req, res) {
+    if (req.user.isAuthenticated()) {
+      res.render('../../src/app/projects/projects.component.html',
+        {
+          user: req.user.mail
+        });
+    }
+  });
+
+  router.get('/projects', function (req, res) {
+    if (req.isAuthenticated()) {
+      res.render('../../src/app/projects/projects.component.html',
+        {
+          user: req.user.mail
+        });
+    }
+  });
+
+// kjøres ved login
+router.post('/login/callback',
+  passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),
+  function(req, res) {
+    res.redirect('/');
+  }
+);
+
+// kjøres ikke ved login
+router.get('/login',
+  passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),
+  function(req, res) {
+    res.redirect('/');
+  }
+);
+
+router.get('/logout', function(req, res) {
+  return strategy.logout(req, function(err, uri) {
+    return res.redirect(uri);
+  });
+});
+
+  module.exports = router;

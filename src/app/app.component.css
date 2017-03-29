@@ -31,11 +31,7 @@ ul li{
 	list-style: none;
 	margin-right: 10px;
 	z-index: 10;
-<<<<<<< HEAD
     color: white;
-=======
-  color: white;
->>>>>>> master
 }
 
 nav{
@@ -70,19 +66,15 @@ router-outlet {
   position: absolute;
 }
 
-/*footer*/
-.app {
-=======
+
 /*footer*/
 .app {
     position: relative;
->>>>>>> master
     min-height: 100%;
     width: 100%;
     margin-bottom: 60px; /* bottom = footer height */
     display: table;
 }
-<<<<<<< HEAD
 /*
 footer {
     bottom: 0;
@@ -92,7 +84,7 @@ footer {
     background-color: #424242;
     padding-left: 5px;
 }*/
-=======
+
 footer {
     position: absolute;
     height: 60px;
@@ -103,4 +95,4 @@ footer {
     left: 0;
     padding-left: 5px;
 }
->>>>>>> master
+

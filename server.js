@@ -17,12 +17,14 @@ const app = express();
 
 // Parsers for POST data
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Point static path to dist
 app.use(express.static(path.join(__dirname, 'dist')));
 
+mongoose.Promise = global.Promise;
 var db = mongoose.connect(url, (err) => {
+  // TODO: catch db timeout error
   if (err) {
     console.log('Could not connect to database. Reason: ');
     console.log(err);

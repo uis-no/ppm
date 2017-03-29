@@ -45,8 +45,15 @@ router.use(passport.initialize());
 router.use(passport.session());
 
 
-// kjøres ikke ved login
+router.get('/isAuthenticated', (req, res) => {
+  if (req.isAuthenticated()) {
+    return res.json(true);
+  } else {
+    return res.json(false);
+  }
+});
 
+// kjøres ikke ved login
 router.get('/', function (req, res) {
     console.log("on /: " + req.user);
     if (req.user.isAuthenticated()) {

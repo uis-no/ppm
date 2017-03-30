@@ -3,11 +3,19 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
+//import { MarkdownModule } from 'angular2-markdown';
+import { FileUploadModule } from 'ng2-file-upload';
 
 import { AppComponent } from './app.component';
-import { ProjectsComponent } from './projects/projects.component';
 
+// Directive
+import { MarkdownDirective } from './markdown.directive';
+
+// Services
 import { ProjectsService } from './projects.service';
+
+// Controllers
+import { ProjectsComponent } from './projects/projects.component';
 import { AddProjectComponent } from './add-project/add-project.component';
 import { ProjectDetailsComponent } from './project-details/project-details.component';
 
@@ -40,6 +48,7 @@ const ROUTES = [
   ],
   imports: [
     BrowserModule,
+    FileUploadModule,
     FormsModule,
     HttpModule,
     RouterModule.forRoot(ROUTES)

@@ -17,12 +17,14 @@ const app = express();
 
 // Parsers for POST data
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Point static path to dist
 app.use(express.static(path.join(__dirname, 'dist')));
 
+mongoose.Promise = global.Promise;
 var db = mongoose.connect(url, (err) => {
+  // TODO: catch db timeout error
   if (err) {
     console.log('Could not connect to database. Reason: ');
     console.log(err);
@@ -31,17 +33,21 @@ var db = mongoose.connect(url, (err) => {
 });
 
 // Set our routes
-app.use('/api', api);
-//app.use('/', routes);
-//app.use('/sso', sso);
 app.use('/', routes);
+app.use('/api', api);
+//app.use('/sso', sso);
+
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
 // Catch all other routes and return the index file
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/index.html'));
+  if (req.isAuthenticated()) {
+      res.sendFile(path.join(__dirname, 'dist/index.html'));
+  } else {
+      res.sendFile(path.join(__dirname, 'login.html'));
+  }
 });
 
 /**

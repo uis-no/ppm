@@ -14,7 +14,7 @@ export class AddProjectComponent{
   project: Project = {
     course: '',
     title: '',
-    description: '',
+    description: '##\tBackground\n\n##\tMotivation \n\n##\tObjectives',
     proposer: [],
     approved: false,
     responsible: [],
@@ -25,7 +25,7 @@ export class AddProjectComponent{
   };
 
   constructor(private projectsService: ProjectsService) { }
-  
+
   createProject(project: Project) {
     this.projectsService.createProject(project).then(() => {
       console.log("project" + project);

@@ -4,16 +4,27 @@
     <div class="card card-block">
       <h4 class="card-title">{{ project.title }}</h4>
       <p class="card-text">{{ project.description }}</p>
-      <p> Course: {{ project.course._id }} </p>
-      <p> Year: {{ project.course.year }} </p>
-      <p> Proposer: {{ project.proposer.name }} </p>
-      <p> Approved: {{ project.approved }} </p>
-      <p>Responsible: {{ project.responsible.name }} </p>
-      <p> Advisor: {{ project.advisor.name }} </p>
-      <p> Examiner: {{ project.examiner.name }} </p>
-      <p *ngFor="let student of project.student"> Student: {{ student.name }} </p>
+      <p class="card-text"> Course: {{ project.course._id }} </p>
+      <p class="card-text"> Year: {{ project.course.year }} </p>
+      <p class="card-text"> Proposer: {{ project.proposer.name }} </p>
+      <p class="card-text"> Approved: {{ project.approved }} </p>
+      <p class="card-text">Responsible: {{ project.responsible.name }} </p>
+      <p class="card-text"> Advisor: {{ project.advisor.name }} </p>
+      <p class="card-text" *ngIf="project.examiner"> Examiner: {{ project.examiner.name }} </p>
+      <p class="card-text" *ngIf="!project.examiner"> Examiner: null </p>
+      <p class="card-text" *ngFor="let student of project.student"> Student: {{ student.name }} </p>
     </div>
   </div>
-</div>
+  <div>
+      <div ng2FileDrop
+        name="uploadedFile"
+        (fileOver)="fileOverBase($event)"
+        [uploader]="uploader"
+        type="file"
+        style="border: dotted 3px lightgray; height: 64px;">Drop your submission here</div>
+      <div>
 
-<a href="http://localhost:3000/logout">Logout {{ user }} from Feide?</a>
+      <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">Upload All</button>
+    </div>
+</div>
+</div>

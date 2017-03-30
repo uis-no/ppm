@@ -3,6 +3,11 @@ var saml = require('passport-saml');
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
+var session = require('express-session');
+
+var fs = require('fs');
+
+// TODO: store mail, eduPersonAffiliation, and name if one is found in profile or another easily accessible object
 
 var strategy = new SamlStrategy(
   {
@@ -14,20 +19,12 @@ var strategy = new SamlStrategy(
     identifierFormat: 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient'
   },
 
-/*  module.exports.Profile = (profile, done) => { 
-      return done(null, profile);
-  } );*/
-  
   function(profile, done) {
-    //exports.user = profile.mail;
-    //module.exports.profile;
-    console.log(profile);
     router.profile;
     return done(null, profile);
   })
 
 var metadata = strategy.generateServiceProviderMetadata();
-//console.log(metadata);
 
   passport.serializeUser(function (user, done) {
     done(null, user);
@@ -39,25 +36,47 @@ var metadata = strategy.generateServiceProviderMetadata();
 
 passport.use(strategy);
 
+router.use(session({
+  secret: 'social justice cat',
+  resave: false,
+  saveUninitialized: true
+}));
 router.use(passport.initialize());
+router.use(passport.session());
+
+
+router.get('/isAuthenticated', (req, res) => {
+  if (req.isAuthenticated()) {
+    return res.json(true);
+  } else {
+    return res.json(false);
+  }
+});
 
 // kjøres ikke ved login
 router.get('/', function (req, res) {
-    if (req.isAuthenticated()) {
-      res.render('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/src/app/projects/projects.component.html',
+    console.log("on /: " + req.user);
+    if (req.user.isAuthenticated()) {
+      res.render('/projects',
         {
           user: req.user
         });
-    } 
+    }
   });
 
-  router.get('/projects', function (req, res) {
+  router.get('/user', function (req, res, err) {
+    console.log("on user: " + req.user);
+    if(err) {
+      return res.status(500).send(err);
+    }
+
     if (req.isAuthenticated()) {
-      res.render('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/src/app/projects/projects.component.html',
+      console.log("user is authenticated");
+      return res.send(
         {
           user: req.user
         });
-    } 
+    }
   });
 
 // kjøres ved login
@@ -68,7 +87,7 @@ router.post('/login/callback',
   }
 );
 
-// kjøres ikke ved login
+// Part of the login process, /login/callback uses this route to redirect to feide's login site
 router.get('/login',
   passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),
   function(req, res) {
@@ -77,7 +96,8 @@ router.get('/login',
 );
 
 router.get('/logout', function(req, res) {
-  return strategy.logout(req, function(err, uri) {
+  console.log("on logout: " + req.user);
+  strategy.logout(req.user, function(err, uri) {
     return res.redirect(uri);
   });
 });

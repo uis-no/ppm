@@ -22,6 +22,7 @@ export class ProjectsService {
 //TODO: add observables to accommodate for many requests
 
   //Get a project by id
+  // TODO: find out how to cast objectid to string or number
   getProject(id:number): Promise<Project> {
         return this.http.get(`/api/projects/${id}`)
                         .toPromise()

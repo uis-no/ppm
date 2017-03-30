@@ -6,6 +6,15 @@ var project = new Schema({
   // ISSUE : ObjectId is not recognized as a valid type, will use number until resolved
   _id : Number,
 
+  /* TODO: use this to remove the need to manually assign an id
+  _id :{
+    type: mongoose.Types.ObjectId,
+    index: true,
+    required: true,
+    auto: true
+  },
+  */
+
   course : { type: String, ref: 'Course' },
 
   title : String,
@@ -25,7 +34,11 @@ var project = new Schema({
   student : [ { type: Number, ref: 'Student' } ],
 
   //time_limits : Array
-  
+
+  submission : {
+    type: Schema.Types.ObjectId,
+    ref: 'fs.files'
+  }
 });
 
 

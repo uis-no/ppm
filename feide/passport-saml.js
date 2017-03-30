@@ -21,7 +21,7 @@ var strategy = new SamlStrategy(
   function(profile, done) {
     //exports.user = profile.mail;
     //module.exports.profile;
-    //console.log(profile);
+    console.log(profile);
     router.profile;
     return done(null, profile);
   })
@@ -44,18 +44,18 @@ router.use(passport.initialize());
 // kjøres ikke ved login
 router.get('/', function (req, res) {
     if (req.isAuthenticated()) {
-      res.render('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/src/app/posts/posts.component.html',
+      res.render('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/src/app/projects/projects.component.html',
         {
-          user: req.user.mail
+          user: req.user
         });
     } 
   });
 
   router.get('/projects', function (req, res) {
     if (req.isAuthenticated()) {
-      res.render('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/src/app/posts/posts.component.html',
+      res.render('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/src/app/projects/projects.component.html',
         {
-          user: req.user.mail
+          user: req.user
         });
     } 
   });

@@ -1,18 +1,37 @@
 import { Component, OnInit } from '@angular/core';
-import { ProjectsService } from '../projects.service';
-import { Project } from '../project.interface';
-import { Course } from '../course.interface';
+import { CoursesService } from '../services/courses.service';
+import { EmployeesService } from '../services/employee.service';
+import { ProjectsService } from '../services/projects.service';
+import { Course } from '../interfaces/course.interface';
+import { Employee } from '../interfaces/employee.interface';
+import { Project } from '../interfaces/project.interface';
 import 'rxjs/add/operator/map';
 
 @Component({
   selector: 'new-project',
   templateUrl: './add-project-employee.component.html',
   styleUrls: ['./add-project.component.css'],
-  providers: [ProjectsService]
+  providers: [CoursesService, EmployeesService, ProjectsService]
 })
+
+
+
 export class AddProjectComponent implements OnInit {
 
   submitted: boolean = false;
+
+  courses: Course[];
+
+  employee: Employee = {
+    name: '',
+    mail: '',
+    mobile: '',
+    course: ''
+  };
+
+  employees: Employee[];
+
+  name: string;
 
   project: Project = {
     course: null,
@@ -27,20 +46,40 @@ export class AddProjectComponent implements OnInit {
 //    time_limits: []
   };
 
-  courses: Course[];
+  constructor(private coursesService: CoursesService, private projectsService: ProjectsService, 
+              private employeeService: EmployeesService) { }
 
-  constructor(private projectsService: ProjectsService) { }
 
-    ngOnInit() {
-    this.projectsService
+
+  ngOnInit() {
+
+    this.coursesService
       .getAllCourses()
       .then((courses: Course[]) => {
         this.courses = courses.map((course) => {
           return course;
         });
       });
+
+    this.employeeService
+      .getAllEmployees()
+      .then((employees: Employee[]) => {
+        this.employees = employees.map((employee) => {
+          console.log(employee);
+          return employee;
+        });
+      });
+
   }
   
+
+
+/*  getEmployee(name: string) {
+    this.employeeService.getEmployee(this.name).then((employee: Employee) => {
+    this.employee = employee;
+      });
+  }*/
+
   createProject(project: Project) {
     this.projectsService.createProject(project).then(() => {
       console.log("project" + project);
@@ -48,4 +87,5 @@ export class AddProjectComponent implements OnInit {
       this.submitted = true;
     });
   }
+
 }

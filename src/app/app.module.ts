@@ -7,7 +7,8 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { ProjectsComponent } from './projects/projects.component';
 
-import { ProjectsService } from './projects.service';
+import { EmployeesService } from './services/employee.service';
+import { ProjectsService } from './services/projects.service';
 import { AddProjectComponent } from './add-project/add-project-employee.component';
 import { ProjectDetailsComponent } from './project-details/project-details.component';
 
@@ -44,7 +45,7 @@ const ROUTES = [
     HttpModule,
     RouterModule.forRoot(ROUTES)
   ],
-  providers: [ProjectsService],
+  providers: [EmployeesService, ProjectsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

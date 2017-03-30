@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ProjectsService } from '../projects.service';
-import { Project } from '../project.interface';
+import { ProjectsService } from '../services/projects.service';
+import { Project } from '../interfaces/project.interface';
 import { ProjectDetailsComponent } from '../project-details/project-details.component';
 import 'rxjs/add/operator/map';
 //require('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/feide/passport-saml');
@@ -41,16 +41,16 @@ export class ProjectsComponent implements OnInit {
 
   createNewProject() {
     var project: Project = {
-    course: '',
-    title: '',
-    description: '',
-    proposer: [],
-    approved: false,
-    responsible: [],
-    advisor: [],
-    examiner: [],
-    student: [],
-//    time_limits: []
+      course: '',
+      title: '',
+      description: '',
+      proposer: [],
+      approved: false,
+      responsible: [],
+      advisor: [],
+      examiner: [],
+      student: [],
+  //    time_limits: []
     };
     this.selectProject(project);
   }

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ProjectsService } from '../projects.service';
-import { Project } from '../project.interface';
+import { ProjectsService } from '../services/projects.service';
+import { Project } from '../interfaces/project.interface';
 
 @Component({
   selector: 'project-details-component',
@@ -9,6 +9,9 @@ import { Project } from '../project.interface';
   styleUrls: ['./project-details.component.css'],
   providers: [ProjectsService]
 })
+
+
+
 export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   project: Project;
@@ -30,4 +33,5 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
+
 }

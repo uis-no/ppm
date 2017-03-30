@@ -3,26 +3,19 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var student = new Schema({
-  _id : {
-    type : Number,
-    auto: true
-  },
 
-  name : {
-    type : String
-  },
+  _id : Number,
 
-  mail : {
-    type : String
-  },
+  name : String,
 
-  mobile : {
-    type : String
-  },
+  mail : String,
 
-  grades : {
-      type : Array
-  }
+  mobile : String,
+
+  grades : Array,
+
+  course : { type: String, ref: 'Course' }
+
 });
 
 

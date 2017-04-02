@@ -3,21 +3,24 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
-//import { MarkdownModule } from 'angular2-markdown';
+
 import { FileUploadModule } from 'ng2-file-upload';
+import { MarkdownDirective } from './directives/markdown.directive';
 
 import { AppComponent } from './app.component';
 
+// Services
+import { LoginService } from './services/passport.service';
 import { EmployeesService } from './services/employee.service';
 import { ProjectsService } from './services/projects.service';
-import { AddProjectComponent } from './add-project/add-project-employee.component';
+import { FileService } from './services/file.service';
 
-// Directive
-//import { MarkdownDirective } from './markdown.directive';
+import { AddProjectComponent } from './add-project/add-project-employee.component';
 
 // Controllers
 import { ProjectsComponent } from './projects/projects.component';
 import { ProjectDetailsComponent } from './project-details/project-details.component';
+import { ProjectsPendingComponent } from './projects-pending/projects-pending.component';
 
 const ROUTES = [
   {
@@ -44,7 +47,9 @@ const ROUTES = [
     AppComponent,
     ProjectsComponent,
     AddProjectComponent,
-    ProjectDetailsComponent
+    ProjectDetailsComponent,
+    ProjectsPendingComponent,
+    MarkdownDirective
   ],
   imports: [
     BrowserModule,
@@ -53,7 +58,7 @@ const ROUTES = [
     HttpModule,
     RouterModule.forRoot(ROUTES)
   ],
-  providers: [EmployeesService, ProjectsService],
+  providers: [EmployeesService, ProjectsService, LoginService, FileService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

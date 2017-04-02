@@ -1,25 +1,33 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectsService } from '../services/projects.service';
+import { FileService } from '../services/file.service';
 import { Project } from '../interfaces/project.interface';
+// 3rd party js library
+//import * as Marked from 'marked';
+
+import { MarkdownService } from '../services/markdown.service';
 
 import { FileUploader } from 'ng2-file-upload';
+
 
 @Component({
   selector: 'project-details',
   templateUrl: './project-details.component.html',
   styleUrls: ['./project-details.component.css'],
-  providers: [ProjectsService]
+  providers: [ProjectsService, FileService, MarkdownService]
 })
 
 
 
 export class ProjectDetailsComponent implements OnInit, OnDestroy {
+  private id: number = 0;
 
+  private blob: Blob;
 
   public uploader:FileUploader = new FileUploader({
     url: '',
-    method: 'PUT'
+    method: 'POST'
   });
   public hasBaseDropZoneOver:boolean = false;
 
@@ -30,7 +38,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   project: Project;
   private sub: any;
   //id: string;
-  private id: number;
+
 
   private get getid(): number {
     return this.id;
@@ -38,11 +46,13 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   private set setid(id: number) {
     this.id = id;
   }
+  output: string;
 
-  constructor(private projectsService: ProjectsService, private route: ActivatedRoute) {
+  constructor(private projectsService: ProjectsService, private fileService: FileService,
+    private md: MarkdownService, private route: ActivatedRoute) {
     this.sub = this.route.params.subscribe(params =>  {
       this.setid = Number.parseInt(params['id']);
-      this.uploader.setOptions({ url: 'http://localhost:3000/api/projects/' + this.getid });
+      this.uploader.setOptions({ url: 'http://localhost:3000/api/projects/' + this.getid + '/submission' });
     });
   }
 
@@ -50,8 +60,14 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   ngOnInit() {
       this.projectsService.getProject(this.getid).then((project: Project) => {
         this.project = project;
+
+        this.output = this.md.convert(this.project.description);
       });
 
+      this.fileService.getFile(this.getid).then((blob: Blob) => {
+        this.blob = blob;
+        console.log(this.blob);
+      });
   }
 
   ngOnDestroy() {

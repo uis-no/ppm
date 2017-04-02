@@ -9,6 +9,12 @@ const mongoose = require('mongoose');
 var mongoDriver = mongoose.mongo;
 var db = mongoose.connection;
 
+// TODO: extract to models folder
+var Schema = mongoose.Schema;
+FileSchema = new Schema({}, { strict: false, collection: 'fs.files' });
+var File = mongoose.model('File', FileSchema);
+
+
 // TODO: allow for multiple file uploads
 var upload = multer({ dest: 'tmp/'}).single('file');
 
@@ -35,10 +41,70 @@ var Ext_examiner = require('../models/ext_examiner.ts');
 var Project = require('../models/project.ts');
 var Student = require('../models/student.ts');
 
+router.route('/projects/unreviewed')
+  .get((req, res) => {
+    Project.find({ approved : false }, (err, projects) => {
+      if (err) {
+        return res.status(500).send(err);
+      } else {
+        return res.status(200).json(projects);
+      }
+    });
+  });
 
+router.route('/projects/:_id/submission')
+  // Reads the file from database and creates a stream the client can user
+  .get((req, res) => {
+    var gfs = new Gridfs(db.db, mongoDriver);
+    Project.findOne({ _id : req.params._id }, (err, project) => {
+      if (err) {
+        return res.status(500).send(err);
+      } else {
+        File.findOne({ _id : project.submission }, (err, file) => {
+          console.log(file);
+          if (err) {
+            return res.send(err);
+          } else {
+            var readStream = gfs.createReadStream(file);
+            console.log(readStream);
+            readStream.pipe(res);
+          }
+        });
+      }
+    });
+  })
+  .post((req, res) => {
+    var gfs = new Gridfs(db.db, mongoDriver);
+    Project.findOne({ _id : req.params._id }, (err, project) => {
+      /* multer's upload uploads a file to a tmp folder on disk, we use
+        gridfs-stream and fs to read the file here and write it to the database,
+        we then delete the file from the tmp folder
+      */
+      upload(req, res, (err) => {
+        var writeStream = gfs.createWriteStream({
+          filename: req.file.originalname
+        });
+
+        var readStream = fs.createReadStream('tmp/' + req.file.filename)
+        // Deletes file from tmp folder
+          .on("end", () => {
+            fs.unlink("tmp/" + req.file.filename, (err) => {
+              res.status(200).json(readStream.id);
+            })
+          })
+          .on("err", () => {
+            res.send("error uploading file");
+          })
+          // reads the input as it writes the output
+          .pipe(writeStream);
+          // saves the id reference of child file to parent project
+          project.submission = readStream.id;
+          project.save();
+      });
+    });
+  });
 
 router.route('/company')
-
   // get all companies
   .get((req, res) => {
     Company
@@ -76,8 +142,6 @@ router.route('/course')
       res.status(200).json(courses);
     })
   });
-
-
 
 router.route('/employee')
 
@@ -182,55 +246,7 @@ router.route('/projects')
       res.status(200).json({ message: 'Your project has been created.'});
       }
     });
-  })
-
-    // update a project by id
-  .put((req, res) => {
-    var gfs = new Gridfs(db.db, mongoDriver);
-    Project.findOne({ _id : req.params._id }, (err, project) => {
-      /* multer's upload uploads a file to a tmp folder on disk, we use
-        gridfs-stream and fs to read the file here and write it to the database,
-        we then delete the file from the tmp folder
-      */
-      upload(req, res, (err) => {
-        var writeStream = gfs.createWriteStream({
-          filename: req.file.originalname
-        });
-
-        var readStream = fs.createReadStream('tmp/' + req.file.filename)
-        // Deletes file from tmp folder
-          .on("end", () => {
-            fs.unlink("tmp/" + req.file.filename, (err) => {
-              res.status(200).json(readStream.id);
-            })
-          })
-          .on("err", () => {
-            res.send("error uploading file");
-          })
-          // reads the input as it writes the output
-          .pipe(writeStream);
-          // saves the id reference of child file to parent project
-          project.submission = readStream.id;
-          project.save();
-      });
-    });
-  })
-
-  // delete a project by id
-  .delete((req, res) => {
-    var obj = req.body;
-    var project = new Project(obj);
-
-    Project.findOneAndRemove({ _id : project._id }, project, (err) => {
-      if (err) {
-        res.status(500).send(err);
-      } else {
-        res.status(200).json({ message: 'Your project has been deleted.'});
-      }
-    });
   });
-  
-  
 
 router.route('/projects/:_id')
 

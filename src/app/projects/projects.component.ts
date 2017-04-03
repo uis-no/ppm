@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ProjectsService } from '../projects.service';
-import { Project } from '../project.interface';
+import { ProjectsService } from '../services/projects.service';
+import { Project } from '../interfaces/project.interface';
 import { ProjectDetailsComponent } from '../project-details/project-details.component';
 import 'rxjs/add/operator/map';
 //require('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/feide/passport-saml');
@@ -28,33 +28,33 @@ export class ProjectsComponent implements OnInit {
         });
       });
   }
-
-  private getIndexOfProject = (projectId : Number) => {
+/*
+  private getIndexOfProject = (projectId : String) => {
     return this.projects.findIndex((project) => {
-      return project._id === projectId;
+      return project._id.$oid === projectId;
     });
   }
-
+*/
   selectProject(project: Project) {
     this.selectedProject = project;
   }
 
   createNewProject() {
     var project: Project = {
-    course: '',
-    title: '',
-    description: '',
-    proposer: [],
-    approved: false,
-    responsible: [],
-    advisor: [],
-    examiner: [],
-    student: [],
-//    time_limits: []
+      course: '',
+      title: '',
+      description: '',
+      proposer: [],
+      approved: false,
+      responsible: [],
+      advisor: [],
+      examiner: [],
+      student: [],
+  //    time_limits: []
     };
     this.selectProject(project);
   }
-
+/*
   deleteProject = (projectId: Number) => {
     var idx = this.getIndexOfProject(projectId);
     if (idx !== -1) {
@@ -77,7 +77,7 @@ export class ProjectsComponent implements OnInit {
       this.selectProject(project);
     }
     return this.projects;
-  }
+  }*/
 
   spInitSSO(binding) {
     window.location.href = '/sso/spinitsso-' + (binding === 0 ? 'redirect' : 'post');

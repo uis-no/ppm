@@ -4,53 +4,54 @@ import { Http, Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 //import 'rxjs/add/operator/map';
 //import 'rxjs/add/operator/catch';
-import { Project } from './project.interface';
+import { Project } from '../interfaces/project.interface';
 
 @Injectable()
 export class ProjectsService {
 
   constructor(private http: Http) { }
 
-  // Get all posts from the API
+  // Get all projects
   getAllProjects(): Promise<Project[]> {
-    return this.http.get('/api/projects')
-                .toPromise()
-                .then(res => res.json() as Project[])
-                .catch(this.handleError);
-
+        return this.http.get('/api/projects')
+                        .toPromise()
+                        .then(res => res.json() as Project[])
+                        .catch(this.handleError);
   }
+
 //TODO: add observables to accommodate for many requests
 
   //Get a project by id
+  // TODO: find out how to cast objectid to string or number
   getProject(id:number): Promise<Project> {
-    return this.http.get(`/api/projects/${id}`)
-      .toPromise()
-      .then(res => res.json() as Project)
-      .catch(this.handleError);
+        return this.http.get(`/api/projects/${id}`)
+                        .toPromise()
+                        .then(res => res.json() as Project)
+                        .catch(this.handleError);
   }
 
   // Add new Project
   createProject(newProject: Project): Promise<Project> {
         return this.http.post('/api/projects', newProject)
-              .toPromise()
-              .then(res => res.json() as Project)
-              .catch(this.handleError);
+                        .toPromise()
+                        .then(res => res.json() as Project)
+                        .catch(this.handleError);
   }
 
    // Update a project
     updateProject (putProject: Project): Promise<Project> {
         return this.http.put(`/api/projects/` + putProject._id, putProject)
-              .toPromise()
-              .then(res => res.json() as Project)
-              .catch(this.handleError);
+                        .toPromise()
+                        .then(res => res.json() as Project)
+                        .catch(this.handleError);
     }
 
     // Delete a project
     deleteProject (delProjectId: Number): Promise<Number> {
         return this.http.delete(`/api/projects/` + delProjectId)
-                  .toPromise()
-                  .then(res => res.json() as Number)
-                  .catch(this.handleError);
+                        .toPromise()
+                        .then(res => res.json() as Number)
+                        .catch(this.handleError);
     }
 
   private handleError (error: any) {

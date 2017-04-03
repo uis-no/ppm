@@ -2,18 +2,72 @@
 <div class="container" *ngIf="project">
   <div class="row">
     <div class="card card-block">
+
       <h4 class="card-title">{{ project.title }}</h4>
+
       <p class="card-text">{{ project.description }}</p>
+
       <p> Course: {{ project.course._id }} </p>
+
       <p> Year: {{ project.course.year }} </p>
-      <p> Proposer: {{ project.proposer.name }} </p>
+
+      <p *ngFor="let proposer of project.proposer"> 
+          Proposer: <br> 
+          Employee no. / Student no. / Organisation no.: {{ proposer.user._id }} <br>
+          Full name / Company name: {{ proposer.user.name }} <br>
+          Mobile: {{ proposer.user.mobile }} <br>
+          Mail: {{ proposer.user.mail }} <br>
+      </p>
+
       <p> Approved: {{ project.approved }} </p>
-      <p>Responsible: {{ project.responsible.name }} </p>
-      <p> Advisor: {{ project.advisor.name }} </p>
-      <p> Examiner: {{ project.examiner.name }} </p>
-      <p *ngFor="let student of project.student"> Student: {{ student.name }} </p>
+
+      <p *ngFor="let responsible of project.responsible">
+          Responsible: <br> 
+          Employee no.: {{ responsible.user._id }} <br>
+          Full name: {{ responsible.user.name }} <br>
+          Mobile: {{ responsible.user.mobile }} <br>
+          Mail: {{ responsible.user.mail }} <br>
+      </p>
+
+      <p *ngFor="let advisor of project.advisor"> 
+          Advisor: <br> 
+          Employee no. / Organisation no.: {{ advisor.user._id }} <br>
+          Full name / Company name: {{ advisor.user.name }} <br>
+          Mobile: {{ advisor.user.mobile }} <br>
+          Mail: {{ advisor.user.mail }} <br>
+      </p>
+
+      <p *ngFor="let examiner of project.examiner"> 
+          Examiner: <br> 
+          Employee no. / Organisation no.: {{ examiner.user._id }} <br>
+          Full name / Company name: {{ examiner.user.name }} <br>
+          Mobile: {{ examiner.user.mobile }} <br>
+          Mail: {{ examiner.user.mail }} <br>
+      </p>
+
+      <p *ngIf="!project.examiner"> Examiner: None assigned </p>
+
+      <p *ngFor="let student of project.student"> 
+        Student: <br> 
+        Student no.: {{ student._id }} <br>
+        Full name: {{ student.name }} <br>
+        Mobile: {{ student.mobile }} <br>
+        Mail: {{ student.mail }} <br>
+      </p>
+
     </div>
   </div>
+  <div>
+      <div ng2FileDrop
+        name="uploadedFile"
+        (fileOver)="fileOverBase($event)"
+        [uploader]="uploader"
+        type="file"
+        style="border: dotted 3px lightgray; height: 64px;">Drop your submission here</div>
+      <div>
+
+      <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">Upload All</button>
+    </div>
+</div>
 </div>
 
-<a href="http://localhost:3000/logout">Logout {{ user }} from Feide?</a>

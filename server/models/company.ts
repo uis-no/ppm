@@ -3,22 +3,15 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var company = new Schema({
-  _id : {
-    type : Number,
-    auto: true
-  },
 
-  name : {
-    type : String
-  },
+  _id : Number,
 
-  mail : {
-    type : String
-  },
+  name : String,
 
-  mobile : {
-    type : String
-  }
+  mail : String,
+
+  mobile : String
+
 });
 
 

@@ -2,23 +2,16 @@ var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
-var examiner = new Schema({
-  _id : {
-    type : Number,
-    auto: true
-  },
+var ext_examiner = new Schema({
 
-  name : {
-    type : String
-  },
+  _id : Number,
 
-  mail : {
-    type : String
-  },
+  name : String,
 
-  mobile : {
-    type : String
-  }
+  mail : String,
+
+  mobile : String
+
 });
 
 

@@ -1,21 +1,34 @@
-import { Component } from '@angular/core';
 import { Auth }              from './auth.service';
-import { ProjectsService } from './projects.service';
-import { Project } from './project.interface';
+import { Component, OnInit } from '@angular/core';
+import { ProjectsService } from './services/projects.service';
+import { Project } from './interfaces/project.interface';
+import { LoginService } from './passport.service';
+
 
 
 @Component({
   selector: 'app-root',
-  providers: [ Auth, ProjectsService ],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  providers: [ProjectsService, LoginService, Auth]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  title = 'JARIDA Thesis Manager';
+  myAuth = false;
 
+  constructor (private loginService: LoginService, private auth: Auth) {
+  }
 
-  constructor(private auth: Auth) {}
+  ngOnInit () {
+    this.isAuthenticated();
+  }
 
-  title = 'Thesis Manager';
+  public isAuthenticated(){
+    this.loginService.getAuth().then(auth => {
+      this.myAuth = auth;
+    });
+  }
+
 
 }
 

@@ -1,7 +1,7 @@
 {
   "project": {
     "version": "1.0.0-beta.19-3",
-    "name": "mean-app"
+    "name": "Jarida"
   },
   "apps": [
     {
@@ -18,9 +18,10 @@
       "prefix": "app",
       "mobile": false,
       "styles": [
-        "styles.css"
+        "styles.css",
+        "../node_modules/prismjs/themes/prism-okaidia.css"
       ],
-      "scripts": [],
+      "scripts": ["../node_modules/marked/lib/marked.js"],
       "environments": {
         "source": "environments/environment.ts",
         "dev": "environments/environment.ts",

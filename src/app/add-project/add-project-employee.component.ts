@@ -5,13 +5,14 @@ import { ProjectsService } from '../services/projects.service';
 import { Course } from '../interfaces/course.interface';
 import { Employee } from '../interfaces/employee.interface';
 import { Project } from '../interfaces/project.interface';
+import { MarkdownService } from '../services/markdown.service';
 import 'rxjs/add/operator/map';
 
 @Component({
   selector: 'new-project',
   templateUrl: './add-project-employee.component.html',
   styleUrls: ['./add-project.component.css'],
-  providers: [CoursesService, EmployeesService, ProjectsService]
+  providers: [CoursesService, EmployeesService, ProjectsService, MarkdownService]
 })
 
 
@@ -46,8 +47,11 @@ export class AddProjectComponent implements OnInit {
 //    time_limits: []
   };
 
-  constructor(private coursesService: CoursesService, private projectsService: ProjectsService, 
-              private employeeService: EmployeesService) { }
+  output: string;
+  private toggle: boolean = false;
+
+  constructor(private coursesService: CoursesService, private projectsService: ProjectsService,
+              private employeeService: EmployeesService, private md: MarkdownService) { }
 
 
 
@@ -69,9 +73,19 @@ export class AddProjectComponent implements OnInit {
           return employee;
         });
       });
+  }
+
+
+  toggleMarkdown() {
+    if(this.toggle == true) {
+      this.toggle = false;
+    } else {
+      this.toggle = true;
+    }
+    this.output = this.md.convert(this.project.description);
 
   }
-  
+
 
 
 /*  getEmployee(name: string) {

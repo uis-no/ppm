@@ -7,7 +7,7 @@
 
 <div *ngIf="project" class="row">
   <form class="col-md-12">
-    
+
     <div class="form-group">
       <label for="project-id">id</label>
       <input class="form-control" name="id" [(ngModel)]="project._id" placeholder="Title" />
@@ -28,38 +28,40 @@
     <div class="form-group">
       <label>Description</label>
       <input class="form-control" name="description" [(ngModel)]="project.description" placeholder="Description"/>
+      <button (click)="toggleMarkdown()">toggle markdown</button>
+      <div *ngIf="toggle" [innerHTML]="output"></div>
     </div>
 
     <div class="form-group">
       <label>Proposer</label> <br>
-      <input #proposername (keyup)="0" type="text" class="person" name="proposer-name" 
+      <input #proposername (keyup)="0" type="text" class="person" name="proposer-name"
               [(ngModel)]="project.proposer.name" placeholder="Name"/>
-      <input #proposermobile (keyup)="0" type="text" class="person" name="proposer-mobile" 
+      <input #proposermobile (keyup)="0" type="text" class="person" name="proposer-mobile"
               [(ngModel)]="project.proposer.mobile" placeholder="Mobile"/>
-      <input #proposermail (keyup)="0" type="text" class="person" name="proposer-mail" 
+      <input #proposermail (keyup)="0" type="text" class="person" name="proposer-mail"
               [(ngModel)]="project.proposer.mail" placeholder="Mail"/>
     </div> <br>
 
     <div class="form-group">
       <label>Responsible</label> <br>
 
-<input type="text" name="myText" value="Norway" selectBoxOptions="Canada;Denmark;Finland;Germany;Mexico;Norway;Sweden;United Kingdom;United States"> 
+<input type="text" name="myText" value="Norway" selectBoxOptions="Canada;Denmark;Finland;Germany;Mexico;Norway;Sweden;United Kingdom;United States">
 
-      <input #responsiblename value="{{proposername.value}}" (keyup)="0" type="text" class="person" 
+      <input #responsiblename value="{{proposername.value}}" (keyup)="0" type="text" class="person"
               id="displayValue" name="responsible-name"  [(ngModel)]="project.responsible.name" placeholder="Name"/>
-      <input #responsiblemobile value="{{proposermobile.value}}" (keyup)="0" type="text" class="person" 
+      <input #responsiblemobile value="{{proposermobile.value}}" (keyup)="0" type="text" class="person"
               name="responsible-mobile" [(ngModel)]="project.responsible.mobile" placeholder="Mobile"/>
-      <input #responsiblemail value="{{proposermail.value}}" (keyup)="0" type="text" class="person" 
+      <input #responsiblemail value="{{proposermail.value}}" (keyup)="0" type="text" class="person"
               name="responsible-mail" [(ngModel)]="project.responsible.mail" placeholder="Mail"/>
     </div> <br>
 
     <div class="form-group">
       <label>Advisor</label> <br>
-      <input #advisorname value="{{responsiblename.value}}" type="text" class="person" name="advisor-name" 
+      <input #advisorname value="{{responsiblename.value}}" type="text" class="person" name="advisor-name"
               [(ngModel)]="project.advisor.name" placeholder="Name"/>
-      <input #advisormobile value="{{responsiblemobile.value}}" type="text" class="person" name="advisor-mobile" 
+      <input #advisormobile value="{{responsiblemobile.value}}" type="text" class="person" name="advisor-mobile"
               [(ngModel)]="project.advisor.mobile" placeholder="Mobile"/>
-      <input #advisormail value="{{responsiblemail.value}}" type="text" class="person" name="advisor-mail" 
+      <input #advisormail value="{{responsiblemail.value}}" type="text" class="person" name="advisor-mail"
               [(ngModel)]="project.advisor.mail" placeholder="Mail"/>
     </div> <br>
 

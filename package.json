@@ -23,6 +23,7 @@
     "@angular/platform-browser-dynamic": "~2.4.1",
     "@angular/router": "~3.4.1",
     "@types/marked": "0.0.28",
+    "angular2-jwt": "^0.1.28",
     "body-parser": "^1.15.2",
     "core-js": "^2.4.1",
     "express": "^4.14.0",

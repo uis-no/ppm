@@ -3,8 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { ProjectsService } from '../services/projects.service';
 import { FileService } from '../services/file.service';
 import { Project } from '../interfaces/project.interface';
-// 3rd party js library
-//import * as Marked from 'marked';
 
 import { MarkdownService } from '../services/markdown.service';
 

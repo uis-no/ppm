@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="card card-block" *ngIf="myAuth == false">
+    <h3>Velkommen til JARIDA</h3>
+    <p>Project proposal manager for Universitet i Stavanger</p>
+    <button>Logg på med Feide</button>
+  </div>
+
+  <div *ngIf="auth.authenticated() || myAuth == true">
+    <p>Something something, congrats you're logged in!</p>
+  </div>
+</div>
+
+<div *ngIf="myAuth == false">
+  <a class="navbar-brand" href="#">Auth0 - Angular 2</a>
+  <button class="btn btn-primary btn-margin" (click)="auth.login()" *ngIf="!auth.authenticated()">Log In</button>
+  <button class="btn btn-primary btn-margin" (click)="auth.logout()" *ngIf="auth.authenticated()">Log Out</button>
+</div>

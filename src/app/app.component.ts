@@ -1,19 +1,20 @@
-import { Component, OnInit } from '@angular/core';
 import { ProjectsService } from './services/projects.service';
 import { Project } from './interfaces/project.interface';
 import { LoginService } from './services/passport.service';
+import { Component, OnInit } from '@angular/core';
+import { Auth }              from './auth.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [ProjectsService, LoginService]
+  providers: [ProjectsService, LoginService, Auth]
 })
 export class AppComponent implements OnInit {
   title = 'JARIDA Thesis Manager';
-  auth = false;
+  myAuth = false;
 
-  constructor (private loginService: LoginService) {
+  constructor (private loginService: LoginService, private auth: Auth) {
   }
 
   ngOnInit () {
@@ -22,8 +23,7 @@ export class AppComponent implements OnInit {
 
   public isAuthenticated(){
     this.loginService.getAuth().then(auth => {
-      this.auth = auth;
+      this.myAuth = auth;
     });
   }
-
 }

@@ -19,32 +19,45 @@ import { AddProjectComponent } from './add-project/add-project-employee.componen
 
 // Controllers
 import { ProjectsComponent } from './projects/projects.component';
+import { AUTH_PROVIDERS }      from 'angular2-jwt';
+import { AuthGuard } from './auth.guard';
+import { Auth } from './auth.service';
+
+import { HomepageComponent } from './homepage/homepage.component';
 import { ProjectDetailsComponent } from './project-details/project-details.component';
 import { ProjectsPendingComponent } from './projects-pending/projects-pending.component';
 
 const ROUTES = [
   {
     path: '',
-    redirectTo: 'projects',
+    redirectTo: 'app-homepage',
     pathMatch: 'full'
   },
   {
     path: 'projects',
-    component: ProjectsComponent
+    component: ProjectsComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'app-homepage',
+    component: HomepageComponent
   },
   {
     path: 'new-project',
-    component: AddProjectComponent
+    component: AddProjectComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'projects/project-details/:id',
-    component: ProjectDetailsComponent
+    component: ProjectDetailsComponent,
+    canActivate: [AuthGuard]
   }
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
+    HomepageComponent,
     ProjectsComponent,
     AddProjectComponent,
     ProjectDetailsComponent,
@@ -58,7 +71,7 @@ const ROUTES = [
     HttpModule,
     RouterModule.forRoot(ROUTES)
   ],
-  providers: [EmployeesService, ProjectsService, LoginService, FileService],
+  providers: [EmployeesService, ProjectsService, LoginService, FileService,AUTH_PROVIDERS, AuthGuard, Auth],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

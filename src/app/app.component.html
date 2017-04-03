@@ -1,9 +1,11 @@
+
 <header>
   <h1><a [routerLink]="['/']">{{title}}</a></h1>
   <nav>
     <ul>
-      <li *ngIf="auth == true"><button [routerLink]="['/new-project']">New project</button></li>
-      <li *ngIf="auth == false"><a href="http://localhost:3000/login">Log in via Feide</a></li>
+      <li *ngIf="myAuth == true"><button [routerLink]="['/new-project']">New project</button></li>
+      <li *ngIf="myAuth == true"><button [routerLink]="['/projects']">Get All projects</button></li>
+      <li *ngIf="myAuth == false"><a href="http://localhost:3000/login">Log in via Feide</a></li>
     </ul>
   </nav>
 </header>

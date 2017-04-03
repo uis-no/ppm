@@ -1,0 +1,44 @@
+div{
+    border: solid 1px;
+    border-radius: 5px;
+    width: 90%;
+    min-height: 100%;
+    margin-left: 5%;
+    margin-top:10px;
+    padding: 5px;
+}
+
+h2{
+    margin-bottom: 10px;
+}
+
+h3{
+    font-size: 1em;
+}
+
+p{
+    position: relative;
+    margin-top: -4px;
+}
+
+table{
+    margin-top: 15px;
+}
+
+td{
+    vertical-align: top;
+    min-height: 100px;
+}
+
+#h3col{
+    width: 150px;
+    text-align: right;
+    padding-right: 10px;
+}
+
+button{
+    margin-left: 80%;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}

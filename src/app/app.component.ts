@@ -10,7 +10,7 @@ import { LoginService } from './passport.service';
   providers: [ProjectsService, LoginService]
 })
 export class AppComponent implements OnInit {
-  title = 'JARIDA Thesis Manager';
+  title = 'Jarida Thesis Manager';
   auth = false;
 
   constructor (private loginService: LoginService) {

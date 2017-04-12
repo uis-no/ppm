@@ -5,11 +5,13 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 //import { MarkdownModule } from 'angular2-markdown';
 import { FileUploadModule } from 'ng2-file-upload';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 
 import { EmployeesService } from './services/employee.service';
 import { ProjectsService } from './services/projects.service';
+import { StudentsService } from './services/students.service';
 import { AddProjectComponent } from './add-project/add-project-employee.component';
 
 // Directive
@@ -51,9 +53,10 @@ const ROUTES = [
     FileUploadModule,
     FormsModule,
     HttpModule,
-    RouterModule.forRoot(ROUTES)
+    RouterModule.forRoot(ROUTES),
+    NgbModule.forRoot()
   ],
-  providers: [EmployeesService, ProjectsService],
+  providers: [EmployeesService, ProjectsService, StudentsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

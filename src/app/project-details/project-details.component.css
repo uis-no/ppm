@@ -1,0 +1,40 @@
+.students{
+    float: left;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+}
+
+#studentdiv{
+    float: left;   
+    width: 100%;
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 30px;
+}
+
+.applyEdit{
+    position: absolute;
+    margin: 5px;
+    margin-left: 0;
+}
+
+.responsibles{
+    float: left;
+    padding-right: 20px;
+    padding-bottom: 20px;
+
+}
+
+#respdiv{
+    float: left;
+    width: 100%;
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+#info{
+    float: left;
+    padding-right: 40px;
+}

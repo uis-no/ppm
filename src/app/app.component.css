@@ -1,5 +1,6 @@
 /*header*/
 header{
+    margin-top: 0;
 	background-color: #424242;
 	height: 60px;
 	z-index: 2000;
@@ -19,6 +20,7 @@ button{
 }
 
 .header-cont{
+    margin-top: 0;
 	width: 100%;
 	position: relative;
 	top: 0px;

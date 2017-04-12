@@ -236,6 +236,22 @@ router.route('/projects/:_id')
 
   // get a project by id
   .get((req, res) => {
+    if(req.user.eduPersonAffiliation == 'student,member' ){ //funke som det skal, men er på feil plass.
+        Project.findOne({ _id : req.params._id, student: req.user._id}, (err, project) => {
+          if (err) {
+            res.status(500).send(err);
+          } else {
+           res.status(200).json(project);
+          }
+          })
+          .populate('course')
+          .populate('proposer.user')
+          .populate('responsible.user')
+          .populate('advisor.user')
+          .populate('examiner.user')
+          .populate('student')
+        
+    }else{
     Project.findOne({ _id : req.params._id }, (err, project) => {
       if (err) {
         res.status(500).send(err);
@@ -243,12 +259,13 @@ router.route('/projects/:_id')
         res.status(200).json(project);
       }
     })
-  .populate('course')
-  .populate('proposer.user')
-  .populate('responsible.user')
-  .populate('advisor.user')
-  .populate('examiner.user')
-  .populate('student')
+    .populate('course')
+    .populate('proposer.user')
+    .populate('responsible.user')
+    .populate('advisor.user')
+    .populate('examiner.user')
+    .populate('student')
+    }
   })
 
   // update a project by id

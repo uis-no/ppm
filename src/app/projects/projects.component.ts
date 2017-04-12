@@ -44,14 +44,14 @@ export class ProjectsComponent implements OnInit {
       course: '',
       title: '',
       description: '',
-      proposer: [],
+      proposer: [{role: '', user: ''}],
       approved: false,
-      responsible: [],
-      advisor: [],
-      examiner: [],
+      responsible: [{role: '', user: ''}],
+      advisor: [{role: '', user: ''}],
+      examiner: [{role: '', user: ''}],
       student: [],
   //    time_limits: []
-    };
+  };
     this.selectProject(project);
   }
 /*

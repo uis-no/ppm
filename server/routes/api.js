@@ -88,9 +88,10 @@ router.route('/employee')
     .find((err, employees) => {
       if (err) {
         res.status(500).send(err);
-      }
+      } else {
       res.status(200).json(employees);
-    })
+    }
+  });
   })
 
   // create new employee
@@ -303,12 +304,12 @@ router.route('/student')
 
   // get all students
   .get((req, res) => {
-    Proposer
-    .find((err, proposers) => {
+    Student
+    .find((err, students) => {
       if (err) {
         res.status(500).send(err);
       }
-      res.status(200).json(proposers);
+      res.status(200).json(students);
     })
   })
 

@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 //import { MarkdownModule } from 'angular2-markdown';
 import { FileUploadModule } from 'ng2-file-upload';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { AUTH_PROVIDERS }      from 'angular2-jwt';
 import { AuthGuard } from './auth.guard';
@@ -17,6 +18,7 @@ import { HomepageComponent } from './homepage/homepage.component';
 
 import { EmployeesService } from './services/employee.service';
 import { ProjectsService } from './services/projects.service';
+import { StudentsService } from './services/students.service';
 import { AddProjectComponent } from './add-project/add-project-employee.component';
 
 // Directive
@@ -65,10 +67,11 @@ const ROUTES = [
     FileUploadModule,
     FormsModule,
     HttpModule,
-    RouterModule.forRoot(ROUTES)
+    RouterModule.forRoot(ROUTES),
+    NgbModule.forRoot()
   ],
 
-  providers: [EmployeesService, ProjectsService, AUTH_PROVIDERS, AuthGuard, Auth],
+  providers: [EmployeesService, ProjectsService, StudentsService, AUTH_PROVIDERS, AuthGuard, Auth],
 
   bootstrap: [AppComponent]
 })

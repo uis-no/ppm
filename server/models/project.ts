@@ -15,23 +15,23 @@ var project = new Schema({
   },
   */
 
-  course : { type: string, ref: 'Course' },
+  course : { type: String, ref: 'Course' },
 
-  title : string,
+  title : String,
 
-  description : string,
+  description : String,
 
-  proposer : [ { role: string, user: { type: string, refPath: 'proposer.role' } } ],
+  proposer : [ { role: String, user: { type: String, refPath: 'proposer.role' } } ],
 
   approved : Boolean,
 
-  responsible : [ { role: string, user: { type: Number, refPath: 'responsible.role' } } ],
+  responsible : [ { role: String, user: { type: String, refPath: 'responsible.role' } } ],
 
-  advisor : [ { role: string, user: { type: Number, refPath: 'advisor.role' } } ],
+  advisor : [ { role: String, user: { type: String, refPath: 'advisor.role' } } ],
 
-  examiner : [ { role: string, user: { type: Number, refPath: 'examiner.role' } } ],
+  examiner : [ { role: String, user: { type: String, refPath: 'examiner.role' } } ],
 
-  student : [ { type: string, ref: 'Student' } ],
+  student : [ { type: String, ref: 'Student' } ],
 
   submission : {
     type: Schema.Types.ObjectId,

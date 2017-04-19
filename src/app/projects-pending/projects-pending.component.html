@@ -2,7 +2,7 @@
   <div class="row" *ngFor="let project of projects" (click)="selectProject(project)" [class.active]="project === selectedProject">
     <div class="card card-block" [routerLink]="['project-details/', project._id]">
       <h4 class="card-title">{{ project.title }}</h4>
-      <div [innerHTML]="output"></div>
+      <p class="card-text">{{ project.description }}</p>
       <p> Course: {{ project.course._id }} </p>
       <p> Year: {{ project.course.year }} </p>
       <p *ngFor="let proposer of project.proposer"> Proposer: {{ proposer.user.name }} </p>

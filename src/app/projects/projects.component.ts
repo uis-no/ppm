@@ -2,42 +2,38 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ProjectsService } from '../services/projects.service';
 import { Project } from '../interfaces/project.interface';
 import { ProjectDetailsComponent } from '../project-details/project-details.component';
+import { MarkdownService } from '../services/markdown.service';
 import 'rxjs/add/operator/map';
-//require('/Users/mariusjakobsen/Desktop/Bachelor-oppgave/feide/passport-saml');
 
 @Component({
   selector: 'project-list',
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.css'],
-  providers: [ProjectsService]
+  providers: [ProjectsService, MarkdownService]
 })
 export class ProjectsComponent implements OnInit {
   // instantiate posts to an empty object
   projects: Project[];
   selectedProject: Project;
+  output: string;
 
-  constructor(private projectsService: ProjectsService) { }
+  constructor(private projectsService: ProjectsService, private md: MarkdownService) { }
 
   ngOnInit() {
     this.projectsService
       .getAllProjects()
       .then((projects: Project[]) => {
         this.projects = projects.map((project) => {
-          console.log(project);
+          this.output = this.md.convert(project.description);
           return project;
         });
       });
   }
-/*
-  private getIndexOfProject = (projectId : String) => {
-    return this.projects.findIndex((project) => {
-      return project._id.$oid === projectId;
-    });
-  }
-*/
+
   selectProject(project: Project) {
     this.selectedProject = project;
   }
+
 
   createNewProject() {
     var project: Project = {
@@ -78,6 +74,7 @@ export class ProjectsComponent implements OnInit {
     }
     return this.projects;
   }*/
+
 
   spInitSSO(binding) {
     window.location.href = '/sso/spinitsso-' + (binding === 0 ? 'redirect' : 'post');

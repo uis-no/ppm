@@ -20,6 +20,12 @@ export class ProjectsService {
   }
 
 //TODO: add observables to accommodate for many requests
+getUnreviewedProjects(): Promise<Project[]> {
+        return this.http.get('/api/projects/unreviewed')
+                        .toPromise()
+                        .then(res => res.json() as Project[])
+                        .catch(this.handleError);
+}
 
   //Get a project by id
   // TODO: find out how to cast objectid to string or number

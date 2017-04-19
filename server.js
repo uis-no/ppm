@@ -23,8 +23,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'dist')));
 
 mongoose.Promise = global.Promise;
-var db = mongoose.connect(url, (err) => {
-  // TODO: catch db timeout error
+var db = mongoose.connect(url, { server: { socketOptions: {auto_reconnect: true, connectTimeoutMS: 3000}}}, (err) => {
   if (err) {
     console.log('Could not connect to database. Reason: ');
     console.log(err);
@@ -32,10 +31,27 @@ var db = mongoose.connect(url, (err) => {
   console.log('Connected to database!');
 });
 
+mongoose.connection.on('disconnected', () => {
+  console.log('mongoose connection disconnected');
+});
+mongoose.connection.on('error', (err) => {
+  console.log('mongoose connection experienced an error,\n ' + err);
+});
+mongoose.connection.on('open', () => {
+  console.log('mongoose connection has been opened');
+});
+
+var gracefulExit = () => {
+  mongoose.connection.close(() => {
+    console.log("Mongoose connection disconnected because app was terminated");
+    process.exit(0);
+  });
+}
+process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
+
 // Set our routes
 app.use('/', routes);
 app.use('/api', api);
-//app.use('/sso', sso);
 
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
@@ -43,11 +59,7 @@ app.set('view engine', 'handlebars');
 
 // Catch all other routes and return the index file
 app.get('*', (req, res) => {
-  if (req.isAuthenticated()) {
-      res.sendFile(path.join(__dirname, 'dist/index.html'));
-  } else {
-      res.sendFile(path.join(__dirname, 'login.html'));
-  }
+  res.sendFile(path.join(__dirname, 'dist/index.html'));
 });
 
 /**

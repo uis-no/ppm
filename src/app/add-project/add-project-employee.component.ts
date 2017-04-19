@@ -7,6 +7,7 @@ import { Course } from '../interfaces/course.interface';
 import { Employee } from '../interfaces/employee.interface';
 import { Project } from '../interfaces/project.interface';
 import { Student } from '../interfaces/student.interface';
+import { MarkdownService } from '../services/markdown.service';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -16,7 +17,9 @@ import {Observable} from 'rxjs/Observable';
   selector: 'new-project',
   templateUrl: './add-project-employee.component.html',
   styleUrls: ['./add-project.component.css'],
-  providers: [CoursesService, EmployeesService, ProjectsService, StudentsService]
+
+  providers: [CoursesService, EmployeesService, ProjectsService, StudentsService, MarkdownService]
+
 })
 
 
@@ -57,6 +60,7 @@ export class AddProjectComponent implements OnInit {
 //    time_limits: []
   };
 
+
 /*  student: Student = {
     _id: '',
     name: '',
@@ -69,9 +73,14 @@ export class AddProjectComponent implements OnInit {
   student: Student;
 
   userType: any;
+  output: string;
+  private toggle: boolean = false;
 
   constructor(private coursesService: CoursesService, private employeeService: EmployeesService, 
-              private projectsService: ProjectsService, private studentsService: StudentsService) { }
+              private projectsService: ProjectsService, private studentsService: StudentsService, private md: MarkdownService) { }
+
+
+
 
 
 
@@ -93,6 +102,16 @@ export class AddProjectComponent implements OnInit {
           return employee;
         });
       });
+  }
+
+
+  toggleMarkdown() {
+    if(this.toggle == true) {
+      this.toggle = false;
+    } else {
+      this.toggle = true;
+    }
+    this.output = this.md.convert(this.project.description);
 
     this.studentsService
       .getAllStudents()
@@ -104,7 +123,7 @@ export class AddProjectComponent implements OnInit {
       });
 
   }
-  
+
 
 
 /*  getEmployee(name: string) {
@@ -148,6 +167,7 @@ export class AddProjectComponent implements OnInit {
       this.submitted = true;
     });
   }
+
 
 
 
@@ -199,4 +219,5 @@ export class AddProjectComponent implements OnInit {
   }
 
 }
+
 

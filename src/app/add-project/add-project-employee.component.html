@@ -5,6 +5,7 @@
   </div>
 </div>
 
+
 <div *ngIf="project">
 
   <form (ngSubmit)="createProject(project, student1.value)" 
@@ -14,6 +15,7 @@
       <label for="project-id">ID</label>
       <input type="text" class="form-control" id="id" name="id" [(ngModel)]="project._id" placeholder="ID" size="15"/>
     </div>-->
+
 
 <!--    <div class="form-group col-md-3 projectform">
 -->
@@ -50,6 +52,7 @@
 
 
     <div class="form-group">
+
 
       <label for="proposer-name" class="control-label col-md-3">Proposer
         <div class="row">
@@ -117,6 +120,7 @@
       <input #advisormail value="{{responsiblemail.value}}" type="text" class="form-control" name="advisor-mail" 
               [(ngModel)]="project.advisor.mail" placeholder="Mail" required>-->
     </div>
+
 
     <div class="form-group">
       <label for="student" class="control-label col-md-3">Student</label>

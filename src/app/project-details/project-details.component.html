@@ -1,18 +1,23 @@
 <h1 *ngIf="project">Project Details for {{ project.title }}</h1>
 <div class="container" *ngIf="project">
   <div class="row">
+
     <div class="panel">
+
 
       <h4 class="">{{ project.title }}</h4>
 
+
       <button class="applyEdit" type="button" >Apply for Project</button>
       <button *ngIf="user.eduPersonAffiliation == 'employee,member'"[routerLink]="['/new-project']" class="applyEdit" type="button" >Edit Project</button>
+
 
       <p class="">{{ project.description }}</p>
       <div >
       <p id="info"> Course: {{ project.course._id }} </p>
 
       <p id="info"> Year: {{ project.course.year }} </p>
+
 
       <p id="info"> Approved: {{ project.approved }} </p>
       </div>
@@ -26,6 +31,7 @@
           Mail: {{ proposer.user.mail }} <br>
       </p>
 
+
       <p *ngFor="let responsible of project.responsible"  class= "responsibles">
           <strong>Responsible:</strong> <br> 
           Employee no.: {{ responsible.user._id }} <br>
@@ -34,6 +40,7 @@
           Mail: {{ responsible.user.mail }} <br>
       </p>
 
+
       <p *ngFor="let advisor of project.advisor"  class= "responsibles"> 
           <strong>Advisor:</strong> <br> 
           Employee no. / Organisation no.: {{ advisor.user._id }} <br>
@@ -41,6 +48,7 @@
           Mobile: {{ advisor.user.mobile }} <br>
           Mail: {{ advisor.user.mail }} <br>
       </p>
+
 
       <p *ngFor="let examiner of project.examiner"  class= "responsibles"> 
           <strong>Examiner:</strong> <br> 
@@ -51,6 +59,7 @@
       </p>
       
       <p *ngIf="!project.examiner"> Examiner: None assigned </p>
+
       </div>
       <br>
       <div id="studentdiv">
@@ -61,11 +70,12 @@
         Mobile: {{ student.mobile }} <br>
         Mail: {{ student.mail }} <br>
       </p>
+
       </div>
 
     </div>
   </div>
-  <div>
+  <div *ngIf="!project.submission">
       <div ng2FileDrop
         name="uploadedFile"
         (fileOver)="fileOverBase($event)"
@@ -75,7 +85,6 @@
       <div>
 
       <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">Upload All</button>
-    </div>
+  </div>
 </div>
 </div>
-

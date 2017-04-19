@@ -1,14 +1,14 @@
 <h1 *ngIf="project">Project Details for {{ project.title }}</h1>
 <div class="container" *ngIf="project">
   <div class="row">
-    <div class="card card-block">
+    <div class="panel">
 
-      <h4 class="card-title">{{ project.title }}</h4>
+      <h4 class="">{{ project.title }}</h4>
 
-      <!--<button class="applyEdit" type="button" >Apply for Project</button>-->
-      <button class="applyEdit" type="button" >Edit Project</button>
+      <button class="applyEdit" type="button" >Apply for Project</button>
+      <button *ngIf="user.eduPersonAffiliation == 'employee,member'"[routerLink]="['/new-project']" class="applyEdit" type="button" >Edit Project</button>
 
-      <p class="card-text">{{ project.description }}</p>
+      <p class="">{{ project.description }}</p>
       <div >
       <p id="info"> Course: {{ project.course._id }} </p>
 

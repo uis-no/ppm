@@ -1,17 +1,97 @@
-<div class="container">
-  <div class="card card-block" *ngIf="myAuth == false">
-    <h3>Velkommen til JARIDA</h3>
-    <p>Project proposal manager for Universitet i Stavanger</p>
-    <button>Logg på med Feide</button>
-  </div>
+<div class="container row">
+  <div class="panel panel-default login-container text-center col-md-12" *ngIf="(myAuth == false && !auth.authenticated()) || (myAuth == false && auth.authenticated())">
+    <!--<div class="panel-heading">
+      <h4>Welcome to Jarida, a project proposal manager in association with the University of Stavanger</h4>
+    </div>-->
+    <div class="panel-body">
+      <p>Log in to get started.</p>
+      <button class="btn btn-primary btn-margin" (click)="toFeide()">Log on using Feide</button>
+      <p></p>
+      <div *ngIf="myAuth == false" class="col">
+        <p *ngIf="!auth.authenticated()">or</p>
+        <button class="btn btn-primary btn-margin" (click)="auth.login()" *ngIf="!auth.authenticated()">Log In using Auth0</button>
+        <button class="btn btn-primary btn-margin" (click)="auth.logout()" *ngIf="auth.authenticated()">Log out from Auth0</button>
 
-  <div *ngIf="auth.authenticated() || myAuth == true">
-    <p>Something something, congrats you're logged in!</p>
+      </div>
+    </div>
   </div>
-</div>
+  <div></div>
 
-<div *ngIf="myAuth == false">
-  <a class="navbar-brand" href="#">Auth0 - Angular 2</a>
-  <button class="btn btn-primary btn-margin" (click)="auth.login()" *ngIf="!auth.authenticated()">Log In</button>
-  <button class="btn btn-primary btn-margin" (click)="auth.logout()" *ngIf="auth.authenticated()">Log Out</button>
+  <!-- Displays applied projects to student -->
+  <div class="col-md-12" *ngIf="myAuth == true">
+    <div class="col-md-8">
+      <div>
+        <div>
+          <h1 *ngIf="student == true">My Project</h1>
+          <h1 *ngIf="employee == true">Unreviewed Projects</h1>
+        </div>
+        <div *ngIf="student == true">
+          <div class="panel" [class.panel-success]="myProject.status == 'approved'"
+          [class.panel-danger]="myProject.status == 'rejected'"
+          [class.panel-default]="myProject.status == 'pending'"
+          [routerLink]="['project-details/', myProject._id]">
+            <div class="panel-heading">
+              <p class="panel-title panel-primary">{{myProject.title}}</p>
+            </div>
+            <div class="panel-body">
+              <p>{{myProject.description}}</p>
+              <p>Status: <span class="label" [class.label-danger]="myProject.status == 'rejected'"
+                [class.label-success]="myProject.status == 'approved'"
+                [class.label-default]="myProject.status == 'pending'">{{myProject.status}}</span></p>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="employee == true">
+          <div *ngFor="let project of projects">
+            <div class="panel" [class.panel-success]="project.status == 'approved'"
+            [class.panel-danger]="project.status == 'rejected'"
+            [class.panel-default]="project.status == 'pending'"
+            [routerLink]="['project-details/', project._id]">
+              <div class="panel-heading">
+                <p class="panel-title panel-primary">{{project.title}}</p>
+              </div>
+              <div class="panel-body">
+                <p>{{project.description}}</p>
+                <p>Status: <span class="label" [class.label-danger]="project.status == 'rejected'"
+                  [class.label-success]="project.status == 'approved'"
+                  [class.label-default]="project.status == 'pending'">{{project.status}}</span></p>
+              </div>
+              <button *ngIf="project.file" (click)="notify(project._id)" class="btn btn-success">Notify Examiner</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Side Panel / info bar -->
+    <div class="col-md-3 col-md-offset-1">
+      <div *ngIf="auth.authenticated() || myAuth == true" class="panel panel-info">
+        <div class="panel-heading">Logged in as {{user.mail}}</div>
+        <div *ngIf="student == true" class="panel-body">
+          <p>{{user.email}}</p>
+          <p>{{user.eduPersonPrincipalName}}</p>
+          <button *ngIf="myAuth == true" (click)="logoutFromFeide()">Log out from Feide</button>
+          <button class="btn btn-primary btn-margin" (click)="auth.logout()" *ngIf="auth.authenticated()">Log Out</button>
+        </div>
+        <div class="panel panel-info">
+          <div class="panel-heading"><h4>Deadlines</h4></div>
+          <!--<div class="panel-body"><p ngFor="let deadline of deadlines">{{deadline}}</p></div>-->
+          <div class="panel-body">
+            <h4>For faculty</h4>
+            <p>Post projects: 15.10.2017</p>
+            <p>Announce assigned projects: 15.12.2017</p>
+
+            <h4>For students</h4>
+            <p>Suggest project: 15.11.2017</p>
+            <p>Apply for projects: 15.12.2017</p>
+            <p>Accept project: 01.01.2018</p>
+            <p>Submit project: 15.05.2018</p>
+          </div>
+        </div>
+        <div *ngIf="employee == true" class="panel-body">
+          <p>Employee at feide logged in</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

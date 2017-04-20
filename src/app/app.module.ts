@@ -43,6 +43,11 @@ const ROUTES = [
     component: HomepageComponent
   },
   {
+    path: 'app-homepage/project-details/:id',
+    component: ProjectDetailsComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'new-project',
     component: AddProjectComponent,
     canActivate: [AuthGuard]
@@ -71,7 +76,7 @@ const ROUTES = [
     HttpModule,
     RouterModule.forRoot(ROUTES)
   ],
-  providers: [EmployeesService, ProjectsService, LoginService, FileService,AUTH_PROVIDERS, AuthGuard, Auth],
+  providers: [EmployeesService, ProjectsService, LoginService, FileService, AUTH_PROVIDERS, AuthGuard, Auth],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

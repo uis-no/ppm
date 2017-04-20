@@ -31,7 +31,9 @@ var project = new Schema({
 
   examiner : [ { role: String, user: { type: Number, refPath: 'examiner.role' } } ],
 
-  student : [ { type: Number, ref: 'Student' } ],
+  applied: [ [{type: Number, ref: 'Student'}]],
+  
+  assigned : [ { type: Number, ref: 'Student' } ],
 
   submission : {
     type: Schema.Types.ObjectId,

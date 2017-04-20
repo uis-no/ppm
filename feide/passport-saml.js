@@ -64,18 +64,9 @@ router.get('/', function (req, res) {
     }
   });
 
-  router.get('/user', function (req, res, err) {
-    console.log("on user: " + req.user);
-    if(err) {
-      return res.status(500).send(err);
-    }
-
+  router.get('/user', function (req, res) {
     if (req.isAuthenticated()) {
-      console.log("user is authenticated");
-      return res.send(
-        {
-          user: req.user
-        });
+      return res.json(req.user);
     }
   });
 

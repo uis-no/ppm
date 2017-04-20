@@ -8,8 +8,8 @@
       <h4 class="">{{ project.title }}</h4>
 
 
-      <button class="applyEdit" type="button" >Apply for Project</button>
-      <button *ngIf="user.eduPersonAffiliation == 'employee,member'"[routerLink]="['/new-project']" class="applyEdit" type="button" >Edit Project</button>
+      <button *ngIf = "student == true" class="applyEdit" type="button" (click) = "openCustomPopup()" >Apply for Project</button>
+      <button *ngIf = "ansatt == true" [routerLink]="['/new-project']" class="applyEdit" type="button" >Edit Project</button>
 
 
       <p class="">{{ project.description }}</p>

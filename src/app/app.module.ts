@@ -25,7 +25,6 @@ import { Auth } from './auth.service';
 
 import { HomepageComponent } from './homepage/homepage.component';
 import { ProjectDetailsComponent } from './project-details/project-details.component';
-import { ProjectsPendingComponent } from './projects-pending/projects-pending.component';
 
 const ROUTES = [
   {
@@ -66,7 +65,6 @@ const ROUTES = [
     ProjectsComponent,
     AddProjectComponent,
     ProjectDetailsComponent,
-    ProjectsPendingComponent,
     MarkdownDirective
   ],
   imports: [

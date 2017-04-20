@@ -5,6 +5,8 @@ const multer = require('multer');
 const fs = require('fs');
 const Gridfs = require('gridfs-stream');
 
+const Mail = require('../mail.ts');
+
 const jwt = require('express-jwt');
 
 const mongoose = require('mongoose');
@@ -42,6 +44,27 @@ var Ext_examiner = require('../models/ext_examiner.ts');
 var Project = require('../models/project.ts');
 var Student = require('../models/student.ts');
 var File = require('../models/file.ts');
+
+router.route('/projects/notify/:_id')
+  .get((req,res) => {
+    if(req.user.eduPersonAffiliation.includes('employee')) {
+      Project.findOne({ _id : req.params._id}, (err, project) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          if (project.status == 'assigned' && project.file) {
+            Employee.findOne({ user: project.examiner.user }, (err, examiner) => {
+              Mail.sendMail(examiner.mail, 'Project submission of ' + project.title + ' is ready for evaluation',
+              'Go to http:localhost:3000/projects/' + project._id + '/submission to download file');
+              return res.status(200).send('Mail sent to ' + examiner.name);
+            });
+          } else {
+            res.send("Could not find a submission for this project");
+          }
+        }
+      });
+    }
+  });
 
 router.route('/projects/unreviewed')
   .get((req, res) => {

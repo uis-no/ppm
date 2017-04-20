@@ -20,7 +20,8 @@ import { HomepageComponent } from './homepage/homepage.component';
 
 import { MarkdownDirective } from './directives/markdown.directive';
 
-
+import { BootstrapModalModule } from 'ng2-bootstrap-modal';
+import { ApplyComponent } from './project-details/apply.component';
 
 // Services
 import { LoginService } from './services/passport.service';
@@ -72,7 +73,8 @@ const ROUTES = [
     AddProjectComponent,
     ProjectDetailsComponent,
     ProjectsPendingComponent,
-    MarkdownDirective
+    MarkdownDirective,
+    ApplyComponent
   ],
   imports: [
     BrowserModule,
@@ -80,7 +82,8 @@ const ROUTES = [
     FormsModule,
     HttpModule,
     RouterModule.forRoot(ROUTES),
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    BootstrapModalModule
   ],
 
   providers: [EmployeesService, ProjectsService, StudentsService, AUTH_PROVIDERS, AuthGuard, Auth, LoginService, FileService],

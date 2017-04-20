@@ -1,18 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CoursesService } from '../services/courses.service';
 import { EmployeesService } from '../services/employee.service';
 import { ProjectsService } from '../services/projects.service';
+import { StudentsService } from '../services/students.service';
 import { Course } from '../interfaces/course.interface';
 import { Employee } from '../interfaces/employee.interface';
 import { Project } from '../interfaces/project.interface';
+import { Student } from '../interfaces/student.interface';
 import { MarkdownService } from '../services/markdown.service';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
   selector: 'new-project',
   templateUrl: './add-project-employee.component.html',
   styleUrls: ['./add-project.component.css'],
-  providers: [CoursesService, EmployeesService, ProjectsService, MarkdownService]
+
+  providers: [CoursesService, EmployeesService, ProjectsService, StudentsService, MarkdownService]
+
 })
 
 
@@ -30,28 +37,50 @@ export class AddProjectComponent implements OnInit {
     course: ''
   };
 
+  names: string[] = [];
+
   employees: Employee[];
 
-  name: string;
+  students: Student[];
+
+  studentCount: number = 1;
+/*  twoStudents: boolean = false;
+  threeStudents: boolean = false;*/
 
   project: Project = {
-    course: null,
+    course: '',
     title: '',
     description: '',
-    proposer: [],
+    proposer: [{role: '', user: ''}],
     status: 'pending',
-    responsible: [],
-    advisor: [],
-    examiner: [],
+    responsible: [{role: '', user: ''}],
+    advisor: [{role: '', user: ''}],
+    examiner: [{role: '', user: ''}],
     student: [],
 //    time_limits: []
   };
 
+
+/*  student: Student = {
+    _id: '',
+    name: '',
+    mail: '',
+    mobile: '',
+    grades: [],
+    course: ''
+  };*/
+
+  student: Student;
+
+  userType: any;
   output: string;
   private toggle: boolean = false;
 
-  constructor(private coursesService: CoursesService, private projectsService: ProjectsService,
-              private employeeService: EmployeesService, private md: MarkdownService) { }
+  constructor(private coursesService: CoursesService, private employeeService: EmployeesService,
+              private projectsService: ProjectsService, private studentsService: StudentsService, private md: MarkdownService) { }
+
+
+
 
 
 
@@ -69,7 +98,7 @@ export class AddProjectComponent implements OnInit {
       .getAllEmployees()
       .then((employees: Employee[]) => {
         this.employees = employees.map((employee) => {
-          console.log(employee);
+          this.names.push(employee.name);
           return employee;
         });
       });
@@ -84,6 +113,15 @@ export class AddProjectComponent implements OnInit {
     }
     this.output = this.md.convert(this.project.description);
 
+    this.studentsService
+      .getAllStudents()
+      .then((students: Student[]) => {
+        this.students = students.map((student) => {
+          this.names.push(student.name);
+          return student;
+        });
+      });
+
   }
 
 
@@ -94,12 +132,90 @@ export class AddProjectComponent implements OnInit {
       });
   }*/
 
-  createProject(project: Project) {
+
+
+  getUser(user: string) {
+/*    switch (this.userType) {                    // bruk denne senere
+
+    }*/
+    this.employeeService
+      .getEmployee(user)
+      .then((employee: Employee) => {
+        return employee.mobile;
+      });
+  }
+
+
+
+  createProject(project: Project, student: string) {
+    for (var i = 0; i < project.proposer.length; i++) {
+      this.employeeService.getEmployee(project.proposer[i].user)
+                          .then((proposer: Employee) => {
+
+                          })
+    }
+
+
+/*    for (i = 0; i < student.length; i++) {
+      this.studentsService.getStudent(student[i])
+                          .then((student: Student) => {
+                            project.student.push(student._id);
+                          });
+    }*/
     this.projectsService.createProject(project).then(() => {
-      console.log("project" + project);
-      console.log("this-project" + this.project);
+      console.log(project);
       this.submitted = true;
     });
+  }
+
+
+
+
+  searchAll = (text$: Observable<string>) =>
+    text$
+      .debounceTime(200)
+      .distinctUntilChanged()
+      .map(term => term.length < 2 ? []
+        : this.names.filter(v => new RegExp(term, 'gi').test(v)).splice(0, 10));
+
+
+
+  addStudent() {
+    this.studentCount++;
+    if (this.studentCount > 3) {this.studentCount = 3};
+/*    switch (this.studentCount) {
+      case 1:
+        this.twoStudents = false;
+        this.threeStudents = false;
+        break;
+      case 2:
+        this.twoStudents = true;
+        this.threeStudents = false;
+        break;
+      case 3:
+        this.twoStudents = true;
+        this.threeStudents = true;
+        break;
+    }*/
+  }
+
+  removeStudent() {
+    this.studentCount--;
+    if (this.studentCount < 1) {this.studentCount = 1};
+/*    switch (this.studentCount) {
+      case 1:
+        this.twoStudents = false;
+        this.threeStudents = false;
+        break;
+      case 2:
+        this.twoStudents = true;
+        this.threeStudents = false;
+        break;
+      case 3:
+        this.twoStudents = true;
+        this.threeStudents = true;
+        break;
+    }*/
   }
 
 }

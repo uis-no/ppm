@@ -1,8 +1,10 @@
+
 import { ProjectsService } from './services/projects.service';
 import { Project } from './interfaces/project.interface';
 import { LoginService } from './services/passport.service';
 import { Component, OnInit } from '@angular/core';
 import { Auth }              from './auth.service';
+
 
 @Component({
   selector: 'app-root',
@@ -11,6 +13,7 @@ import { Auth }              from './auth.service';
   providers: [ProjectsService, LoginService, Auth]
 })
 export class AppComponent implements OnInit {
+
   title = 'JARIDA Thesis Manager';
   myAuth = false;
   sumProjects: number = 0;
@@ -40,4 +43,5 @@ export class AppComponent implements OnInit {
     });
     return this.myAuth;
   }
+
 }

@@ -56,6 +56,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   // Reads the url and grabs the id and makes a call to the service to get the project based on id
   ngOnInit() {
+
       this.projectsService.getProject(this.getid).then((project: Project) => {
         this.project = project;
 
@@ -66,6 +67,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         this.blob = blob;
         console.log(this.blob);
       });
+
   }
 
   ngOnDestroy() {

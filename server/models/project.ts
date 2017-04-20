@@ -20,7 +20,7 @@ var project = new Schema({
 
   description : String,
 
-  proposer : [ { role: String, user: { type: Number, refPath: 'proposer.role' } } ],
+  proposer : [ { role: String, user: { type: String, refPath: 'proposer.role' } } ],
 
   status : String,
 
@@ -31,8 +31,6 @@ var project = new Schema({
   examiner : [ { role: String, user: { type: Number, refPath: 'examiner.role' } } ],
 
   student : [ { type: Number, ref: 'Student' } ],
-
-  //time_limits : Array
 
   submission : {
     type: Schema.Types.ObjectId,

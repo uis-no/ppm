@@ -8,7 +8,9 @@ var course = new Schema({
 
   course : String,
 
-  year : Number
+  year : Number,
+
+  //time_limits : Object
 
 });
 

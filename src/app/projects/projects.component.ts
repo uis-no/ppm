@@ -34,6 +34,48 @@ export class ProjectsComponent implements OnInit {
     this.selectedProject = project;
   }
 
+
+  createNewProject() {
+    var project: Project = {
+      course: '',
+      title: '',
+      description: '',
+      proposer: [{role: '', user: ''}],
+      status: 'pending',
+      responsible: [{role: '', user: ''}],
+      advisor: [{role: '', user: ''}],
+      examiner: [{role: '', user: ''}],
+      student: [],
+  //    time_limits: []
+  };
+    this.selectProject(project);
+  }
+/*
+  deleteProject = (projectId: Number) => {
+    var idx = this.getIndexOfProject(projectId);
+    if (idx !== -1) {
+      this.projects.splice(idx, 1);
+      this.selectProject(null);
+    }
+    return this.projects;
+  }
+
+  addProject = (project: Project) => {
+    this.projects.push(project);
+    this.selectProject(project);
+    return this.projects;
+  }
+
+  updateProject = (project: Project) => {
+    var idx = this.getIndexOfProject(project._id);
+    if (idx !== -1) {
+      this.projects[idx] = project;
+      this.selectProject(project);
+    }
+    return this.projects;
+  }*/
+
+
   spInitSSO(binding) {
     window.location.href = '/sso/spinitsso-' + (binding === 0 ? 'redirect' : 'post');
   }

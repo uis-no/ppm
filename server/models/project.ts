@@ -6,15 +6,14 @@ var project = new Schema({
   // ISSUE : ObjectId is not recognized as a valid type, will use number until resolved
   _id : Number,
 
-  /* TODO: use this to remove the need to manually assign an id
+  /* // TODO: use this to remove the need to manually assign an id
   _id :{
     type: mongoose.Types.ObjectId,
     index: true,
     required: true,
     auto: true
   },
-  */
-
+*/
   course : { type: String, ref: 'Course' },
 
   title : String,
@@ -23,7 +22,7 @@ var project = new Schema({
 
   proposer : [ { role: String, user: { type: String, refPath: 'proposer.role' } } ],
 
-  approved : Boolean,
+  status : String,
 
   responsible : [ { role: String, user: { type: Number, refPath: 'responsible.role' } } ],
 

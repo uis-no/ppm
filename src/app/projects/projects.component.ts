@@ -41,7 +41,7 @@ export class ProjectsComponent implements OnInit {
       title: '',
       description: '',
       proposer: [{role: '', user: ''}],
-      approved: false,
+      status: 'pending',
       responsible: [{role: '', user: ''}],
       advisor: [{role: '', user: ''}],
       examiner: [{role: '', user: ''}],

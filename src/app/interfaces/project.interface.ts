@@ -4,8 +4,8 @@ export class Project {
   course: string;
   title: string;
   description: string;
+  status: string;
   proposer: [{role: string, user: string}];
-  approved: boolean;
   responsible: [{role: string, user: string}];
   advisor: [{role: string, user: string}];
   examiner: [{role: string, user: string}];

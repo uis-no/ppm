@@ -19,12 +19,12 @@
       <p id="info"> Year: {{ project.course.year }} </p>
 
 
-      <p id="info"> Approved: {{ project.approved }} </p>
+      <p id="info"> Staus: {{ project.status }} </p>
       </div>
 
       <div id="respdiv">
-      <p *ngFor="let proposer of project.proposer"  class= "responsibles"> 
-          <strong>Proposer:</strong> <br> 
+      <p *ngFor="let proposer of project.proposer"  class= "responsibles">
+          <strong>Proposer:</strong> <br>
           Employee no. / Student no. / Organisation no.: {{ proposer.user._id }} <br>
           Full name / Company name: {{ proposer.user.name }} <br>
           Mobile: {{ proposer.user.mobile }} <br>
@@ -33,7 +33,7 @@
 
 
       <p *ngFor="let responsible of project.responsible"  class= "responsibles">
-          <strong>Responsible:</strong> <br> 
+          <strong>Responsible:</strong> <br>
           Employee no.: {{ responsible.user._id }} <br>
           Full name: {{ responsible.user.name }} <br>
           Mobile: {{ responsible.user.mobile }} <br>
@@ -41,8 +41,8 @@
       </p>
 
 
-      <p *ngFor="let advisor of project.advisor"  class= "responsibles"> 
-          <strong>Advisor:</strong> <br> 
+      <p *ngFor="let advisor of project.advisor"  class= "responsibles">
+          <strong>Advisor:</strong> <br>
           Employee no. / Organisation no.: {{ advisor.user._id }} <br>
           Full name / Company name: {{ advisor.user.name }} <br>
           Mobile: {{ advisor.user.mobile }} <br>
@@ -50,21 +50,21 @@
       </p>
 
 
-      <p *ngFor="let examiner of project.examiner"  class= "responsibles"> 
-          <strong>Examiner:</strong> <br> 
+      <p *ngFor="let examiner of project.examiner"  class= "responsibles">
+          <strong>Examiner:</strong> <br>
           Employee no. / Organisation no.: {{ examiner.user._id }} <br>
           Full name / Company name: {{ examiner.user.name }} <br>
           Mobile: {{ examiner.user.mobile }} <br>
           Mail: {{ examiner.user.mail }} <br>
       </p>
-      
+
       <p *ngIf="!project.examiner"> Examiner: None assigned </p>
 
       </div>
       <br>
       <div id="studentdiv">
-      <p style="font-weight: bold">Students:</p>      
-      <p *ngFor="let student of project.student"  class = "students"> 
+      <p style="font-weight: bold">Students:</p>
+      <p *ngFor="let student of project.student"  class = "students">
         Student no.: {{ student._id }} <br>
         Full name: {{ student.name }} <br>
         Mobile: {{ student.mobile }} <br>

@@ -1,16 +1,15 @@
 
-<header>
+<header *ngIf="myAuth == true">
   <h1><a [routerLink]="['/']">{{title}}</a></h1>
   <nav>
     <ul>
-      <li *ngIf="myAuth == true"><button [routerLink]="['/new-project']">New project</button></li>
-      <li *ngIf="myAuth == true"><button [routerLink]="['/projects']">Get All projects</button></li>
-      <li *ngIf="myAuth == false"><a href="http://localhost:3000/login">Log in via Feide</a></li>
+      <li *ngIf="myAuth == true || auth.authenticated()"><button [routerLink]="['/new-project']">New project</button></li>
+      <li *ngIf="myAuth == true || auth.authenticated()"><button [routerLink]="['/projects']">Get All projects <span class="badge">{{sumProjects}}</span></button></li>
     </ul>
   </nav>
 </header>
 
 <!-- BUG: karma testsuite does not regconize the element and fails all tests because of it -->
-<div class="container">
+<div class="container view-container">
   <router-outlet></router-outlet>
 </div>

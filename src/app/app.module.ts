@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 
 
 import { FileUploadModule } from 'ng2-file-upload';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AUTH_PROVIDERS }      from 'angular2-jwt';
 import { AuthGuard } from './auth.guard';
@@ -36,7 +36,6 @@ import { AddProjectComponent } from './add-project/add-project-employee.componen
 // Controllers
 import { ProjectsComponent } from './projects/projects.component';
 import { ProjectDetailsComponent } from './project-details/project-details.component';
-import { ProjectsPendingComponent } from './projects-pending/projects-pending.component';
 
 const ROUTES = [
   {
@@ -51,7 +50,12 @@ const ROUTES = [
   },
   {
     path: 'app-homepage',
-    component: HomepageComponent, 
+    component: HomepageComponent,
+  },
+  {
+    path: 'app-homepage/project-details/:id',
+    component: ProjectDetailsComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'new-project',
@@ -72,9 +76,10 @@ const ROUTES = [
     ProjectsComponent,
     AddProjectComponent,
     ProjectDetailsComponent,
-    ProjectsPendingComponent,
     MarkdownDirective,
-    ApplyComponent
+    ApplyComponent,
+    MarkdownDirective
+
   ],
   imports: [
     BrowserModule,
@@ -85,10 +90,7 @@ const ROUTES = [
     NgbModule.forRoot(),
     BootstrapModalModule
   ],
-
   providers: [EmployeesService, ProjectsService, StudentsService, AUTH_PROVIDERS, AuthGuard, Auth, LoginService, FileService],
-
-
   bootstrap: [AppComponent]
 })
 export class AppModule { }

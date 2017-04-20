@@ -5,22 +5,25 @@ const multer = require('multer');
 const fs = require('fs');
 const Gridfs = require('gridfs-stream');
 
+const Mail = require('../mail.ts');
+
+const jwt = require('express-jwt');
+
 const mongoose = require('mongoose');
 var mongoDriver = mongoose.mongo;
 var db = mongoose.connection;
 
-// TODO: extract to models folder
-var Schema = mongoose.Schema;
-FileSchema = new Schema({}, { strict: false, collection: 'fs.files' });
-var File = mongoose.model('File', FileSchema);
-
-
 // TODO: allow for multiple file uploads
 var upload = multer({ dest: 'tmp/'}).single('file');
 
+/*var authCheck = jwt({
+  secret: new Buffer('auth0secret'),
+  audience: '1QKH2NdD18m2ddQ5kXCzDuJeYTdQk1eA'
+});*/
+
 // we'll authenticate users from here
-// TODO: Allow cross origin requests
 router.use((req, res, next) => {
+  //console.log(authCheck);
   if (req.isAuthenticated()) {
     console.log(req.user.mail + " logged in and is using the api");
     next();
@@ -40,36 +43,70 @@ var Employee = require('../models/employee.ts');
 var Ext_examiner = require('../models/ext_examiner.ts');
 var Project = require('../models/project.ts');
 var Student = require('../models/student.ts');
+var File = require('../models/file.ts');
+
+router.route('/projects/notify/:_id')
+  .get((req,res) => {
+    if(req.user.eduPersonAffiliation.includes('employee')) {
+      Project.findOne({ _id : req.params._id}, (err, project) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          if (project.status == 'assigned' && project.file) {
+            Employee.findOne({ user: project.examiner.user }, (err, examiner) => {
+              Mail.sendMail(examiner.mail, 'Project submission of ' + project.title + ' is ready for evaluation',
+              'Go to http:localhost:3000/projects/' + project._id + '/submission to download file');
+              return res.status(200).send('Mail sent to ' + examiner.name);
+            });
+          } else {
+            res.send("Could not find a submission for this project");
+          }
+        }
+      });
+    }
+  });
 
 router.route('/projects/unreviewed')
   .get((req, res) => {
-    Project.find({ approved : false }, (err, projects) => {
-      if (err) {
-        return res.status(500).send(err);
-      } else {
-        return res.status(200).json(projects);
-      }
-    });
+    if (req.user.eduPersonAffiliation.includes('employee')) {
+      Project.find({ status : 'pending' }, (err, projects) => {
+        if (err) {
+          return res.status(500).send(err);
+        } else {
+          return res.status(200).json(projects);
+        }
+      })
+      .populate('course')
+      .populate('proposer.user')
+      .populate('responsible.user')
+      .populate('advisor.user')
+      .populate('examiner.user')
+      .populate('student');
+    } else {
+      return res.send("You're not authorized to access this.");
+    }
   });
 
 router.route('/projects/:_id/submission')
-  // Reads the file from database and creates a stream the client can user
+  // Reads the file from database and creates a stream the client can use
   .get((req, res) => {
     var gfs = new Gridfs(db.db, mongoDriver);
     Project.findOne({ _id : req.params._id }, (err, project) => {
       if (err) {
         return res.status(500).send(err);
       } else {
-        File.findOne({ _id : project.submission }, (err, file) => {
-          console.log(file);
-          if (err) {
-            return res.send(err);
-          } else {
-            var readStream = gfs.createReadStream(file);
-            console.log(readStream);
-            readStream.pipe(res);
-          }
-        });
+        if (project.submission) {
+          File.findOne({ _id : project.submission }, (err, file) => {
+            console.log(file);
+            if (err) {
+              return res.send(err);
+            } else {
+              var readStream = gfs.createReadStream(file);
+              console.log(readStream);
+              readStream.pipe(res);
+            }
+          });
+        }
       }
     });
   })
@@ -86,7 +123,7 @@ router.route('/projects/:_id/submission')
         });
 
         var readStream = fs.createReadStream('tmp/' + req.file.filename)
-        // Deletes file from tmp folder
+        // Deletes file from client tmp folder
           .on("end", () => {
             fs.unlink("tmp/" + req.file.filename, (err) => {
               res.status(200).json(readStream.id);
@@ -215,38 +252,110 @@ router.route('/ext_examiner')
   });
 
 
+// returns a students project
+router.route('/my_project')
+  .get((req, res) => {
+    if(req.user.eduPersonAffiliation.includes('student')) {
+      // finds student based on his mail, so we can retrieve his id
+      Student.findOne({ mail: req.user.mail }, (err, student) => {
+        if(err) {
+          return res.status(500).send(err);
+        } else {
+          Project
+          // finds all the projects that are approved or projects related to the student by email
+          .find({ student: student._id }, (err, projects) => {
+            if (err) {
+              return res.status(500).send(err);
+            }
+            return res.status(200).json(projects);
+          })
+          .populate('course')
+          .populate('proposer.user')
+          .populate('responsible.user')
+          .populate('advisor.user')
+          .populate('examiner.user')
+          .populate('student')
+        }
+      });
+    } else {
+      return res.send("You're not authorized to access this.");
+    }
+  });
 
 router.route('/projects')
 
   // get all projects
   .get((req, res) => {
-    Project
-    .find((err, projects) => {
-      if (err) {
-        res.status(500).send(err);
-      }
-      res.status(200).json(projects);
-    })
-    .populate('course')
-    .populate('proposer.user')
-    .populate('responsible.user')
-    .populate('advisor.user')
-    .populate('examiner.user')
-    .populate('student')
+    if(req.user.eduPersonAffiliation.includes('student')) {
+      // finds student based on his mail, so we can retrieve his id
+      Student.findOne({ mail: req.user.mail }, (err, student) => {
+        if(err) {
+          return res.status(500).send(err);
+        } else {
+          Project
+          // finds all the projects that are approved or projects related to the student by email
+          .find({$or:[{ status: 'approved' }, { student: student._id }]}, (err, projects) => {
+            if (err) {
+              return res.status(500).send(err);
+            }
+            return res.status(200).json(projects);
+          })
+          .populate('course')
+          .populate('proposer.user')
+          .populate('responsible.user')
+          .populate('advisor.user')
+          .populate('examiner.user')
+          .populate('student')
+        }
+      });
+
+    }
+    // return all projects if the user is an employee
+    else if(req.user.eduPersonAffiliation.includes('employee')) {
+      Project
+      .find((err, projects) => {
+        if (err) {
+          res.status(500).send(err);
+        }
+        res.status(200).json(projects);
+      })
+      .populate('course')
+      .populate('proposer.user')
+      .populate('responsible.user')
+      .populate('advisor.user')
+      .populate('examiner.user')
+      .populate('student')
+    } else {
+      return res.send("Could not verify your affiliation.");
+    }
+
   })
 
   // create new project
   .post((req, res) => {
     var obj = req.body;
     var project = new Project(obj);
-    console.log(project);
-    project.save((err) => {
-      if (err) {
-        res.status(500).send(err);
-      } else {
-      res.status(200).json({ message: 'Your project has been created.'});
-      }
-    });
+
+    if(req.user.eduPersonAffiliation.includes('employee')) {
+      project.status = 'approved';
+      project.save((err) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+        res.status(200).json({ message: 'Your project has been created.'});
+        }
+      });
+    } else {
+      project.status = 'pending';
+      project.save((err) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+        res.status(200).json({ message: 'Your project has been created.'});
+        }
+      });
+    }
+
   });
 
 router.route('/projects/:_id')

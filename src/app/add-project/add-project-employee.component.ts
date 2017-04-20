@@ -52,7 +52,7 @@ export class AddProjectComponent implements OnInit {
     title: '',
     description: '',
     proposer: [{role: '', user: ''}],
-    approved: false,
+    status: 'pending',
     responsible: [{role: '', user: ''}],
     advisor: [{role: '', user: ''}],
     examiner: [{role: '', user: ''}],
@@ -76,7 +76,7 @@ export class AddProjectComponent implements OnInit {
   output: string;
   private toggle: boolean = false;
 
-  constructor(private coursesService: CoursesService, private employeeService: EmployeesService, 
+  constructor(private coursesService: CoursesService, private employeeService: EmployeesService,
               private projectsService: ProjectsService, private studentsService: StudentsService, private md: MarkdownService) { }
 
 
@@ -151,10 +151,10 @@ export class AddProjectComponent implements OnInit {
     for (var i = 0; i < project.proposer.length; i++) {
       this.employeeService.getEmployee(project.proposer[i].user)
                           .then((proposer: Employee) => {
-                            
+
                           })
     }
-    
+
 
 /*    for (i = 0; i < student.length; i++) {
       this.studentsService.getStudent(student[i])
@@ -219,5 +219,3 @@ export class AddProjectComponent implements OnInit {
   }
 
 }
-
-

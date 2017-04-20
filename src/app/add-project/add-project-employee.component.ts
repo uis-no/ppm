@@ -39,7 +39,7 @@ export class AddProjectComponent implements OnInit {
     title: '',
     description: '',
     proposer: [],
-    approved: false,
+    status: 'pending',
     responsible: [],
     advisor: [],
     examiner: [],

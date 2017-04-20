@@ -5,7 +5,7 @@ export class Project {
   title: string;
   description: string;
   proposer: Array<Object>;
-  approved: boolean;
+  status: string;
   responsible: Array<Object>;
   advisor: Array<Object>;
   examiner: Array<Object>;

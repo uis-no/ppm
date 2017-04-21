@@ -21,11 +21,11 @@ var project = new Schema({
 
   description : String,
 
-  proposer : [ { role: String, user: { type: String, refPath: 'proposer.role' } } ],
+  proposer : { role: String, user: { type: String, refPath: 'proposer.role' } },
 
-  approved : Boolean,
+  status : String,
 
-  responsible : [ { role: String, user: { type: String, refPath: 'responsible.role' } } ],
+  responsible : { role: String, user: { type: String, refPath: 'responsible.role' } },
 
   advisor : [ { role: String, user: { type: String, refPath: 'advisor.role' } } ],
 

@@ -4,11 +4,10 @@ export class Project {
   course: string;
   title: string;
   description: string;
-  proposer: [{role: string, user: string}];
-  approved: boolean;
-  responsible: [{role: string, user: string}];
+  proposer: {role: string, user: string};
+  status: string;
+  responsible: {role: string, user: string};
   advisor: [{role: string, user: string}];
   examiner: [{role: string, user: string}];
   student: Array<string>;
- // time_limits: Array<string>;
 }

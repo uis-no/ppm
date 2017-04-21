@@ -175,7 +175,7 @@ router.route('/projects')
   .post((req, res) => {
     var obj = req.body;
     var project = new Project(obj);
-    console.log(project);
+    console.log('api' + project);
     project.save((err) => {
       if (err) {
         res.status(500).send(err);

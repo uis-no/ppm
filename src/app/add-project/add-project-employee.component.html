@@ -1,13 +1,12 @@
 <div *ngIf="project" class="row">
   <div>
     <h2>New Project</h2>
-    <h3 *ngIf="submitted">Your project has been recorded.</h3>
   </div>
 </div>
 
 <div *ngIf="project">
 
-  <form (ngSubmit)="createProject(project, student1.value)" 
+  <form (ngSubmit)="populateSchema(companyproposer.checked)" 
           #heroForm="ngForm" class="form-horizontal">
     
 <!--    <div class="form-group col-md-2 projectform">
@@ -53,10 +52,10 @@
 
       <label for="proposer-name" class="control-label col-md-3">Proposer
         <div class="row">
-          <div class="col-sm-12">
+          <div class="col-md-12">
         <div class="checkbox check">
             <label>
-              <input #companyproposer type="checkbox" (click)="0"> Company/external
+              <input #companyproposer type="checkbox" (click)="0"> New external user
             </label>
         </div>
       </div>
@@ -64,21 +63,21 @@
       </label>
       <div class="col-md-9">
         <input #proposername (keyup)="0" type="search" class="form-control" id="proposer-name" name="proposer-name"
-                [(ngModel)]="project.proposer[0].user" placeholder="Name" [ngbTypeahead]="searchAll" required> 
+                [(ngModel)]="project.proposer.user" placeholder="Name" [ngbTypeahead]="searchProposers" required> 
       </div>
       
       <label for="proposer-mobile" class="control-label sr-only"></label>
         <div class="col-md-9">
           <input #proposermobile *ngIf="companyproposer.checked == true" (keyup)="0" type="text" 
                   class="form-control" id="proposer-mobile" name="proposer-mobile" 
-                    [(ngModel)]="project.proposer.mobile" placeholder="Mobile" required> 
+                    [(ngModel)]="company.mobile" placeholder="Mobile" required> 
         </div>   
 
       <label for="proposer-mail" class="control-label sr-only"></label>
         <div class="col-md-9 col-md-offset-3">
           <input #proposermail *ngIf="companyproposer.checked == true" (keyup)="0" type="email" 
                   class="form-control" id="proposer-mail" name="proposer-mail"
-                  [(ngModel)]="project.proposer.mail" placeholder="Mail" required>
+                  [(ngModel)]="company.mail" placeholder="Mail" required>
         </div>
     </div>
 
@@ -90,7 +89,7 @@
       <div class="col-md-9">
         <input #responsiblename value="{{proposername.value}}" (keyup)="0" (change)="0" type="search" class="form-control" 
                 id="displayValue" id="responsible-name" name="responsible-name" 
-                [(ngModel)]="project.responsible[0].user" placeholder="Name" required>
+                [(ngModel)]="project.responsible.user" placeholder="Name" [ngbTypeahead]="searchResponsibles" required>
       </div>
 <!--      <label for="responsible-mobile" class="sr-only"></label>
           <input #responsiblemobile *ngIf="companyproposer.value == checked" value="{{proposermobile.value}}" (keyup)="0" type="text" class="form-control" 
@@ -107,7 +106,7 @@
         <div class="col-md-9">
           <input #advisorname value="{{responsiblename.value}}" type="search" 
                   class="form-control" id="advisor-name" name="advisor-name"
-                  [(ngModel)]="project.advisor[0].user" placeholder="Name" size="40" required>
+                  [(ngModel)]="project.advisor[0].user" placeholder="Name" [ngbTypeahead]="searchAdvisors" required>
         </div>
       </div>
 <!--      <label for="advisor-mobile" class="sr-only"></label>
@@ -122,21 +121,21 @@
       <label for="student" class="control-label col-md-3">Student</label>
       <div class="col-md-9">
         <input type="search" class="form-control" #student1 id="student1" name="student1" 
-                [(ngModel)]="project.student.name" placeholder="Name (If pre-assigned)" size="40">
-<!--        <input type="search" class="form-control" #student2 id="student2" name="student2" 
-                placeholder="Name (If pre-assigned)" size="40"> 
-        <input type="search" class="form-control" #student3 id="student3" name="student3" 
-                placeholder="Name (If pre-assigned)" size="40"> 
-        <button type="button" class="btn btn-success btn-block btn-xs" (click)="addStudent()">Add student</button>
-        <button type="button" class="btn btn-danger btn-block btn-xs" (click)="removeStudent()"
-                  style="margin-top: 0">Remove student</button>-->
+                [(ngModel)]="project.student[0]" placeholder="Name (If pre-assigned)" [ngbTypeahead]="searchStudents">
+        <input *ngIf="studentCount >= 2" type="search" class="form-control" #student2 id="student2" name="student2" 
+                [(ngModel)]="project.student[1]" placeholder="Name (If pre-assigned)" [ngbTypeahead]="searchStudents"> 
+        <input *ngIf="studentCount >= 3" type="search" class="form-control" #student3 id="student3" name="student3" 
+                [(ngModel)]="project.student[2]" placeholder="Name (If pre-assigned)" [ngbTypeahead]="searchStudents"> 
+        <button type="button" class="btn btn-success btn-xs col-md-6" (click)="addStudent()">Add student</button>
+        <button type="button" class="btn btn-danger btn-xs col-md-6" (click)="removeStudent()"
+                  style="margin-top: 0">Remove student</button>
       </div>
     </div>
 
     
 
-    <button type="submit" class="btn btn-primary btn-block" [disabled]="!heroForm.form.valid">Create Project</button>
-
+    <button type="submit" class="btn btn-primary btn-block" >Create Project</button>
+<!--[disabled]="!heroForm.form.valid"-->
   </form>
 
 </div>

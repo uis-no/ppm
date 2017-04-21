@@ -16,7 +16,7 @@ export class EmployeesService {
                         .catch(this.handleError);
   }
 
-  //Get a Employee by id
+  //Get a Employee by name
   getEmployee(name: string): Promise<Employee> {
         return this.http.get(`/api/employee/${name}`)
                         .toPromise()

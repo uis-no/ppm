@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { CompaniesService} from '../services/companies.service';
 import { CoursesService } from '../services/courses.service';
 import { EmployeesService } from '../services/employee.service';
 import { ProjectsService } from '../services/projects.service';
 import { StudentsService } from '../services/students.service';
+import { Company } from '../interfaces/company.interface';
 import { Course } from '../interfaces/course.interface';
 import { Employee } from '../interfaces/employee.interface';
 import { Project } from '../interfaces/project.interface';
@@ -16,62 +18,43 @@ import {Observable} from 'rxjs/Observable';
   selector: 'new-project',
   templateUrl: './add-project-employee.component.html',
   styleUrls: ['./add-project.component.css'],
-  providers: [CoursesService, EmployeesService, ProjectsService, StudentsService]
+  providers: [CompaniesService, CoursesService, EmployeesService, ProjectsService, StudentsService]
 })
-
-
 
 export class AddProjectComponent implements OnInit {
 
   submitted: boolean = false;
 
-  courses: Course[];
-
-  employee: Employee = {
+  proposerNames: string[] = [];
+  responsibleNames: string[] = [];
+  advisorNames: string[] = [];
+  studentNames: string[] = [];
+  company: Company = {
+    _id: '',
     name: '',
     mail: '',
-    mobile: '',
-    course: ''
+    mobile: ''
   };
-
-  names: string[] = [];
-
+  companies: Company[];
+  courses: Course[];
   employees: Employee[];
-
   students: Student[];
-
   studentCount: number = 1;
-/*  twoStudents: boolean = false;
-  threeStudents: boolean = false;*/
-
   project: Project = {
     course: '',
     title: '',
     description: '',
-    proposer: [{role: '', user: ''}],
-    approved: false,
-    responsible: [{role: '', user: ''}],
+    proposer: {role: '', user: ''},
+    status: '',
+    responsible: {role: '', user: ''},
     advisor: [{role: '', user: ''}],
     examiner: [{role: '', user: ''}],
-    student: [],
-//    time_limits: []
+    student: []
   };
 
-/*  student: Student = {
-    _id: '',
-    name: '',
-    mail: '',
-    mobile: '',
-    grades: [],
-    course: ''
-  };*/
-
-  student: Student;
-
-  userType: any;
-
-  constructor(private coursesService: CoursesService, private employeeService: EmployeesService, 
-              private projectsService: ProjectsService, private studentsService: StudentsService) { }
+  constructor(private companiesService: CompaniesService, private coursesService: CoursesService, 
+              private employeeService: EmployeesService, private projectsService: ProjectsService, 
+              private studentsService: StudentsService) { }
 
 
 
@@ -85,11 +68,24 @@ export class AddProjectComponent implements OnInit {
         });
       });
 
+    this.companiesService
+      .getAllCompanies()
+      .then((companies: Company[]) => {
+        this.companies = companies.map((company) => {
+          this.proposerNames.push(company.name);
+          this.responsibleNames.push(company.name);
+          this.advisorNames.push(company.name);
+          return company;
+        })
+      })
+
     this.employeeService
       .getAllEmployees()
       .then((employees: Employee[]) => {
         this.employees = employees.map((employee) => {
-          this.names.push(employee.name);
+          this.proposerNames.push(employee.name);
+          this.responsibleNames.push(employee.name);
+          this.advisorNames.push(employee.name);
           return employee;
         });
       });
@@ -98,7 +94,8 @@ export class AddProjectComponent implements OnInit {
       .getAllStudents()
       .then((students: Student[]) => {
         this.students = students.map((student) => {
-          this.names.push(student.name);
+          this.proposerNames.push(student.name);
+          this.studentNames.push(student.name);
           return student;
         });
       });
@@ -107,96 +104,167 @@ export class AddProjectComponent implements OnInit {
   
 
 
-/*  getEmployee(name: string) {
-    this.employeeService.getEmployee(this.name).then((employee: Employee) => {
-    this.employee = employee;
-      });
-  }*/
-
-
-
-  getUser(user: string) {
-/*    switch (this.userType) {                    // bruk denne senere
-
-    }*/
-    this.employeeService
-      .getEmployee(user)
-      .then((employee: Employee) => {
-        return employee.mobile;
-      });
+  // Create/POST project
+  createProject() {
+    this.project._id = 60;
+    this.projectsService.createProject(this.project).then(() => {this.submitted = true;});
   }
 
 
 
-  createProject(project: Project, student: string) {
-    for (var i = 0; i < project.proposer.length; i++) {
-      this.employeeService.getEmployee(project.proposer[i].user)
-                          .then((proposer: Employee) => {
-                            
-                          })
+  populateSchema(isCompany) {
+    var proposerFound = false;
+    var responsibleFound = false;
+    var advisorFound = false;
+    var promises: Promise<any>[] = [];
+
+    // Create new external user
+    if (isCompany == true) {
+      this.company._id = "645346"
+      this.company.name = this.project.proposer[0].user;
+      promises.push(this.companiesService.createCompany(this.company).then(() => {}));
     }
-    
 
-/*    for (i = 0; i < student.length; i++) {
-      this.studentsService.getStudent(student[i])
+    // Populate Proposers
+    promises.push(this.employeeService.getEmployee(this.project.proposer.user)
+                        .then((employee: Employee) => {
+                          if (employee != null) {
+                            proposerFound = true;
+                            this.project.proposer.role = 'Employee';
+                            this.project.proposer.user = employee._id;
+                          }
+    }));
+
+    if (proposerFound == false) {
+      promises.push(this.studentsService.getStudent(this.project.proposer.user)
                           .then((student: Student) => {
-                            project.student.push(student._id);
-                          });
-    }*/
-    this.projectsService.createProject(project).then(() => {
-      console.log(project);
-      this.submitted = true;
+                            if (student != null) {
+                              proposerFound = true;
+                              this.project.proposer.role = 'Student';
+                              this.project.proposer.user = student._id;
+                            }
+      }));
+    }
+
+    if (proposerFound == false) {
+      promises.push(this.companiesService.getCompany(this.project.proposer.user)
+                          .then((company: Company) => {
+                            if (company != null) {
+                              proposerFound = true;
+                              this.project.proposer.role = 'Company';
+                              this.project.proposer.user = company._id;
+                            }
+      }));
+    }
+
+
+
+    // Populate Responsibles
+    promises.push(this.employeeService.getEmployee(this.project.responsible.user)
+                        .then((employee: Employee) => {
+                          if (employee != null) {
+                            responsibleFound = true;
+                            this.project.responsible.role = 'Employee';
+                            this.project.responsible.user = employee._id;
+                          }
+    }));
+
+    if (responsibleFound == false) {
+      promises.push(this.companiesService.getCompany(this.project.responsible.user)
+                          .then((company: Company) => {
+                            if (company != null) {
+                              responsibleFound = true;
+                              this.project.responsible.role = 'Company';
+                              this.project.responsible.user = company._id;
+                            }
+      }));
+    }
+
+
+
+    // Populate Advisors
+    for (let key in this.project.advisor) {
+      promises.push(this.employeeService.getEmployee(this.project.advisor[key].user)
+                          .then((employee: Employee) => {
+                            if (employee != null) {
+                              responsibleFound = true;
+                              this.project.advisor[key].role = 'Employee';
+                              this.project.advisor[key].user = employee._id;
+                            }
+      }));
+
+      if (responsibleFound == false) {
+        promises.push(this.companiesService.getCompany(this.project.advisor[key].user)
+                            .then((company: Company) => {
+                              if (company != null) {
+                                responsibleFound = true;
+                                this.project.advisor[key].role = 'Company';
+                                this.project.advisor[key].user = company._id;
+                              }
+        }));
+      }
+    }
+
+
+
+    // Populate Students
+    for (let key in this.project.student) {
+      promises.push(this.studentsService.getStudent(this.project.student[key])
+                          .then((student: Student) => {
+                            if (student != null) {
+                              this.project.student[key] = student._id;
+                            }
+      }));
+    }
+
+
+    // make sure promises finish before creating/POSTing project
+    Promise.all(promises).then(() => {
+      this.createProject();
     });
-  }
+    
+  }    
 
 
 
-  searchAll = (text$: Observable<string>) =>
+  searchProposers = (text$: Observable<string>) =>
     text$
       .debounceTime(200)
       .distinctUntilChanged()
       .map(term => term.length < 2 ? []
-        : this.names.filter(v => new RegExp(term, 'gi').test(v)).splice(0, 10));
+        : this.proposerNames.filter(v => new RegExp(term, 'gi').test(v)).splice(0, 10));
+
+  searchResponsibles = (text$: Observable<string>) =>
+    text$
+      .debounceTime(200)
+      .distinctUntilChanged()
+      .map(term => term.length < 2 ? []
+        : this.responsibleNames.filter(v => new RegExp(term, 'gi').test(v)).splice(0, 10));
+
+  searchAdvisors = (text$: Observable<string>) =>
+    text$
+      .debounceTime(200)
+      .distinctUntilChanged()
+      .map(term => term.length < 2 ? []
+        : this.advisorNames.filter(v => new RegExp(term, 'gi').test(v)).splice(0, 10));
+
+  searchStudents = (text$: Observable<string>) =>
+    text$
+      .debounceTime(200)
+      .distinctUntilChanged()
+      .map(term => term.length < 2 ? []
+        : this.studentNames.filter(v => new RegExp(term, 'gi').test(v)).splice(0, 10));
 
 
 
   addStudent() {
     this.studentCount++;
     if (this.studentCount > 3) {this.studentCount = 3};
-/*    switch (this.studentCount) {
-      case 1:
-        this.twoStudents = false;
-        this.threeStudents = false;
-        break;
-      case 2:
-        this.twoStudents = true;
-        this.threeStudents = false;
-        break;
-      case 3:
-        this.twoStudents = true;
-        this.threeStudents = true;
-        break;
-    }*/
   }
 
   removeStudent() {
     this.studentCount--;
     if (this.studentCount < 1) {this.studentCount = 1};
-/*    switch (this.studentCount) {
-      case 1:
-        this.twoStudents = false;
-        this.threeStudents = false;
-        break;
-      case 2:
-        this.twoStudents = true;
-        this.threeStudents = false;
-        break;
-      case 3:
-        this.twoStudents = true;
-        this.threeStudents = true;
-        break;
-    }*/
   }
 
 }
-

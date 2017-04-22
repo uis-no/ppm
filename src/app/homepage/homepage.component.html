@@ -26,20 +26,21 @@
           <h1 *ngIf="employee == true">Unreviewed Projects</h1>
         </div>
         <div *ngIf="student == true">
-          <div class="panel" [class.panel-success]="myProject.status == 'approved'"
-          [class.panel-danger]="myProject.status == 'rejected'"
-          [class.panel-default]="myProject.status == 'pending'"
-          [routerLink]="['project-details/', myProject._id]">
+          <div *ngIf="myProject" class="panel" [class.panel-success]="myProject[0].status == 'approved'"
+          [class.panel-danger]="myProject[0].status == 'rejected'"
+          [class.panel-default]="myProject[0].status == 'pending'"
+          [routerLink]="['project-details/', myProject[0]._id]">
             <div class="panel-heading">
-              <p class="panel-title panel-primary">{{myProject.title}}</p>
+              <p class="panel-title panel-primary">{{myProject[0].title}}</p>
             </div>
             <div class="panel-body">
-              <p>{{myProject.description}}</p>
-              <p>Status: <span class="label" [class.label-danger]="myProject.status == 'rejected'"
-                [class.label-success]="myProject.status == 'approved'"
-                [class.label-default]="myProject.status == 'pending'">{{myProject.status}}</span></p>
+              <p>{{myProject[0].description}}</p>
+              <p>Status: <span class="label" [class.label-danger]="myProject[0].status == 'rejected'"
+                [class.label-success]="myProject[0].status == 'approved'"
+                [class.label-default]="myProject[0].status == 'pending'">{{myProject[0].status}}</span></p>
             </div>
           </div>
+          <div *ngIf="!myProject"><p>You haven't been assigned to a project yet, go to projects to apply for one.</p></div>
         </div>
         <div *ngIf="employee == true">
           <div *ngFor="let project of projects">

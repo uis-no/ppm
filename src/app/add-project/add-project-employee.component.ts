@@ -40,6 +40,7 @@ export class AddProjectComponent implements OnInit {
   employees: Employee[];
   students: Student[];
   studentCount: number = 1;
+  advisorCount: number = 1;
   project: Project = {
     course: '',
     title: '',
@@ -120,7 +121,7 @@ export class AddProjectComponent implements OnInit {
 
     // Create new external user
     if (isCompany == true) {
-      this.company._id = "645346"
+      this.company._id = "645346";
       this.company.name = this.project.proposer[0].user;
       promises.push(this.companiesService.createCompany(this.company).then(() => {}));
     }
@@ -265,6 +266,16 @@ export class AddProjectComponent implements OnInit {
   removeStudent() {
     this.studentCount--;
     if (this.studentCount < 1) {this.studentCount = 1};
+  }
+
+    addAdvisor() {
+    this.advisorCount++;
+    if (this.advisorCount > 3) {this.advisorCount = 3};
+  }
+
+  removeAdvisor() {
+    this.advisorCount--;
+    if (this.advisorCount < 1) {this.advisorCount = 1};
   }
 
 }

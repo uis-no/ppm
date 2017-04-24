@@ -83,10 +83,10 @@ router.route('/projects/unreviewed')
         }
       })
       .populate('course')
-      .populate('proposer.user')
-      .populate('responsible.user')
-      .populate('advisor.user')
-      .populate('examiner.user')
+      .populate('proposer._id')
+      .populate('responsible._id')
+      .populate('advisor._id')
+      .populate('examiner._id')
       .populate('student')
       .populate('file');
     } else {
@@ -311,14 +311,15 @@ router.route('/projects')
           .find({$or:[{ status: 'unassigned' }, { student: student._id }]}, (err, projects) => {
             if (err) {
               return res.status(500).send(err);
+            } else {
+              return res.status(200).json(projects);
             }
-            return res.status(200).json(projects);
           })
           .populate('course')
-          .populate('proposer.user')
-          .populate('responsible.user')
-          .populate('advisor.user')
-          .populate('examiner.user')
+          .populate('proposer._id')
+          .populate('responsible._id')
+          .populate('advisor._id')
+          .populate('examiner._id')
           .populate('student')
         }
       });
@@ -329,18 +330,17 @@ router.route('/projects')
       //console.log("trying to find all projects");
       Project
       .find((err, projects) => {
-        //console.log('all projects');
-        //console.log(projects);
         if (err) {
-          res.status(500).send(err);
+          return res.status(500).send(err);
+        } else {
+          return res.status(200).json(projects);
         }
-        res.status(200).json(projects);
       })
       .populate('course')
-      .populate('proposer.user')
-      .populate('responsible.user')
-      .populate('advisor.user')
-      .populate('examiner.user')
+      .populate('proposer._id')
+      .populate('responsible._id')
+      .populate('advisor._id')
+      .populate('examiner._id')
       .populate('student')
     } else {
       console.log("not an employee or student");
@@ -365,16 +365,17 @@ router.route('/projects')
       project._id = id + 1;
 
       if(req.user.eduPersonAffiliation.includes('employee')) {
-        if (!project.student) {
-          project.status = 'unassigned';
-        } else {
+        console.log(project.student);
+        if (project.student[0]) {
           project.status = 'assigned'
+        } else {
+          project.status = 'unassigned'
         }
         project.save((err) => {
           if (err) {
             res.status(500).send(err);
           } else {
-          res.status(200).json({ message: 'Your project has been created.'});
+            res.status(200).json({ message: 'Your project has been created.'});
           }
         });
       } else {
@@ -383,7 +384,7 @@ router.route('/projects')
           if (err) {
             res.status(500).send(err);
           } else {
-          res.status(200).json({ message: 'Your project has been created.'});
+            res.status(200).json({ message: 'Your project has been created.'});
           }
         });
       }

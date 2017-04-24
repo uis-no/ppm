@@ -11,6 +11,13 @@ export class ProjectsService {
 
   constructor(private http: Http) { }
 
+  notifyExaminer(id:number) {
+        return this.http.get(`/api/projects/notify/${id}`)
+                        .toPromise()
+                        .then()
+                        .catch(this.handleError);
+  }
+
   // Get all projects
   getAllProjects(): Promise<Project[]> {
         return this.http.get('/api/projects')
@@ -19,7 +26,20 @@ export class ProjectsService {
                         .catch(this.handleError);
   }
 
+  getMyProject(): Promise<Project> {
+    return this.http.get('/api/my_project')
+                    .toPromise()
+                    .then(res => res.json() as Project)
+                    .catch(this.handleError);
+  }
+
 //TODO: add observables to accommodate for many requests
+  getUnreviewedProjects(): Promise<Project[]> {
+          return this.http.get('/api/projects/unreviewed')
+                          .toPromise()
+                          .then(res => res.json() as Project[])
+                          .catch(this.handleError);
+  }
 
   //Get a project by id
   // TODO: find out how to cast objectid to string or number

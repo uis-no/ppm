@@ -1,0 +1,16 @@
+.card-block{
+    text-align: center;
+}
+h3{
+    padding-bottom: 5px;
+}
+
+.login-container {
+  float: none;
+  margin: 0 auto;
+}
+
+/*button:hover{
+    background-color: #DCDCDC;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}*/

@@ -36,6 +36,7 @@ var metadata = strategy.generateServiceProviderMetadata();
 
 passport.use(strategy);
 
+
 router.use(session({
   secret: 'social justice cat',
   resave: false,
@@ -55,27 +56,19 @@ router.get('/isAuthenticated', (req, res) => {
 
 // kjøres ikke ved login
 router.get('/', function (req, res) {
-    console.log("on /: " + req.user);
-    if (req.user.isAuthenticated()) {
-      res.render('/projects',
-        {
-          user: req.user
-        });
+    console.log("on /: ");
+    console.log(req.user);
+    if (req.isAuthenticated()) {
+      res.redirect('/');
+    } else {
+      res.redirect('/login');
     }
   });
 
-  router.get('/user', function (req, res, err) {
-    console.log("on user: " + req.user);
-    if(err) {
-      return res.status(500).send(err);
-    }
-
+  router.get('/user', function (req, res) {
     if (req.isAuthenticated()) {
-      console.log("user is authenticated");
-      return res.send(
-        {
-          user: req.user
-        });
+      //console.log("user is authenticated");
+      return res.json(req.user);
     }
   });
 
@@ -95,11 +88,27 @@ router.get('/login',
   }
 );
 
-router.get('/logout', function(req, res) {
-  console.log("on logout: " + req.user);
-  strategy.logout(req.user, function(err, uri) {
-    return res.redirect(uri);
-  });
+router.post('/logout', function(req, res) {
+  console.log("on logout: ");
+  console.log(req.user);
+  if (req.isAuthenticated()) {
+    strategy.logout(req, function(err, uri) {
+      if(!err) {
+        req.logout();
+        console.log("so far so good?");
+        console.log(req.user);
+        return res.redirect(uri);
+      }
+    });
+  }
 });
+
+/*router.post('/logout/callback', (req, res) => {
+  strategy.logout(req, (err, uri) => {
+    console.log('on logout/callback');
+    console.log(uri);
+    res.redirect(uri);
+  });
+});*/
 
   module.exports = router;

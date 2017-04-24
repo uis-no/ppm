@@ -42,14 +42,15 @@ export class AddProjectComponent implements OnInit {
   studentCount: number = 1;
   advisorCount: number = 1;
   project: Project = {
+    _id: 0,
     course: '',
     title: '',
     description: '',
-    proposer: {role: '', user: ''},
-    status: '',
-    responsible: {role: '', user: ''},
-    advisor: [{role: '', user: ''}],
-    examiner: [{role: '', user: ''}],
+    proposer: {role: '', _id: ''},
+    status: 'pending',
+    responsible: {role: '', _id: ''},
+    advisor: [{role: '', _id: ''}],
+    examiner: [{role: '', _id: ''}],
     student: []
   };
 
@@ -107,7 +108,6 @@ export class AddProjectComponent implements OnInit {
 
   // Create/POST project
   createProject() {
-    this.project._id = 60;
     this.projectsService.createProject(this.project).then(() => {this.submitted = true;});
   }
 
@@ -122,38 +122,38 @@ export class AddProjectComponent implements OnInit {
     // Create new external user
     if (isCompany == true) {
       this.company._id = "645346";
-      this.company.name = this.project.proposer[0].user;
+      this.company.name = this.project.proposer[0]._id;
       promises.push(this.companiesService.createCompany(this.company).then(() => {}));
     }
 
     // Populate Proposers
-    promises.push(this.employeeService.getEmployee(this.project.proposer.user)
+    promises.push(this.employeeService.getEmployee(this.project.proposer._id)
                         .then((employee: Employee) => {
                           if (employee != null) {
                             proposerFound = true;
                             this.project.proposer.role = 'Employee';
-                            this.project.proposer.user = employee._id;
+                            this.project.proposer._id = employee._id;
                           }
     }));
 
     if (proposerFound == false) {
-      promises.push(this.studentsService.getStudent(this.project.proposer.user)
+      promises.push(this.studentsService.getStudent(this.project.proposer._id)
                           .then((student: Student) => {
                             if (student != null) {
                               proposerFound = true;
                               this.project.proposer.role = 'Student';
-                              this.project.proposer.user = student._id;
+                              this.project.proposer._id = student._id;
                             }
       }));
     }
 
     if (proposerFound == false) {
-      promises.push(this.companiesService.getCompany(this.project.proposer.user)
+      promises.push(this.companiesService.getCompany(this.project.proposer._id)
                           .then((company: Company) => {
                             if (company != null) {
                               proposerFound = true;
                               this.project.proposer.role = 'Company';
-                              this.project.proposer.user = company._id;
+                              this.project.proposer._id = company._id;
                             }
       }));
     }
@@ -161,22 +161,22 @@ export class AddProjectComponent implements OnInit {
 
 
     // Populate Responsibles
-    promises.push(this.employeeService.getEmployee(this.project.responsible.user)
+    promises.push(this.employeeService.getEmployee(this.project.responsible._id)
                         .then((employee: Employee) => {
                           if (employee != null) {
                             responsibleFound = true;
                             this.project.responsible.role = 'Employee';
-                            this.project.responsible.user = employee._id;
+                            this.project.responsible._id = employee._id;
                           }
     }));
 
     if (responsibleFound == false) {
-      promises.push(this.companiesService.getCompany(this.project.responsible.user)
+      promises.push(this.companiesService.getCompany(this.project.responsible._id)
                           .then((company: Company) => {
                             if (company != null) {
                               responsibleFound = true;
                               this.project.responsible.role = 'Company';
-                              this.project.responsible.user = company._id;
+                              this.project.responsible._id = company._id;
                             }
       }));
     }
@@ -185,22 +185,22 @@ export class AddProjectComponent implements OnInit {
 
     // Populate Advisors
     for (let key in this.project.advisor) {
-      promises.push(this.employeeService.getEmployee(this.project.advisor[key].user)
+      promises.push(this.employeeService.getEmployee(this.project.advisor[key]._id)
                           .then((employee: Employee) => {
                             if (employee != null) {
                               responsibleFound = true;
                               this.project.advisor[key].role = 'Employee';
-                              this.project.advisor[key].user = employee._id;
+                              this.project.advisor[key]._id = employee._id;
                             }
       }));
 
       if (responsibleFound == false) {
-        promises.push(this.companiesService.getCompany(this.project.advisor[key].user)
+        promises.push(this.companiesService.getCompany(this.project.advisor[key]._id)
                             .then((company: Company) => {
                               if (company != null) {
                                 responsibleFound = true;
                                 this.project.advisor[key].role = 'Company';
-                                this.project.advisor[key].user = company._id;
+                                this.project.advisor[key]._id = company._id;
                               }
         }));
       }

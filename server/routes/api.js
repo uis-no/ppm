@@ -10,6 +10,8 @@ const Mail = require('../mail.ts');
 const jwt = require('express-jwt');
 
 const mongoose = require('mongoose');
+
+
 var mongoDriver = mongoose.mongo;
 var db = mongoose.connection;
 
@@ -41,9 +43,9 @@ var Company = require('../models/company.ts');
 var Course = require('../models/course.ts');
 var Employee = require('../models/employee.ts');
 var Ext_examiner = require('../models/ext_examiner.ts');
-var Project = require('../models/project.ts');
 var Student = require('../models/student.ts');
 var File = require('../models/file.ts');
+var Project = require('../models/project.ts');
 
 router.route('/projects/notify/:_id')
   .get((req,res) => {
@@ -66,10 +68,14 @@ router.route('/projects/notify/:_id')
     }
   });
 
+// TODO: change name more appropriate to the fact that it's pending and completed projects
 router.route('/projects/unreviewed')
   .get((req, res) => {
     if (req.user.eduPersonAffiliation.includes('employee')) {
-      Project.find({ status : 'pending' }, (err, projects) => {
+      //console.log("trying to find all pending projects");
+      Project.find({ $or: [{ status : 'pending' }, { submission : { $exists: true }}]}, (err, projects) => {
+        //console.log('unreviewed projects');
+        //onsole.log(projects);
         if (err) {
           return res.status(500).send(err);
         } else {
@@ -81,7 +87,8 @@ router.route('/projects/unreviewed')
       .populate('responsible.user')
       .populate('advisor.user')
       .populate('examiner.user')
-      .populate('student');
+      .populate('student')
+      .populate('file');
     } else {
       return res.send("You're not authorized to access this.");
     }
@@ -148,9 +155,10 @@ router.route('/company')
     .find((err, companies) => {
       if (err) {
         res.status(500).send(err);
+      } else {
+        res.status(200).json(companies);
       }
-      res.status(200).json(companies);
-    })
+    });
   })
 
   // create new company
@@ -161,7 +169,7 @@ router.route('/company')
       if (err) {
         res.status(500).send(err);
       } else {
-      res.status(200).json({ message: 'Your company has been created.'});
+        res.status(200).json({ message: 'Your company has been created.'});
       }
     });
   });
@@ -232,9 +240,10 @@ router.route('/ext_examiner')
     .find((err, ext_examiners) => {
       if (err) {
         res.status(500).send(err);
+      } else {
+        res.status(200).json(ext_examiners);
       }
-      res.status(200).json(ext_examiners);
-    })
+    });
   })
 
   // create new ext_examiner
@@ -246,7 +255,7 @@ router.route('/ext_examiner')
       if (err) {
         res.status(500).send(err);
       } else {
-      res.status(200).json({ message: 'Your ext_examiner has been created.'});
+        res.status(200).json({ message: 'Your ext_examiner has been created.'});
       }
     });
   });
@@ -261,13 +270,17 @@ router.route('/my_project')
         if(err) {
           return res.status(500).send(err);
         } else {
+          console.log(student);
           Project
           // finds all the projects that are approved or projects related to the student by email
-          .find({ student: student._id }, (err, projects) => {
+          .findOne({$or:[{ student: student._id }, { proposer: student.name } ] }, (err, project) => {
+            console.log(typeof project);
+            console.log(project);
             if (err) {
               return res.status(500).send(err);
+            } else {
+              return res.status(200).json(project);
             }
-            return res.status(200).json(projects);
           })
           .populate('course')
           .populate('proposer.user')
@@ -287,6 +300,7 @@ router.route('/projects')
   // get all projects
   .get((req, res) => {
     if(req.user.eduPersonAffiliation.includes('student')) {
+
       // finds student based on his mail, so we can retrieve his id
       Student.findOne({ mail: req.user.mail }, (err, student) => {
         if(err) {
@@ -294,7 +308,7 @@ router.route('/projects')
         } else {
           Project
           // finds all the projects that are approved or projects related to the student by email
-          .find({$or:[{ status: 'approved' }, { student: student._id }]}, (err, projects) => {
+          .find({$or:[{ status: 'unassigned' }, { student: student._id }]}, (err, projects) => {
             if (err) {
               return res.status(500).send(err);
             }
@@ -312,8 +326,11 @@ router.route('/projects')
     }
     // return all projects if the user is an employee
     else if(req.user.eduPersonAffiliation.includes('employee')) {
+      //console.log("trying to find all projects");
       Project
       .find((err, projects) => {
+        //console.log('all projects');
+        //console.log(projects);
         if (err) {
           res.status(500).send(err);
         }
@@ -326,6 +343,7 @@ router.route('/projects')
       .populate('examiner.user')
       .populate('student')
     } else {
+      console.log("not an employee or student");
       return res.send("Could not verify your affiliation.");
     }
 
@@ -336,33 +354,47 @@ router.route('/projects')
     var obj = req.body;
     var project = new Project(obj);
 
-    if(req.user.eduPersonAffiliation.includes('employee')) {
-      project.status = 'approved';
-      project.save((err) => {
-        if (err) {
-          res.status(500).send(err);
-        } else {
-        res.status(200).json({ message: 'Your project has been created.'});
+    // increments id to a new project
+    Project.find((err, projects) => {
+      var id = 0;
+      projects.forEach((p) => {
+        if (id < p._id) {
+          id = p._id;
         }
       });
-    } else {
-      project.status = 'pending';
-      project.save((err) => {
-        if (err) {
-          res.status(500).send(err);
-        } else {
-        res.status(200).json({ message: 'Your project has been created.'});
-        }
-      });
-    }
+      project._id = id + 1;
 
+      if(req.user.eduPersonAffiliation.includes('employee')) {
+        if (!project.student) {
+          project.status = 'unassigned';
+        } else {
+          project.status = 'assigned'
+        }
+        project.save((err) => {
+          if (err) {
+            res.status(500).send(err);
+          } else {
+          res.status(200).json({ message: 'Your project has been created.'});
+          }
+        });
+      } else {
+        project.status = 'pending';
+        project.save((err) => {
+          if (err) {
+            res.status(500).send(err);
+          } else {
+          res.status(200).json({ message: 'Your project has been created.'});
+          }
+        });
+      }
+    });
   });
 
 router.route('/projects/:_id')
 
   // get a project by id
   .get((req, res) => {
-   
+
     Project.findOne({ _id : req.params._id }, (err, project) => {
       if (err) {
         res.status(500).send(err);
@@ -417,9 +449,10 @@ router.route('/student')
     .find((err, students) => {
       if (err) {
         res.status(500).send(err);
+      } else {
+        res.status(200).json(students);
       }
-      res.status(200).json(students);
-    })
+    });
   })
 
   // create new student
@@ -431,7 +464,7 @@ router.route('/student')
       if (err) {
         res.status(500).send(err);
       } else {
-      res.status(200).json({ message: 'Your student has been created.'});
+        res.status(200).json({ message: 'Your student has been created.'});
       }
     });
   });
@@ -447,7 +480,7 @@ router.route('/student/:name')
       } else {
         res.status(200).json(student);
       }
-    })
+    });
   });
 
 

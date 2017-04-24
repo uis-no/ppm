@@ -46,6 +46,7 @@
     "prismjs": "^1.6.0",
     "rxjs": "5.0.1",
     "ts-helpers": "^1.1.1",
+    "xlsx": "^0.9.12",
     "zone.js": "^0.6.23"
   },
   "devDependencies": {

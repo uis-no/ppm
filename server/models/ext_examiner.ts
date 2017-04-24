@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 
 var ext_examiner = new Schema({
 
-  _id : Number,
+  _id : String,
 
   name : String,
 

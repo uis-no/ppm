@@ -23,28 +23,29 @@
       <div>
         <div>
           <h1 *ngIf="student == true">My Project</h1>
-          <h1 *ngIf="employee == true">Unreviewed Projects</h1>
+          <h1 *ngIf="employee == true">Projects for processing</h1>
         </div>
         <div *ngIf="student == true">
-          <div class="panel" [class.panel-success]="myProject.status == 'approved'"
-          [class.panel-danger]="myProject.status == 'rejected'"
-          [class.panel-default]="myProject.status == 'pending'"
-          [routerLink]="['project-details/', myProject._id]">
+          <div *ngIf="myProject" class="panel" [class.panel-success]="myProject[0].status == 'assigned'"
+          [class.panel-danger]="myProject[0].status == 'rejected'"
+          [class.panel-default]="myProject[0].status == 'pending'"
+          [routerLink]="['project-details/', myProject[0]._id]">
             <div class="panel-heading">
-              <p class="panel-title panel-primary">{{myProject.title}}</p>
+              <p class="panel-title panel-primary">{{myProject[0].title}}</p>
             </div>
             <div class="panel-body">
-              <p>{{myProject.description}}</p>
-              <p>Status: <span class="label" [class.label-danger]="myProject.status == 'rejected'"
-                [class.label-success]="myProject.status == 'approved'"
-                [class.label-default]="myProject.status == 'pending'">{{myProject.status}}</span></p>
+              <p>{{myProject[0].description}}</p>
+              <p>Status: <span class="label" [class.label-danger]="myProject[0].status == 'rejected'"
+                [class.label-success]="myProject[0].status == 'approved'"
+                [class.label-default]="myProject[0].status == 'pending'">{{myProject[0].status}}</span></p>
             </div>
           </div>
+          <div *ngIf="!myProject"><p>You haven't been assigned to a project yet, go to projects to apply for one.</p></div>
         </div>
         <div *ngIf="employee == true">
           <div *ngFor="let project of projects">
-            <div class="panel" [class.panel-success]="project.status == 'approved'"
-            [class.panel-danger]="project.status == 'rejected'"
+            <div class="panel"
+            [class.panel-success]="project.status == 'assigned' || project.status == 'unassigned'"
             [class.panel-default]="project.status == 'pending'"
             [routerLink]="['project-details/', project._id]">
               <div class="panel-heading">
@@ -52,11 +53,12 @@
               </div>
               <div class="panel-body">
                 <p>{{project.description}}</p>
-                <p>Status: <span class="label" [class.label-danger]="project.status == 'rejected'"
-                  [class.label-success]="project.status == 'approved'"
+                <p>Status: <span class="label"
+                  [class.label-success]="project.status == 'assigned' || project.status == 'unassigned'"
                   [class.label-default]="project.status == 'pending'">{{project.status}}</span></p>
+                  <button *ngIf="project.submission" (click)="notify(project._id)" class="btn btn-primary">Notify Examiner</button>
               </div>
-              <button *ngIf="project.file" (click)="notify(project._id)" class="btn btn-success">Notify Examiner</button>
+
             </div>
           </div>
         </div>
@@ -87,9 +89,6 @@
             <p>Accept project: 01.01.2018</p>
             <p>Submit project: 15.05.2018</p>
           </div>
-        </div>
-        <div *ngIf="employee == true" class="panel-body">
-          <p>Employee at feide logged in</p>
         </div>
       </div>
     </div>

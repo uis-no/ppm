@@ -48,9 +48,9 @@ router.use(passport.session());
 
 router.get('/isAuthenticated', (req, res) => {
   if (req.isAuthenticated()) {
-    return res.send(true);
+    return res.json(true);
   } else {
-    return res.send(false);
+    return res.json(false);
   }
 });
 

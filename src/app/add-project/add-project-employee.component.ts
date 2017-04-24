@@ -9,7 +9,6 @@ import { Course } from '../interfaces/course.interface';
 import { Employee } from '../interfaces/employee.interface';
 import { Project } from '../interfaces/project.interface';
 import { Student } from '../interfaces/student.interface';
-import { MarkdownService } from '../services/markdown.service';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -41,6 +40,7 @@ export class AddProjectComponent implements OnInit {
   employees: Employee[];
   students: Student[];
   studentCount: number = 1;
+  advisorCount: number = 1;
   project: Project = {
     _id: 0,
     course: '',
@@ -91,16 +91,6 @@ export class AddProjectComponent implements OnInit {
           return employee;
         });
       });
-  }
-
-/*
-  toggleMarkdown() {
-    if(this.toggle == true) {
-      this.toggle = false;
-    } else {
-      this.toggle = true;
-    }
-    this.output = this.md.convert(this.project.description);
 
     this.studentsService
       .getAllStudents()
@@ -112,7 +102,7 @@ export class AddProjectComponent implements OnInit {
         });
       });
 
-  }*/
+  }
 
 
 
@@ -167,6 +157,8 @@ export class AddProjectComponent implements OnInit {
                             }
       }));
     }
+
+
 
     // Populate Responsibles
     promises.push(this.employeeService.getEmployee(this.project.responsible._id)
@@ -274,6 +266,16 @@ export class AddProjectComponent implements OnInit {
   removeStudent() {
     this.studentCount--;
     if (this.studentCount < 1) {this.studentCount = 1};
+  }
+
+    addAdvisor() {
+    this.advisorCount++;
+    if (this.advisorCount > 3) {this.advisorCount = 3};
+  }
+
+  removeAdvisor() {
+    this.advisorCount--;
+    if (this.advisorCount < 1) {this.advisorCount = 1};
   }
 
 }

@@ -3,19 +3,28 @@
     font-style: italic;
 }
 
-/*input {
-    margin: 10px 0;
-}*/
 
 .ng-valid[required], .ng-valid.required  {
-  border-left: 5px solid #42A948; /* green */
+  border-left: 5px solid #42A948;
 }
 
 .ng-invalid:not(form)  {
-  border-left: 5px solid #a94442; /* red */
+  border-left: 5px solid #a94442;
 }
 
 form {
     width: 60%;
     margin: 10px;
+}
+
+.button-group-addon {
+    padding: 0;
+    border: 0;
+}
+
+.button-addon {
+    height: 34px;
+    width: 34px;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
 }

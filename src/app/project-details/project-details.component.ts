@@ -7,8 +7,7 @@ import { LoginService } from '../services/passport.service';
 import { MarkdownService } from '../services/markdown.service';
 import { FileUploader } from 'ng2-file-upload';
 
-import { DialogComponent, DialogService } from "ng2-bootstrap-modal";
-import { ApplyComponent } from './apply.component';
+import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
 
 @Component({
   selector: 'project-details',
@@ -52,9 +51,10 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   user: any = {};
   student: boolean = false;
   ansatt: boolean = false;
+  applicants: any = [];
 
   constructor(private projectsService: ProjectsService, private fileService: FileService,
-    private md: MarkdownService, private route: ActivatedRoute, private loginService: LoginService, private dialogService:DialogService) {
+    private md: MarkdownService, private route: ActivatedRoute, private loginService: LoginService) {
     
     this.user = this.loginService.getUser().then((user) => {
       this.user = user;
@@ -95,23 +95,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
-          showConfirm() {
-            let disposable = this.dialogService.addDialog(ApplyComponent, {
-                title:'Confirm title', 
-                message:'Confirm message'})
-                .subscribe((isConfirmed)=>{
-                    //We get dialog result
-                    if(isConfirmed) {
-                        alert('accepted');
-                    }
-                    else {
-                        alert('declined');
-                    }
-                });
-            //We can close dialog calling disposable.unsubscribe();
-            //If dialog was not closed manually close it by timeout
-            setTimeout(()=>{
-                disposable.unsubscribe();
-            },10000);
-          }
+  submitApplicants(){
+    this.applicants = document.getElementById("textbox");
+    console.log(this.applicants)
+  }
 }

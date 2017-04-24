@@ -8,9 +8,25 @@
       <h4 class="">{{ project.title }}</h4>
 
 
-      <button *ngIf = "student == true" class="applyEdit" type="button" (click)="showConfirm()" >Apply for Project</button>
+      <button *ngIf = "ansatt == true" class="applyEdit" type="button" (click)="modal.open()" >Apply for Project</button>
       <button *ngIf = "ansatt == true"  class="applyEdit" type="button" >Edit Project</button>
 
+<modal #modal>
+    <modal-header [show-close]="true">
+        <h4 class="modal-title">Apply for this project:</h4>
+    </modal-header>
+    <modal-body>
+      <div class="form-group">
+            <label for="textbox">Who are you applying with?</label>
+            <input autofocus type="text" class="form-control" id="textbox" placeholder="Apply with">
+        </div>
+        <button type="button" class="btn btn-default" (click)="submitApplicants()">Submit</button> 
+    </modal-body>
+    <modal-footer>
+        <button type="button" class="btn btn-primary" (click)="modal.close()">Ok</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="modal.dismiss()">Cancel</button>        
+    </modal-footer>
+</modal>
 
       <p class="">{{ project.description }}</p>
       <div >
@@ -25,8 +41,7 @@
       <div id="respdiv">
       <p *ngFor="let proposer of project.proposer"  class= "responsibles">
           <strong>Proposer:</strong> <br>
-          Employee no. / Student no. / Organisation no.: {{ proposer.user._id }} <br>
-          Full name / Company name: {{ proposer.user.name }} <br>
+          Name: {{ proposer.user.name }} <br>
           Mobile: {{ proposer.user.mobile }} <br>
           Mail: {{ proposer.user.mail }} <br>
       </p>
@@ -34,8 +49,7 @@
 
       <p *ngFor="let responsible of project.responsible"  class= "responsibles">
           <strong>Responsible:</strong> <br>
-          Employee no.: {{ responsible.user._id }} <br>
-          Full name: {{ responsible.user.name }} <br>
+          Name: {{ responsible.user.name }} <br>
           Mobile: {{ responsible.user.mobile }} <br>
           Mail: {{ responsible.user.mail }} <br>
       </p>
@@ -43,8 +57,7 @@
 
       <p *ngFor="let advisor of project.advisor"  class= "responsibles">
           <strong>Advisor:</strong> <br>
-          Employee no. / Organisation no.: {{ advisor.user._id }} <br>
-          Full name / Company name: {{ advisor.user.name }} <br>
+          Name: {{ advisor.user.name }} <br>
           Mobile: {{ advisor.user.mobile }} <br>
           Mail: {{ advisor.user.mail }} <br>
       </p>
@@ -52,8 +65,7 @@
 
       <p *ngFor="let examiner of project.examiner"  class= "responsibles">
           <strong>Examiner:</strong> <br>
-          Employee no. / Organisation no.: {{ examiner.user._id }} <br>
-          Full name / Company name: {{ examiner.user.name }} <br>
+          Name: {{ examiner.user.name }} <br>
           Mobile: {{ examiner.user.mobile }} <br>
           Mail: {{ examiner.user.mail }} <br>
       </p>
@@ -66,7 +78,7 @@
       <p style="font-weight: bold">Students:</p>
       <p *ngFor="let student of project.student"  class = "students">
         Student no.: {{ student._id }} <br>
-        Full name: {{ student.name }} <br>
+        Name: {{ student.name }} <br>
         Mobile: {{ student.mobile }} <br>
         Mail: {{ student.mail }} <br>
       </p>

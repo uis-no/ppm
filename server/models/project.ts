@@ -3,36 +3,30 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var project = new Schema({
-  // ISSUE : ObjectId is not recognized as a valid type, will use number until resolved
   _id : Number,
 
-  /* // TODO: use this to remove the need to manually assign an id
-  _id :{
-    type: mongoose.Types.ObjectId,
-    index: true,
-    required: true,
-    auto: true
-  },
-*/
   course : { type: String, ref: 'Course' },
 
   title : String,
 
   description : String,
 
-  proposer : [ { role: String, user: { type: String, refPath: 'proposer.role' } } ],
+  proposer : [ { role: String, _id: { type: String, refPath: 'proposer.role' } } ],
 
   status : String,
+  // TODO: change user to _id if needed
+  responsible : [ { role: String, _id: { type: String, refPath: 'responsible.role' } } ],
 
-  responsible : [ { role: String, user: { type: Number, refPath: 'responsible.role' } } ],
+  advisor : [ { role: String, _id: { type: String, refPath: 'advisor.role' } } ],
 
-  advisor : [ { role: String, user: { type: Number, refPath: 'advisor.role' } } ],
-
-  examiner : [ { role: String, user: { type: Number, refPath: 'examiner.role' } } ],
-
+  examiner : [ { role: String, _id: { type: String, refPath: 'examiner.role' } } ],
+/*
   applied: [ [{type: Number, ref: 'Student'}]],
-  
+
   assigned : [ { type: Number, ref: 'Student' } ],
+  */
+
+  student : [ { type: String, ref: 'Student' } ],
 
   submission : {
     type: Schema.Types.ObjectId,

@@ -3,20 +3,21 @@
     [class.active]="project === selectedProject">
     <div class="panel"
       [class.panel-default]="project.status == 'pending'"
-      [class.panel-success]="project.status == 'approved'"
+      [class.panel-success]="project.status == 'unassigned' || project.status == 'assigned'"
       [class.panel-danger]="project.status == 'rejected'">
-      <div class="panel-heading"><a class="panel-title" data-toggle="collapse" data-target="#project{{project._id}}">{{ project.title }}</a></div>
-      <div class="panel-collapse collapse">
+      <div class="panel-heading"><a class="panel-title" data-toggle="collapse" data-target="#project{{project._id}}"><h3>{{ project.title }}</h3></a></div>
+      <!-- <div class="panel-collapse collapse"> -->
+      <div class="panel-collapse">
         <div class="panel-body" id="project{{project._id}}" [routerLink]="['project-details/', project._id]">
           <p> Status: <span class="label"
-            [class.label-success]="project.status == 'approved'"
+            [class.label-success]="project.status == 'unassigned' || project.status == 'assigned'"
             [class.label-danger]="project.status == 'rejected'"
             [class.label-default]="project.status == 'pending'">{{ project.status }}</span> </p>
-          <div [innerHTML]="output"></div>
+          <div [innerHTML]="md.convert(project.description)"></div>
           <p *ngIf="project.course._id"> Course: {{ project.course._id }} </p>
           <p> Year: {{ project.course.year }} </p>
-          <p *ngFor="let proposer of project.proposer"> Proposer: {{ proposer.user.name }} </p>
-          <p *ngFor="let advisor of project.advisor"> Advisor: {{ advisor.user.name }} </p>
+          <p *ngFor="let proposer of project.proposer"> Proposer: <span *ngIf="proposer.user">{{ proposer.user.name }}</span> </p>
+          <p *ngFor="let advisor of project.advisor"> Advisor: <span *ngIf="advisor.user">{{ advisor.user.name }}</span> </p>
           <button [routerLink]="['project-details/', project._id]" class="card-link">See details</button>
         </div>
       </div>

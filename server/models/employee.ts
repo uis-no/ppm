@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 
 var employee = new Schema({
 
-  _id : Number,
+  _id : String,
 
   name : String,
 

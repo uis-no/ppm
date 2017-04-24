@@ -23,10 +23,10 @@
       <div>
         <div>
           <h1 *ngIf="student == true">My Project</h1>
-          <h1 *ngIf="employee == true">Unreviewed Projects</h1>
+          <h1 *ngIf="employee == true">Projects for processing</h1>
         </div>
         <div *ngIf="student == true">
-          <div *ngIf="myProject" class="panel" [class.panel-success]="myProject[0].status == 'approved'"
+          <div *ngIf="myProject" class="panel" [class.panel-success]="myProject[0].status == 'assigned'"
           [class.panel-danger]="myProject[0].status == 'rejected'"
           [class.panel-default]="myProject[0].status == 'pending'"
           [routerLink]="['project-details/', myProject[0]._id]">
@@ -44,8 +44,8 @@
         </div>
         <div *ngIf="employee == true">
           <div *ngFor="let project of projects">
-            <div class="panel" [class.panel-success]="project.status == 'approved'"
-            [class.panel-danger]="project.status == 'rejected'"
+            <div class="panel"
+            [class.panel-success]="project.status == 'assigned' || project.status == 'unassigned'"
             [class.panel-default]="project.status == 'pending'"
             [routerLink]="['project-details/', project._id]">
               <div class="panel-heading">
@@ -53,11 +53,12 @@
               </div>
               <div class="panel-body">
                 <p>{{project.description}}</p>
-                <p>Status: <span class="label" [class.label-danger]="project.status == 'rejected'"
-                  [class.label-success]="project.status == 'approved'"
+                <p>Status: <span class="label"
+                  [class.label-success]="project.status == 'assigned' || project.status == 'unassigned'"
                   [class.label-default]="project.status == 'pending'">{{project.status}}</span></p>
+                  <button *ngIf="project.submission" (click)="notify(project._id)" class="btn btn-primary">Notify Examiner</button>
               </div>
-              <button *ngIf="project.file" (click)="notify(project._id)" class="btn btn-success">Notify Examiner</button>
+
             </div>
           </div>
         </div>
@@ -88,9 +89,6 @@
             <p>Accept project: 01.01.2018</p>
             <p>Submit project: 15.05.2018</p>
           </div>
-        </div>
-        <div *ngIf="employee == true" class="panel-body">
-          <p>Employee at feide logged in</p>
         </div>
       </div>
     </div>

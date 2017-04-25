@@ -16,8 +16,8 @@
           <div [innerHTML]="md.convert(project.description)"></div>
           <p *ngIf="project.course._id"> Course: {{ project.course._id }} </p>
           <p> Year: {{ project.course.year }} </p>
-          <p *ngFor="let proposer of project.proposer"> Proposer: <span *ngIf="proposer.user">{{ proposer.user.name }}</span> </p>
-          <p *ngFor="let advisor of project.advisor"> Advisor: <span *ngIf="advisor.user">{{ advisor.user.name }}</span> </p>
+          <p *ngFor="let proposer of project.proposer"> Proposer: <span *ngIf="proposer._id">{{ proposer._id.name }}</span> </p>
+          <p *ngFor="let advisor of project.advisor"> Advisor: <span *ngIf="advisor._id">{{ advisor._id.name }}</span> </p>
           <button [routerLink]="['project-details/', project._id]" class="card-link">See details</button>
         </div>
       </div>

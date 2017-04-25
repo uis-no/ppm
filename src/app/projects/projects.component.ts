@@ -23,8 +23,6 @@ export class ProjectsComponent implements OnInit {
       .getAllProjects()
       .then((projects: Project[]) => {
         this.projects = projects.map((project) => {
-          console.log("project proposer object");
-          console.log(project.proposer);
           return project;
         });
       });

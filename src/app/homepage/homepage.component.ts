@@ -29,7 +29,6 @@ export class HomepageComponent implements OnInit {
           this.user = user;
           user.eduPersonAffiliation.includes('student') ? this.student = true : this.employee = true;
           if (this.student == true) {
-            var tempProject = []
             this.projectsService.getMyProject().then((project: Project) => {
               this.myProject = project;
             });

@@ -25,37 +25,37 @@
       <div id="respdiv">
       <p *ngFor="let proposer of project.proposer"  class= "responsibles">
           <strong>Proposer:</strong> <br>
-          Employee no. / Student no. / Organisation no.: {{ proposer.user._id }} <br>
-          Full name / Company name: {{ proposer.user.name }} <br>
-          Mobile: {{ proposer.user.mobile }} <br>
-          Mail: {{ proposer.user.mail }} <br>
+          Employee no. / Student no. / Organisation no.: {{ proposer._id._id }} <br>
+          Full name / Company name: {{ proposer._id.name }} <br>
+          Mobile: {{ proposer._id.mobile }} <br>
+          Mail: {{ proposer._id.mail }} <br>
       </p>
 
 
       <p *ngFor="let responsible of project.responsible"  class= "responsibles">
           <strong>Responsible:</strong> <br>
-          Employee no.: {{ responsible.user._id }} <br>
-          Full name: {{ responsible.user.name }} <br>
-          Mobile: {{ responsible.user.mobile }} <br>
-          Mail: {{ responsible.user.mail }} <br>
+          Employee no.: {{ responsible._id._id }} <br>
+          Full name: {{ responsible._id.name }} <br>
+          Mobile: {{ responsible._id.mobile }} <br>
+          Mail: {{ responsible._id.mail }} <br>
       </p>
 
 
       <p *ngFor="let advisor of project.advisor"  class= "responsibles">
           <strong>Advisor:</strong> <br>
-          Employee no. / Organisation no.: {{ advisor.user._id }} <br>
-          Full name / Company name: {{ advisor.user.name }} <br>
-          Mobile: {{ advisor.user.mobile }} <br>
-          Mail: {{ advisor.user.mail }} <br>
+          Employee no. / Organisation no.: {{ advisor._id._id }} <br>
+          Full name / Company name: {{ advisor._id.name }} <br>
+          Mobile: {{ advisor._id.mobile }} <br>
+          Mail: {{ advisor._id.mail }} <br>
       </p>
 
 
       <p *ngFor="let examiner of project.examiner"  class= "responsibles">
           <strong>Examiner:</strong> <br>
-          Employee no. / Organisation no.: {{ examiner.user._id }} <br>
-          Full name / Company name: {{ examiner.user.name }} <br>
-          Mobile: {{ examiner.user.mobile }} <br>
-          Mail: {{ examiner.user.mail }} <br>
+          Employee no. / Organisation no.: {{ examiner._id._id }} <br>
+          Full name / Company name: {{ examiner._id.name }} <br>
+          Mobile: {{ examiner._id.mobile }} <br>
+          Mail: {{ examiner._id.mail }} <br>
       </p>
 
       <p *ngIf="!project.examiner"> Examiner: None assigned </p>

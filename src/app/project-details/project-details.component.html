@@ -8,95 +8,81 @@
       <h4 class="">{{ project.title }}</h4>
 
 
-      <button *ngIf = "ansatt == true" class="applyEdit" type="button" (click)="modal.open()" >Apply for Project</button>
-      <button *ngIf = "ansatt == true"  class="applyEdit" type="button" >Edit Project</button>
+      <button *ngIf="ansatt == true" class="applyEdit" type="button" (click)="open()">Apply for Project</button>
+      <button *ngIf="ansatt == true" class="applyEdit" type="button">Edit Project</button>
 
-<modal #modal>
-    <modal-header [show-close]="true">
-        <h4 class="modal-title">Apply for this project:</h4>
-    </modal-header>
-    <modal-body>
-      <div class="form-group">
+      <modal #modal>
+        <modal-header [show-close]="true">
+          <h4 class="modal-title">Apply for this project:</h4>
+        </modal-header>
+        <modal-body>
+          <div class="form-group">
             <label for="textbox">Who are you applying with?</label>
-            <input autofocus type="text" class="form-control" id="textbox" placeholder="Apply with">
-        </div>
-        <button type="button" class="btn btn-default" (click)="submitApplicants()">Submit</button> 
-    </modal-body>
-    <modal-footer>
-        <button type="button" class="btn btn-primary" (click)="modal.close()">Ok</button>
-        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="modal.dismiss()">Cancel</button>        
-    </modal-footer>
-</modal>
+            <input autofocus type="text" class="form-control" id="textbox" placeholder="Apply with" value="" [ngbTypeahead]="searchStudents">
+            <p *ngFor="let student of this.applicants">{{ student }}</p>
+          </div>
+          <button type="button" class="btn btn-default" (click)="addApplicants()">Add</button>
+        </modal-body>
+        <modal-footer>
+          <button type="button" class="btn btn-primary" (click)="close()">Submit</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" (click)="dismiss()">Cancel</button>
+        </modal-footer>
+      </modal>
 
       <p class="">{{ project.description }}</p>
-      <div >
-      <p id="info"> Course: {{ project.course._id }} </p>
+      <div>
+        <p id="info"> Course: {{ project.course._id }} </p>
 
-      <p id="info"> Year: {{ project.course.year }} </p>
+        <p id="info"> Year: {{ project.course.year }} </p>
 
 
-      <p id="info"> Staus: {{ project.status }} </p>
+        <p id="info"> Staus: {{ project.status }} </p>
       </div>
 
       <div id="respdiv">
-      <p *ngFor="let proposer of project.proposer"  class= "responsibles">
-          <strong>Proposer:</strong> <br>
-          Name: {{ proposer.user.name }} <br>
-          Mobile: {{ proposer.user.mobile }} <br>
-          Mail: {{ proposer.user.mail }} <br>
-      </p>
+        <p *ngFor="let proposer of project.proposer" class="responsibles">
+          <strong>Proposer:</strong> <br> Name: {{ proposer._id.name }} <br> Mobile: {{ proposer._id.mobile }} <br> Mail:
+          {{ proposer._id.mail }} <br>
+        </p>
 
 
-      <p *ngFor="let responsible of project.responsible"  class= "responsibles">
-          <strong>Responsible:</strong> <br>
-          Name: {{ responsible.user.name }} <br>
-          Mobile: {{ responsible.user.mobile }} <br>
-          Mail: {{ responsible.user.mail }} <br>
-      </p>
+        <p *ngFor="let responsible of project.responsible" class="responsibles">
+          <strong>Responsible:</strong> <br> Name: {{ responsible._id.name }} <br> Mobile: {{ responsible._id.mobile }}
+          <br> Mail: {{ responsible._id.mail }} <br>
+        </p>
 
 
-      <p *ngFor="let advisor of project.advisor"  class= "responsibles">
-          <strong>Advisor:</strong> <br>
-          Name: {{ advisor.user.name }} <br>
-          Mobile: {{ advisor.user.mobile }} <br>
-          Mail: {{ advisor.user.mail }} <br>
-      </p>
+        <p *ngFor="let advisor of project.advisor" class="responsibles">
+          <strong>Advisor:</strong> <br> Name: {{ advisor._id.name }} <br> Mobile: {{ advisor._id.mobile }} <br> Mail:
+          {{ advisor._id.mail }} <br>
+        </p>
 
 
-      <p *ngFor="let examiner of project.examiner"  class= "responsibles">
-          <strong>Examiner:</strong> <br>
-          Name: {{ examiner.user.name }} <br>
-          Mobile: {{ examiner.user.mobile }} <br>
-          Mail: {{ examiner.user.mail }} <br>
-      </p>
+        <p *ngFor="let examiner of project.examiner" class="responsibles">
+          <strong>Examiner:</strong> <br> Name: {{ examiner._id.name }} <br> Mobile: {{ examiner._id.mobile }} <br> Mail:
+          {{ examiner._id.mail }} <br>
+        </p>
 
-      <p *ngIf="!project.examiner"> Examiner: None assigned </p>
+        <p *ngIf="!project.examiner"> Examiner: None assigned </p>
 
       </div>
       <br>
       <div id="studentdiv">
-      <p style="font-weight: bold">Students:</p>
-      <p *ngFor="let student of project.student"  class = "students">
-        Student no.: {{ student._id }} <br>
-        Name: {{ student.name }} <br>
-        Mobile: {{ student.mobile }} <br>
-        Mail: {{ student.mail }} <br>
-      </p>
+        <p style="font-weight: bold">Students:</p>
+<p *ngFor="let student of project.student" class="students">
+  Student no.: {{ student._id }} <br> Name: {{ student.name }} <br> Mobile: {{ student.mobile }} <br> Mail: {{ student.mail
+  }} <br>
+</p>
 
-      </div>
+</div>
 
-    </div>
-  </div>
-  <div *ngIf="!project.submission">
-      <div ng2FileDrop
-        name="uploadedFile"
-        (fileOver)="fileOverBase($event)"
-        [uploader]="uploader"
-        type="file"
-        style="border: dotted 3px lightgray; height: 64px;">Drop your submission here</div>
-      <div>
+</div>
+</div>
+<div *ngIf="!project.submission">
+  <div ng2FileDrop name="uploadedFile" (fileOver)="fileOverBase($event)" [uploader]="uploader" type="file" style="border: dotted 3px lightgray; height: 64px;">Drop your submission here</div>
+<div>
 
-      <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">Upload All</button>
-  </div>
+  <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">Upload All</button>
+</div>
 </div>
 </div>

@@ -51,6 +51,8 @@ export class AddProjectComponent implements OnInit {
     responsible: {role: '', _id: ''},
     advisor: [{role: '', _id: ''}],
     examiner: [{role: '', _id: ''}],
+    applied: [[]],
+    assigned: [],
     student: []
   };
 
@@ -132,7 +134,7 @@ export class AddProjectComponent implements OnInit {
     // Create new external user
     if (isCompany == true) {
       this.company._id = "645346"
-      this.company.name = this.project.proposer[0].user;
+      this.company.name = this.project.proposer[0]._id;
       promises.push(this.companiesService.createCompany(this.company).then(() => {}));
     }
 

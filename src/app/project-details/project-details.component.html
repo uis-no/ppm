@@ -1,90 +1,101 @@
-<h1 *ngIf="project">Project Details for {{ project.title }}</h1>
 <div class="container" *ngIf="project">
-  <div class="row">
-
-    <div class="panel">
-
-
-      <h4 class="">{{ project.title }}</h4>
-
-
-      <button *ngIf = "student == true" class="applyEdit" type="button" (click) = "openCustomPopup()" >Apply for Project</button>
-      <button *ngIf = "ansatt == true" [routerLink]="['/new-project']" class="applyEdit" type="button" >Edit Project</button>
+  <div class ="row">
+    <div class="panel"
+      [class.panel-default]="project.status == 'pending'"
+      [class.panel-success]="project.status == 'unassigned' || project.status == 'assigned'"
+      [class.panel-danger]="project.status == 'rejected'">
+    <div class="panel-heading">
+      <h1  *ngIf="project">Project Details for {{ project.title }}</h1>
 
 
-      <p class="">{{ project.description }}</p>
-      <div >
-      <p id="info"> Course: {{ project.course._id }} </p>
 
-      <p id="info"> Year: {{ project.course.year }} </p>
+      <button *ngIf="student == true" class="btn btn-default" id="applyEdit" type="button" (click)="open()">Apply for Project</button>
+      <button *ngIf="ansatt == true" class="btn btn-defaul" id="applyEdit" type="button">Edit Project</button>
+    </div>
+      <modal #modal>
+        <modal-header [show-close]="true">
+          <h4 class="modal-title">Apply for this project:</h4>
+        </modal-header>
+        <modal-body>
+          <div class="form-group">
+            <label for="textbox">Who are you applying with?</label>
+            <input autofocus type="text" class="form-control" id="textbox" placeholder="Apply with" value="" [ngbTypeahead]="searchStudents">
+            <p *ngFor="let student of this.applicants">{{ student }}</p>
+          </div>
+          <button type="button" class="btn btn-default" (click)="addApplicants()">Add</button>
+        </modal-body>
+        <modal-footer>
+          <button type="button" class="btn btn-primary" (click)="close()">Submit</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" (click)="dismiss()">Cancel</button>
+        </modal-footer>
+      </modal>
+<div class="panel-body">
+      <div [innerHTML]="md.convert(project.description)"></div>
+      <div>
+        <p id="info"> Course: {{ project.course._id }} </p>
+
+        <p id="info"> Year: {{ project.course.year }} </p>
 
 
-      <p id="info"> Staus: {{ project.status }} </p>
+        <p id="info">Status: <span class="label"
+            [class.label-success]="project.status == 'unassigned' || project.status == 'assigned'"
+            [class.label-danger]="project.status == 'rejected'"
+            [class.label-default]="project.status == 'pending'">{{ project.status }}</span></p>
       </div>
 
       <div id="respdiv">
-      <p *ngFor="let proposer of project.proposer"  class= "responsibles">
+        <p *ngFor="let proposer of project.proposer" class="responsibles">
           <strong>Proposer:</strong> <br>
-          Employee no. / Student no. / Organisation no.: {{ proposer._id._id }} <br>
-          Full name / Company name: {{ proposer._id.name }} <br>
-          Mobile: {{ proposer._id.mobile }} <br>
-          Mail: {{ proposer._id.mail }} <br>
-      </p>
+          <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ proposer._id.name }} <br>
+          <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> {{ proposer._id.mobile }} <br>
+          <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ proposer._id.mail }} <br>
+        </p>
 
 
-      <p *ngFor="let responsible of project.responsible"  class= "responsibles">
+        <p *ngFor="let responsible of project.responsible" class="responsibles">
           <strong>Responsible:</strong> <br>
-          Employee no.: {{ responsible._id._id }} <br>
-          Full name: {{ responsible._id.name }} <br>
-          Mobile: {{ responsible._id.mobile }} <br>
-          Mail: {{ responsible._id.mail }} <br>
-      </p>
+          <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ responsible._id.name }} <br>
+          <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> {{ responsible._id.mobile }}<br>
+          <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ responsible._id.mail }} <br>
+        </p>
 
 
-      <p *ngFor="let advisor of project.advisor"  class= "responsibles">
+        <p *ngFor="let advisor of project.advisor" class="responsibles">
           <strong>Advisor:</strong> <br>
-          Employee no. / Organisation no.: {{ advisor._id._id }} <br>
-          Full name / Company name: {{ advisor._id.name }} <br>
-          Mobile: {{ advisor._id.mobile }} <br>
-          Mail: {{ advisor._id.mail }} <br>
-      </p>
+          <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ advisor._id.name }} <br>
+          <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> {{ advisor._id.mobile }} <br>
+          <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ advisor._id.mail }} <br>
+        </p>
 
 
-      <p *ngFor="let examiner of project.examiner"  class= "responsibles">
+        <p *ngFor="let examiner of project.examiner" class="responsibles">
           <strong>Examiner:</strong> <br>
-          Employee no. / Organisation no.: {{ examiner._id._id }} <br>
-          Full name / Company name: {{ examiner._id.name }} <br>
-          Mobile: {{ examiner._id.mobile }} <br>
-          Mail: {{ examiner._id.mail }} <br>
-      </p>
+          <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ examiner._id.name }} <br>
+          <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> {{ examiner._id.mobile }} <br>
+          <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ examiner._id.mail }} <br>
+        </p>
 
-      <p *ngIf="!project.examiner"> Examiner: None assigned </p>
+        <p *ngIf="!project.examiner"> Examiner: None assigned </p>
 
       </div>
       <br>
       <div id="studentdiv">
-      <p style="font-weight: bold">Students:</p>
-      <p *ngFor="let student of project.student"  class = "students">
-        Student no.: {{ student._id }} <br>
-        Full name: {{ student.name }} <br>
-        Mobile: {{ student.mobile }} <br>
-        Mail: {{ student.mail }} <br>
-      </p>
+        <p style="font-weight: bold">Students:</p>
+          <p *ngFor="let student of project.student" class="students">
+            <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ student.name }} <br>
+            <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> {{ student.mobile }} <br>
+            <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ student.mail }} <br>
+</p>
 
-      </div>
+</div>
+</div>
+</div>
+</div>
+<div *ngIf="!project.submission">
+  <div ng2FileDrop name="uploadedFile" (fileOver)="fileOverBase($event)" [uploader]="uploader" type="file" style="border: dotted 3px lightgray; height: 64px;">Drop your submission here</div>
+<div>
 
-    </div>
-  </div>
-  <div *ngIf="!project.submission">
-      <div ng2FileDrop
-        name="uploadedFile"
-        (fileOver)="fileOverBase($event)"
-        [uploader]="uploader"
-        type="file"
-        style="border: dotted 3px lightgray; height: 64px;">Drop your submission here</div>
-      <div>
-
-      <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">Upload All</button>
-  </div>
+  <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">Upload All</button>
+</div>
 </div>
 </div>

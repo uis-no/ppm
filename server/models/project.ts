@@ -20,14 +20,14 @@ var project = new Schema({
   advisor : [ { role: String, _id: { type: String, refPath: 'advisor.role' } } ],
 
   examiner : [ { role: String, _id: { type: String, refPath: 'examiner.role' } } ],
-/*
-  applied: [ [{type: Number, ref: 'Student'}]],
 
-  assigned : [ { type: Number, ref: 'Student' } ],
-  */
+  applied: [ [{ type: String, ref: 'Student'}]],
+
+  assigned : [ { type: String, ref: 'Student' } ],
+  
 
   student : [ { type: String, ref: 'Student' } ],
-
+  
   submission : {
     type: Schema.Types.ObjectId,
     ref: 'fs.files'

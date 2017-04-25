@@ -51,6 +51,8 @@ export class AddProjectComponent implements OnInit {
     responsible: {role: null, _id: null},
     advisor: [{role: null, _id: null}],
     examiner: [{role: null, _id: null}],
+    applied: [[]],
+    assigned: [],
     student: []
   };
 

@@ -9,6 +9,8 @@ export class Project {
   responsible: {role: string, _id: string};
   advisor: [{role: string, _id: string}];
   examiner: [{role: string, _id: string}];
+  applied: [Array<string>];
+  assigned: Array<string>;
   student: Array<string>;
   submission?: File;
 }

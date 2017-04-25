@@ -8,7 +8,7 @@
       <h4 class="">{{ project.title }}</h4>
 
 
-      <button *ngIf="ansatt == true" class="applyEdit" type="button" (click)="open()">Apply for Project</button>
+      <button *ngIf="student == true" class="applyEdit" type="button" (click)="open()">Apply for Project</button>
       <button *ngIf="ansatt == true" class="applyEdit" type="button">Edit Project</button>
 
       <modal #modal>

@@ -1,16 +1,17 @@
-<h1 *ngIf="project">Project Details for {{ project.title }}</h1>
 <div class="container" *ngIf="project">
-  <div class="row">
+  <div class ="row">
+    <div class="panel"
+      [class.panel-default]="project.status == 'pending'"
+      [class.panel-success]="project.status == 'unassigned' || project.status == 'assigned'"
+      [class.panel-danger]="project.status == 'rejected'">
+    <div class="panel-heading">
+      <h1  *ngIf="project">Project Details for {{ project.title }}</h1>
 
-    <div class="panel">
-
-
-      <h4 class="">{{ project.title }}</h4>
-
-
-      <button *ngIf="student == true" class="applyEdit" type="button" (click)="open()">Apply for Project</button>
-      <button *ngIf="ansatt == true" class="applyEdit" type="button">Edit Project</button>
-
+    
+      
+      <button *ngIf="student == true" class="btn btn-default" id="applyEdit" type="button" (click)="open()">Apply for Project</button>
+      <button *ngIf="ansatt == true" class="btn btn-defaul" id="applyEdit" type="button">Edit Project</button>
+    </div>
       <modal #modal>
         <modal-header [show-close]="true">
           <h4 class="modal-title">Apply for this project:</h4>
@@ -28,39 +29,50 @@
           <button type="button" class="btn btn-default" data-dismiss="modal" (click)="dismiss()">Cancel</button>
         </modal-footer>
       </modal>
-
-      <p class="">{{ project.description }}</p>
+<div class="panel-body">
+      <div [innerHTML]="md.convert(project.description)"></div>
       <div>
         <p id="info"> Course: {{ project.course._id }} </p>
 
         <p id="info"> Year: {{ project.course.year }} </p>
 
 
-        <p id="info"> Staus: {{ project.status }} </p>
+        <p id="info">Status: <span class="label"
+            [class.label-success]="project.status == 'unassigned' || project.status == 'assigned'"
+            [class.label-danger]="project.status == 'rejected'"
+            [class.label-default]="project.status == 'pending'">{{ project.status }}</span></p>
       </div>
 
       <div id="respdiv">
         <p *ngFor="let proposer of project.proposer" class="responsibles">
-          <strong>Proposer:</strong> <br> Name: {{ proposer._id.name }} <br> Mobile: {{ proposer._id.mobile }} <br> Mail:
-          {{ proposer._id.mail }} <br>
+          <strong>Proposer:</strong> <br> 
+          <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ proposer._id.name }} <br> 
+          <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> {{ proposer._id.mobile }} <br> 
+          <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ proposer._id.mail }} <br>
         </p>
 
 
         <p *ngFor="let responsible of project.responsible" class="responsibles">
-          <strong>Responsible:</strong> <br> Name: {{ responsible._id.name }} <br> Mobile: {{ responsible._id.mobile }}
-          <br> Mail: {{ responsible._id.mail }} <br>
+          <strong>Responsible:</strong> <br> 
+          <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ responsible._id.name }} <br> 
+          <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> {{ responsible._id.mobile }}<br> 
+          <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ responsible._id.mail }} <br>
         </p>
 
 
         <p *ngFor="let advisor of project.advisor" class="responsibles">
-          <strong>Advisor:</strong> <br> Name: {{ advisor._id.name }} <br> Mobile: {{ advisor._id.mobile }} <br> Mail:
-          {{ advisor._id.mail }} <br>
+          <strong>Advisor:</strong> <br> 
+          <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ advisor._id.name }} <br> 
+          <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> {{ advisor._id.mobile }} <br> 
+          <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ advisor._id.mail }} <br>
         </p>
 
 
         <p *ngFor="let examiner of project.examiner" class="responsibles">
-          <strong>Examiner:</strong> <br> Name: {{ examiner._id.name }} <br> Mobile: {{ examiner._id.mobile }} <br> Mail:
-          {{ examiner._id.mail }} <br>
+          <strong>Examiner:</strong> <br> 
+          <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ examiner._id.name }} <br> 
+          <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> {{ examiner._id.mobile }} <br> 
+          <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ examiner._id.mail }} <br>
         </p>
 
         <p *ngIf="!project.examiner"> Examiner: None assigned </p>
@@ -69,13 +81,14 @@
       <br>
       <div id="studentdiv">
         <p style="font-weight: bold">Students:</p>
-<p *ngFor="let student of project.student" class="students">
-  Student no.: {{ student._id }} <br> Name: {{ student.name }} <br> Mobile: {{ student.mobile }} <br> Mail: {{ student.mail
-  }} <br>
+          <p *ngFor="let student of project.student" class="students"> 
+            <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ student.name }} <br> 
+            <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> {{ student.mobile }} <br> 
+            <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ student.mail }} <br>
 </p>
 
 </div>
-
+</div>
 </div>
 </div>
 <div *ngIf="!project.submission">

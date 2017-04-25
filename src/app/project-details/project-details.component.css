@@ -1,7 +1,7 @@
 .students{
     float: left;
     padding-top: 10px;
-    padding-right: 10px;
+    padding-right: 15px;
     padding-bottom: 10px;
 }
 
@@ -13,12 +13,12 @@
     margin-bottom: 30px;
 }
 
-.applyEdit{
+#applyEdit{
     float: right;
     position: relative;
     margin: 5px;
     margin-left: 0;
-    margin-top: -20px;
+    margin-top: -50px;
 }
 
 .responsibles{

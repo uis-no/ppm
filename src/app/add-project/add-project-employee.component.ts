@@ -29,12 +29,12 @@ export class AddProjectComponent implements OnInit {
   responsibleNames: string[] = [];
   advisorNames: string[] = [];
   studentNames: string[] = [];
-  company: Company = {
+  company: Company[] = [{
     _id: '',
     name: '',
     mail: '',
     mobile: ''
-  };
+  }];
   companies: Company[];
   courses: Course[];
   employees: Employee[];
@@ -121,9 +121,9 @@ export class AddProjectComponent implements OnInit {
 
     // Create new external user
     if (isCompany == true) {
-      this.company._id = "645346";
-      this.company.name = this.project.proposer[0]._id;
-      promises.push(this.companiesService.createCompany(this.company).then(() => {}));
+      this.company[0]._id = "645346";
+      this.company[0].name = this.project.proposer[0]._id;
+      promises.push(this.companiesService.createCompany(this.company[0]).then(() => {}));
     }
 
     // Populate Proposers

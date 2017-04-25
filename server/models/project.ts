@@ -11,11 +11,11 @@ var project = new Schema({
 
   description : String,
 
-  proposer : [ { role: String, _id: { type: String, refPath: 'proposer.role' } } ],
+  proposer : { role: String, _id: { type: String, refPath: 'proposer.role' } },
 
   status : String,
   // TODO: change user to _id if needed
-  responsible : [ { role: String, _id: { type: String, refPath: 'responsible.role' } } ],
+  responsible : { role: String, _id: { type: String, refPath: 'responsible.role' } },
 
   advisor : [ { role: String, _id: { type: String, refPath: 'advisor.role' } } ],
 

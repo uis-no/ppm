@@ -47,6 +47,12 @@ var Student = require('../models/student.ts');
 var File = require('../models/file.ts');
 var Project = require('../models/project.ts');
 
+router.route('/sendMail')
+  .post((req, res) => {
+    Mail.sendMail(req.mail, req.subject, req.bodyText);
+    return res.status(200).send('Mail sent.');
+  });
+
 router.route('/projects/notify/:_id')
   .get((req,res) => {
     if(req.user.eduPersonAffiliation.includes('employee')) {
@@ -104,13 +110,12 @@ router.route('/projects/:_id/submission')
       } else {
         if (project.submission) {
           File.findOne({ _id : project.submission }, (err, file) => {
-            console.log(file);
             if (err) {
               return res.send(err);
             } else {
               var readStream = gfs.createReadStream(file);
-              console.log(readStream);
-              readStream.pipe(res);
+              console.log(readStream.pipe(res));
+              //readStream.pipe(res);
             }
           });
         }
@@ -409,6 +414,7 @@ router.route('/projects/:_id')
     .populate('advisor._id')
     .populate('examiner._id')
     .populate('student')
+    .populate('file');
   })
 
   // update a project by id

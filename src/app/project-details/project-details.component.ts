@@ -64,6 +64,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   ansatt: boolean = false;
   applicants: any = [];
 
+
   constructor(private projectsService: ProjectsService, private fileService: FileService,
     private md: MarkdownService, private route: ActivatedRoute, private loginService: LoginService,
     private studentsService: StudentsService, private mailService: MailService) {
@@ -108,7 +109,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           return student;
           });
         });
-
+      
   }
 
   ngOnDestroy() {

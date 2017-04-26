@@ -41,6 +41,8 @@
             [class.label-success]="project.status == 'unassigned' || project.status == 'assigned'"
             [class.label-danger]="project.status == 'rejected'"
             [class.label-default]="project.status == 'pending'">{{ project.status }}</span></p>
+
+        <a *ngIf="project.file" class="info" (click)="downloadSubmission(project._id)">Open submission</a>
       </div>
 
       <div id="respdiv">

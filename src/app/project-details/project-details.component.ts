@@ -30,7 +30,7 @@ import {Observable} from 'rxjs/Observable';
 export class ProjectDetailsComponent implements OnInit, OnDestroy {
   private id: number = 0;
 
-  private blob: Blob;
+  private blob: any;
 
   public uploader:FileUploader = new FileUploader({
     url: '',
@@ -44,7 +44,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   students: Student[];
   studentNames: string[] = [];
-  
+
   project: Project;
   private sub: any;
   //id: string;
@@ -65,10 +65,10 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   constructor(private projectsService: ProjectsService, private fileService: FileService,
     private md: MarkdownService, private route: ActivatedRoute, private loginService: LoginService,
     private studentsService: StudentsService) {
-    
+
     this.user = this.loginService.getUser().then((user) => {
       this.user = user;
-      console.log(this.user.eduPersonAffiliation[0]);
+      //console.log(this.user.eduPersonAffiliation[0]);
       if(this.user.eduPersonAffiliation.includes('employee')){
             this.ansatt = true;
       }else if(this.user.eduPersonAffiliation.includes('student')){
@@ -77,7 +77,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
       }
     });
-    
+
 
     this.sub = this.route.params.subscribe(params =>  {
       this.setid = Number.parseInt(params['id']);
@@ -85,22 +85,19 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  
+
   // Reads the url and grabs the id and makes a call to the service to get the project based on id
   ngOnInit() {
 
       this.projectsService.getProject(this.getid).then((project: Project) => {
         this.project = project;
-
+        console.log(project.submission);
         this.output = this.md.convert(this.project.description);
       });
 
-      this.fileService.getFile(this.getid).then((blob: Blob) => {
-        this.blob = blob;
-        console.log(this.blob);
-      });
-      
-      
+      //this.fileService.getFile(this.getid).then();
+
+
       this.studentsService
       .getAllStudents()
       .then((students: Student[]) => {
@@ -116,6 +113,10 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
+  downloadSubmission(id) {
+    window.location.href = 'http://localhost:3000/api/projects/' + id + '/submission';
+  }
+
   addApplicants(){
     if ((<HTMLInputElement>document.getElementById("textbox")).value != ""){
     this.applicants.push((<HTMLInputElement>document.getElementById("textbox")).value);
@@ -123,10 +124,10 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     }else{}
     console.log(this.applicants)
   }
-  
+
   @ViewChild('modal')
     modal: ModalComponent;
-  
+
   open(){
     this.applicants.push(this.user.eduPersonPrincipalName);
     this.modal.open();
@@ -136,7 +137,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     this.applicants = [];
     this.modal.close();
   }
-  
+
   close() {
     var promises: Promise<any>[] = [];
     console.log(this.applicants)
@@ -163,8 +164,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   }
 
 
-  
-  
+
+
 
   searchStudents = (text$: Observable<string>) =>
     text$

@@ -49,7 +49,7 @@ var Project = require('../models/project.ts');
 
 router.route('/sendMail')
   .post((req, res) => {
-    Mail.sendMail(req.mail, req.subject, req.bodyText);
+    Mail.sendMail(req.body.mail, req.body.subject, req.body.bodyText);
     return res.status(200).send('Mail sent.');
   });
 

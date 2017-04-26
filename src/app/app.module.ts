@@ -28,6 +28,7 @@ import { EmployeesService } from './services/employee.service';
 import { ProjectsService } from './services/projects.service';
 import { StudentsService } from './services/students.service';
 import { FileService } from './services/file.service';
+import { MailService } from './services/mail.service';
 
 
 import { AddProjectComponent } from './add-project/add-project-employee.component';
@@ -88,7 +89,7 @@ const ROUTES = [
     NgbModule.forRoot(),
     Ng2Bs3ModalModule,
   ],
-  providers: [EmployeesService, ProjectsService, StudentsService, AUTH_PROVIDERS, AuthGuard, Auth, LoginService, FileService],
+  providers: [EmployeesService, ProjectsService, StudentsService, AUTH_PROVIDERS, AuthGuard, Auth, LoginService, FileService, MailService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

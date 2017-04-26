@@ -86,12 +86,7 @@
 
       </div>
       <br>
-      <div id="studentdiv">
-        <p style="font-weight: bold">Students:</p>
-          <p *ngFor="let student of project.student" class="students">
-            <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ student.name }} <br>
-            <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> {{ student.mobile }} <br>
-            <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ student.mail }} <br>
+      <div id="studentdiv" *ngIf="project.student.length > 0 && project.status == 'assigned'">
         <p style="font-weight: bold;" >Students:</p>
           <p *ngFor="let student of project.student" class="students">
             <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ student.name }} <br>
@@ -99,8 +94,8 @@
             <button (click)="mailOpen(student.mail)" id="mailto">
               <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ student.mail }} <br>
             </button>
-</p>
-</div>
+          </p>
+      </div>
 
 
  <modal #mailToModal>

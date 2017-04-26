@@ -7,10 +7,12 @@
     <div class="panel-heading">
       <h1  *ngIf="project">Project Details for {{ project.title }}</h1>
 
+
     
       
       <button *ngIf="student == true" class="btn btn-info" id="applyEdit" type="button" (click)="open()">Apply for Project</button>
       <button *ngIf="ansatt == true" class="btn btn-info" id="applyEdit" type="button">Edit Project</button>
+
     </div>
       <modal #modal>
         <modal-header [show-close]="true">
@@ -41,6 +43,8 @@
             [class.label-success]="project.status == 'unassigned' || project.status == 'assigned' || project.status == 'delivered'"
             [class.label-danger]="project.status == 'rejected'"
             [class.label-default]="project.status == 'pending'">{{ project.status }}</span></p>
+
+        <a *ngIf="project.file" class="info" (click)="downloadSubmission(project._id)">Open submission</a>
       </div>
 
       <div id="respdiv">

@@ -1,3 +1,4 @@
+var config = require('./config/config.js');
 // Get dependencies
 const express = require('express');
 const path = require('path');
@@ -5,12 +6,13 @@ const http = require('http');
 const bodyParser = require('body-parser');
 const exphbs  = require('express-handlebars');
 const mongoose = require('mongoose');
-var url = 'mongodb://admin:admin@ds061196.mlab.com:61196/ppm';
+
+var url = config.db.connection;
+
+//const parser = require('./server/parser.ts');
 
 // Get our routes
 const api = require('./server/routes/api');
-//const routes = require('./feide/index'); // Feide
-//const sso = require('./feide/sso'); // Feide
 const routes = require('./feide/passport-saml');
 
 const app = express();

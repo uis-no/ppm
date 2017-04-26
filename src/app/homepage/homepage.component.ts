@@ -19,6 +19,9 @@ export class HomepageComponent implements OnInit {
   employee: boolean = false;
   student: boolean = false;
 
+  tabState = 0;
+  tabTitle= 'All';
+
   constructor(private auth: Auth, private loginService: LoginService, private projectsService: ProjectsService) { }
 
   ngOnInit() {
@@ -29,9 +32,10 @@ export class HomepageComponent implements OnInit {
           this.user = user;
           user.eduPersonAffiliation.includes('student') ? this.student = true : this.employee = true;
           if (this.student == true) {
-            var tempProject = []
             this.projectsService.getMyProject().then((project: Project) => {
               this.myProject = project;
+              console.log(this.myProject);
+              return this.myProject;
             });
           }
           if (this.employee == true) {
@@ -46,6 +50,16 @@ export class HomepageComponent implements OnInit {
       }
     });
 
+  }
+
+  renderTabState(tabState) {
+    if (tabState == 0) {
+      this.tabTitle = 'pending';
+    } else if (tabState == 1) {
+      this.tabTitle = 'assigned';
+    } else {
+      this.tabTitle = 'All';
+    }
   }
 
   notify(id:number) {

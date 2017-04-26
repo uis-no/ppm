@@ -5,19 +5,16 @@
 </div>
 
 
+
 <div *ngIf="project">
 
-  <form (ngSubmit)="populateSchema(companyproposer.checked)"
+
+
+  <form (ngSubmit)="populateSchema(companyproposer.checked)" 
           #heroForm="ngForm" class="form-horizontal">
-
-<!--    <div class="form-group col-md-2 projectform">
-      <label for="project-id">ID</label>
-      <input type="text" class="form-control" id="id" name="id" [(ngModel)]="project._id" placeholder="ID" size="15"/>
-    </div>-->
+    
 
 
-<!--    <div class="form-group col-md-3 projectform">
--->
     <div class="form-group">
       <label for="course" class="control-label col-md-3">Course</label>
       <div class="col-md-9">
@@ -27,6 +24,8 @@
         </select>
       </div>
     </div>
+
+
 
     <div class="form-group">
       <label for="title" class="control-label col-md-3">Title</label>
@@ -39,6 +38,8 @@
         </div>
       </div>
     </div>
+
+
 
     <div class="form-group">
       <label for="description" class="control-label col-md-3">Description</label>
@@ -55,33 +56,35 @@
 
       <label for="proposer-name" class="control-label col-md-3">Proposer
         <div class="row">
-          <div class="col-md-12">
-        <div class="checkbox check">
-            <label>
-              <input #companyproposer type="checkbox" (click)="0"> New external user
-            </label>
-        </div>
-      </div>
+          <div>
+            <div class="checkbox check">
+              <label>
+                <input #companyproposer type="checkbox" (click)="0"> New external user
+              </label>
+            </div>
+          </div>
         </div>
       </label>
+
       <div class="col-md-9">
         <input #proposername (keyup)="0" type="search" class="form-control" id="proposer-name" name="proposer-name"
                 [(ngModel)]="project.proposer._id" placeholder="Name" [ngbTypeahead]="searchProposers" required>
       </div>
 
       <label for="proposer-mobile" class="control-label sr-only"></label>
-        <div class="col-md-9">
-          <input #proposermobile *ngIf="companyproposer.checked == true" (keyup)="0" type="text"
-                  class="form-control" id="proposer-mobile" name="proposer-mobile"
-                    [(ngModel)]="company.mobile" placeholder="Mobile" required>
-        </div>
+      <div class="col-md-2 col-md-offset-3">
+        <input #proposermobile *ngIf="companyproposer.checked == true" (keyup)="0" type="text" 
+                class="form-control" id="proposer-mobile" name="proposer-mobile" 
+                  [(ngModel)]="company.mobile" placeholder="Mobile" required> 
+      </div>   
 
       <label for="proposer-mail" class="control-label sr-only"></label>
-        <div class="col-md-9 col-md-offset-3">
-          <input #proposermail *ngIf="companyproposer.checked == true" (keyup)="0" type="email"
-                  class="form-control" id="proposer-mail" name="proposer-mail"
-                  [(ngModel)]="company.mail" placeholder="Mail" required>
-        </div>
+      <div class="col-md-7">
+        <input #proposermail *ngIf="companyproposer.checked == true" (keyup)="0" type="email" 
+                class="form-control" id="proposer-mail" name="proposer-mail"
+                [(ngModel)]="company.mail" placeholder="Mail" required>
+      </div>
+
     </div>
 
 
@@ -94,52 +97,110 @@
                 id="displayValue" id="responsible-name" name="responsible-name"
                 [(ngModel)]="project.responsible._id" placeholder="Name" [ngbTypeahead]="searchResponsibles" required>
       </div>
-<!--      <label for="responsible-mobile" class="sr-only"></label>
-          <input #responsiblemobile *ngIf="companyproposer.value == checked" value="{{proposermobile.value}}" (keyup)="0" type="text" class="form-control"
-              name="responsible-mobile" [(ngModel)]="project.responsible.mobile" placeholder="Mobile" required>
-      <label for="responsible-mail" class="sr-only"></label>
-      <input #responsiblemail value="{{proposermail.value}}" (keyup)="0" type="text" class="form-control"
-              name="responsible-mail" [(ngModel)]="project.responsible.mail" placeholder="Mail" required>-->
     </div>
 
+
+
     <div class="form-group">
-      <label class="control-label col-md-3">Advisor</label>
-      <div>
-        <label for="advisor-name" class="control-label sr-only col-md-2"></label>
-        <div class="col-md-9">
-          <input #advisorname value="{{responsiblename.value}}" type="search"
-                  class="form-control" id="advisor-name" name="advisor-name"
+
+      <label class="control-label col-md-3">Advisor</label>    
+      <div class="col-md-9">
+        <div class="input-group">
+          <label for="advisor-name1" class="control-label sr-only"></label>
+          <input value="{{responsiblename.value}}" type="search" 
+                  class="form-control" id="advisor-name1" name="advisor-name1"
                   [(ngModel)]="project.advisor[0]._id" placeholder="Name" [ngbTypeahead]="searchAdvisors" required>
+          <div class="input-group-addon button-group-addon">
+            <button type="button" class="btn btn-success btn-sm button-addon" (click)="addAdvisor()">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            </button>
+          </div>
         </div>
       </div>
-<!--      <label for="advisor-mobile" class="sr-only"></label>
-          <input #advisormobile *ngIf="companyproposer.value == checked" value="{{responsiblemobile.value}}" type="text" class="form-control" name="advisor-mobile"
-              [(ngModel)]="project.advisor.mobile" placeholder="Mobile" required>
-      <label for="advisor-mail" class="sr-only"></label>
-      <input #advisormail value="{{responsiblemail.value}}" type="text" class="form-control" name="advisor-mail"
-              [(ngModel)]="project.advisor.mail" placeholder="Mail" required>-->
+
+      <div *ngIf="advisorCount >= 2" class="col-md-9 col-md-offset-3">
+        <div class="input-group">
+          <label for="advisor-name2" class="control-label sr-only"></label>
+          <input type="search" class="form-control" id="advisor-name2" name="advisor-name2"
+                  [(ngModel)]="project.advisor[1]._id" placeholder="Name" [ngbTypeahead]="searchAdvisors">
+          <div class="input-group-addon button-group-addon">
+            <button type="button" class="btn btn-danger btn-sm button-addon" (click)="removeAdvisor()">
+              <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="advisorCount >= 3" class="col-md-9 col-md-offset-3">
+        <div class="input-group">
+          <label for="advisor-name3" class="control-label sr-only"></label>
+          <input type="search" class="form-control" id="advisor-name3" name="advisor-name3"
+                  [(ngModel)]="project.advisor[2]._id" placeholder="Name" [ngbTypeahead]="searchAdvisors">
+          <div class="input-group-addon button-group-addon">
+            <button type="button" class="btn btn-danger btn-sm button-addon" (click)="removeAdvisor()">
+              <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+
     </div>
 
 
+
     <div class="form-group">
-      <label for="student" class="control-label col-md-3">Student</label>
+
+      <label class="control-label col-md-3">Student</label>
       <div class="col-md-9">
-        <input type="search" class="form-control" #student1 id="student1" name="student1"
-                [(ngModel)]="project.student[0]" placeholder="Name (If pre-assigned)" [ngbTypeahead]="searchStudents">
-        <input *ngIf="studentCount >= 2" type="search" class="form-control" #student2 id="student2" name="student2"
-                [(ngModel)]="project.student[1]" placeholder="Name (If pre-assigned)" [ngbTypeahead]="searchStudents">
-        <input *ngIf="studentCount >= 3" type="search" class="form-control" #student3 id="student3" name="student3"
-                [(ngModel)]="project.student[2]" placeholder="Name (If pre-assigned)" [ngbTypeahead]="searchStudents">
-        <button type="button" class="btn btn-success btn-xs col-md-6" (click)="addStudent()">Add student</button>
-        <button type="button" class="btn btn-danger btn-xs col-md-6" (click)="removeStudent()"
-                  style="margin-top: 0">Remove student</button>
+        <div class="input-group">
+          <label for="student1" class="control-label sr-only"></label>
+          <input type="search" class="form-control" id="student1" name="student1" 
+                  [(ngModel)]="project.student[0]" placeholder="Name (If pre-assigned)" [ngbTypeahead]="searchStudents">
+          <div class="input-group-addon button-group-addon">
+            <button type="button" class="btn btn-success btn-sm button-addon" (click)="addStudent()">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
       </div>
+
+      <div *ngIf="studentCount >= 2" class="col-md-9 col-md-offset-3">
+        <div class="input-group">
+          <label for="student2" class="control-label sr-only"></label>
+          <input type="search" class="form-control" id="student2" name="student2" 
+                  [(ngModel)]="project.student[1]" placeholder="Name (If pre-assigned)" [ngbTypeahead]="searchStudents">
+          <div class="input-group-addon button-group-addon">
+            <button type="button" class="btn btn-danger btn-sm button-addon" (click)="removeStudent()">
+              <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="studentCount >= 3" class="col-md-9 col-md-offset-3">
+        <div class="input-group">
+          <label for="student3" class="control-label sr-only"></label>
+          <input type="search" class="form-control" id="student3" name="student3" 
+                  [(ngModel)]="project.student[2]" placeholder="Name (If pre-assigned)" [ngbTypeahead]="searchStudents">
+          <div class="input-group-addon button-group-addon">
+            <button type="button" class="btn btn-danger btn-sm button-addon" (click)="removeStudent()">
+              <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+
     </div>
 
 
 
     <button type="submit" class="btn btn-primary btn-block" >Create Project</button>
 <!--[disabled]="!heroForm.form.valid"-->
+
+
+
   </form>
+
+
 
 </div>

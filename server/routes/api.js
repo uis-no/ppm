@@ -47,6 +47,12 @@ var Student = require('../models/student.ts');
 var File = require('../models/file.ts');
 var Project = require('../models/project.ts');
 
+router.route('/sendMail')
+  .post((req, res) => {
+    Mail.sendMail(req.mail, req.subject, req.bodyText);
+    return res.status(200).send('Mail sent.');
+  });
+
 router.route('/projects/notify/:_id')
   .get((req,res) => {
     if(req.user.eduPersonAffiliation.includes('employee')) {
@@ -104,13 +110,12 @@ router.route('/projects/:_id/submission')
       } else {
         if (project.submission) {
           File.findOne({ _id : project.submission }, (err, file) => {
-            console.log(file);
             if (err) {
               return res.send(err);
             } else {
               var readStream = gfs.createReadStream(file);
-              console.log(readStream);
-              readStream.pipe(res);
+              console.log(readStream.pipe(res));
+              //readStream.pipe(res);
             }
           });
         }
@@ -311,8 +316,9 @@ router.route('/projects')
           .find({$or:[{ status: 'unassigned' }, { student: student._id }]}, (err, projects) => {
             if (err) {
               return res.status(500).send(err);
+            } else {
+              return res.status(200).json(projects);
             }
-            return res.status(200).json(projects);
           })
           .populate('course')
           .populate('proposer._id')
@@ -329,12 +335,11 @@ router.route('/projects')
       //console.log("trying to find all projects");
       Project
       .find((err, projects) => {
-        //console.log('all projects');
-        //console.log(projects);
         if (err) {
-          res.status(500).send(err);
+          return res.status(500).send(err);
+        } else {
+          return res.status(200).json(projects);
         }
-        res.status(200).json(projects);
       })
       .populate('course')
       .populate('proposer._id')
@@ -365,16 +370,17 @@ router.route('/projects')
       project._id = id + 1;
 
       if(req.user.eduPersonAffiliation.includes('employee')) {
-        if (!project.student) {
-          project.status = 'unassigned';
-        } else {
+        console.log(project.student);
+        if (project.student[0]) {
           project.status = 'assigned'
+        } else {
+          project.status = 'unassigned'
         }
         project.save((err) => {
           if (err) {
             res.status(500).send(err);
           } else {
-          res.status(200).json({ message: 'Your project has been created.'});
+            res.status(200).json({ message: 'Your project has been created.'});
           }
         });
       } else {
@@ -383,7 +389,7 @@ router.route('/projects')
           if (err) {
             res.status(500).send(err);
           } else {
-          res.status(200).json({ message: 'Your project has been created.'});
+            res.status(200).json({ message: 'Your project has been created.'});
           }
         });
       }
@@ -408,6 +414,7 @@ router.route('/projects/:_id')
     .populate('advisor._id')
     .populate('examiner._id')
     .populate('student')
+    .populate('file');
   })
 
   // update a project by id

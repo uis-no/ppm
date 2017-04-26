@@ -1,14 +1,24 @@
+<div>
+  <ul class="nav nav-pills">
+    <li><button class="btn btn-primary" (click)="renderTabState(100)">All</button></li>
+    <li><button class="btn btn-primary" (click)="renderTabState(0)">Pending</button></li>
+    <li><button class="btn btn-primary" (click)="renderTabState(1)">Unassigned</button></li>
+    <li><button class="btn btn-primary" (click)="renderTabState(2)">Assigned</button></li>
+    <li><button class="btn btn-primary" (click)="renderTabState(3)">Rejected</button></li>
+  </ul>
+</div>
+
 <div class="container">
   <div class="row" *ngFor="let project of projects" (click)="selectProject(project)"
     [class.active]="project === selectedProject">
-    <div class="panel"
+    <div *ngIf="tabTitle == project.status || tabTitle == 'All'" class="panel"
       [class.panel-default]="project.status == 'pending'"
       [class.panel-success]="project.status == 'unassigned' || project.status == 'assigned'"
       [class.panel-danger]="project.status == 'rejected'">
 
       <div class="panel-heading"><a class="panel-title" data-toggle="collapse" data-target="#project{{project._id}}"><h3>{{ project.title }}</h3></a></div>
       <!-- <div class="panel-collapse collapse"> -->
-      <div class="panel-collapse">
+      <div class="panel-collapse collapse" [class.collapse]="false">
         <div class="panel-body" id="project{{project._id}}" [routerLink]="['project-details/', project._id]">
           <p> Status: <span class="label"
             [class.label-success]="project.status == 'unassigned' || project.status == 'assigned'"
@@ -17,9 +27,9 @@
           <div [innerHTML]="md.convert(project.description)"></div>
           <p *ngIf="project.course._id"> Course: {{ project.course._id }} </p>
           <p> Year: {{ project.course.year }} </p>
-          <p *ngFor="let proposer of project.proposer"> Proposer: <span *ngIf="proposer.user">{{ proposer.user.name }}</span> </p>
-          <p *ngFor="let advisor of project.advisor"> Advisor: <span *ngIf="advisor.user">{{ advisor.user.name }}</span> </p>
-          <button [routerLink]="['project-details/', project._id]" class="card-link">See details</button>
+          <p *ngFor="let proposer of project.proposer"> Proposer: <span *ngIf="proposer._id">{{ proposer._id.name }}</span> </p>
+          <p *ngFor="let advisor of project.advisor"> Advisor: <span *ngIf="advisor._id">{{ advisor._id.name }}</span> </p>
+          <button [routerLink]="['project-details/', project._id]" class="btn btn-default">See details</button>
         </div>
       </div>
     </div>

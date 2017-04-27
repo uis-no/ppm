@@ -17,11 +17,13 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import {Observable} from 'rxjs/Observable';
 
+import { MailService } from '../services/mail.service';
+
 @Component({
   selector: 'project-details',
   templateUrl: './project-details.component.html',
   styleUrls: ['./project-details.component.css'],
-  providers: [ProjectsService, FileService, MarkdownService, LoginService, StudentsService]
+  providers: [ProjectsService, FileService, MarkdownService, LoginService, StudentsService, MailService]
 })
 
 
@@ -62,10 +64,11 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   ansatt: boolean = false;
   applicants: any = [];
 
+
   constructor(private projectsService: ProjectsService, private fileService: FileService,
     private md: MarkdownService, private route: ActivatedRoute, private loginService: LoginService,
-    private studentsService: StudentsService) {
-
+    private studentsService: StudentsService, private mailService: MailService) {
+    
     this.user = this.loginService.getUser().then((user) => {
       this.user = user;
       //console.log(this.user.eduPersonAffiliation[0]);
@@ -86,6 +89,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   }
 
 
+
   // Reads the url and grabs the id and makes a call to the service to get the project based on id
   ngOnInit() {
 
@@ -94,7 +98,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         console.log(project.submission);
         this.output = this.md.convert(this.project.description);
       });
-
+      
       //this.fileService.getFile(this.getid).then();
 
 
@@ -107,6 +111,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           });
         });
 
+      
   }
 
   ngOnDestroy() {
@@ -173,4 +178,56 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       .distinctUntilChanged()
       .map(term => term.length < 2 ? []
         : this.studentNames.filter(v => new RegExp(term, 'gi').test(v)).splice(0, 10));
+
+
+  @ViewChild('mailToModal')
+    mailToModal: ModalComponent;
+  
+  mail: String;
+
+  mailOpen(mail){
+    this.mail = mail;
+    (<HTMLInputElement>document.getElementById("mailfield")).value = mail;
+    this.mailToModal.open();
+  }
+
+  sendMail(){
+    this.mail = (<HTMLInputElement>document.getElementById("mailfield")).value;
+    var subject = (<HTMLInputElement>document.getElementById("subject")).value;
+    var text = (<HTMLInputElement>document.getElementById("mailtext")).value;
+    this.mailService.sendMail(this.mail, subject, text);
+    this.mailToModal.close();
+  }
+
+
+  approveProject(){
+    this.project.status = 'unassigned';
+    this.projectsService.updateProject(this.project);
+  }
+
+  @ViewChild('rejectModal')
+    rejectModal: ModalComponent;
+
+
+    rejectProject(){
+      (<HTMLInputElement>document.getElementById("mailfield")).value = this.project.proposer[0]._id.mail;
+      this.rejectModal.open();
+    }
+
+    rejectClose(){
+      this.project.status = 'rejected';
+      this.mail = (<HTMLInputElement>document.getElementById("mailfield")).value;
+      var subject = (<HTMLInputElement>document.getElementById("subject")).value;
+      var text = (<HTMLInputElement>document.getElementById("mailtext")).value;
+      this.mailService.sendMail(this.mail, subject, text);
+      this.rejectModal.close()
+    }
+
+    cancel(){
+      (<HTMLInputElement>document.getElementById("mailfield")).value = "";
+      (<HTMLInputElement>document.getElementById("subject")).value = "";
+      (<HTMLInputElement>document.getElementById("mailtext")).value = "";
+      this.modal.close();
+    }
+
 }

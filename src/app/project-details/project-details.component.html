@@ -144,7 +144,7 @@
 </div>
 </div>
 </div>
-<div *ngIf="!project.submission">
+<div *ngIf="!project.submission && student == true">
   <div ng2FileDrop name="uploadedFile" (fileOver)="fileOverBase($event)" [uploader]="uploader" type="file" style="border: dotted 3px lightgray; height: 64px;">Drop your submission here</div>
 <div>
 

@@ -89,6 +89,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   }
 
 
+
   // Reads the url and grabs the id and makes a call to the service to get the project based on id
   ngOnInit() {
 
@@ -97,7 +98,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         console.log(project.submission);
         this.output = this.md.convert(this.project.description);
       });
-
+      
       //this.fileService.getFile(this.getid).then();
 
 
@@ -109,6 +110,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           return student;
           });
         });
+
       
   }
 
@@ -186,7 +188,6 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   mailOpen(mail){
     this.mail = mail;
     (<HTMLInputElement>document.getElementById("mailfield")).value = mail;
-    console.log(mail);
     this.mailToModal.open();
   }
 
@@ -198,5 +199,35 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     this.mailToModal.close();
   }
 
+
+  approveProject(){
+    this.project.status = 'unassigned';
+    this.projectsService.updateProject(this.project);
+  }
+
+  @ViewChild('rejectModal')
+    rejectModal: ModalComponent;
+
+
+    rejectProject(){
+      (<HTMLInputElement>document.getElementById("mailfield")).value = this.project.proposer[0]._id.mail;
+      this.rejectModal.open();
+    }
+
+    rejectClose(){
+      this.project.status = 'rejected';
+      this.mail = (<HTMLInputElement>document.getElementById("mailfield")).value;
+      var subject = (<HTMLInputElement>document.getElementById("subject")).value;
+      var text = (<HTMLInputElement>document.getElementById("mailtext")).value;
+      this.mailService.sendMail(this.mail, subject, text);
+      this.rejectModal.close()
+    }
+
+    cancel(){
+      (<HTMLInputElement>document.getElementById("mailfield")).value = "";
+      (<HTMLInputElement>document.getElementById("subject")).value = "";
+      (<HTMLInputElement>document.getElementById("mailtext")).value = "";
+      this.modal.close();
+    }
 
 }

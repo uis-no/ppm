@@ -5,15 +5,36 @@
       [class.panel-success]="project.status == 'unassigned' || project.status == 'assigned'"
       [class.panel-danger]="project.status == 'rejected'">
     <div class="panel-heading">
-      <h1  *ngIf="project">Project Details for {{ project.title }}</h1>
-
-
-    
-      
-      <button *ngIf="student == true" class="btn btn-info" id="applyEdit" type="button" (click)="open()">Apply for Project</button>
-      <button *ngIf="ansatt == true" class="btn btn-info" id="applyEdit" type="button">Edit Project</button>
-
+       <div class="row"> 
+          <div class="col-md-9">
+            <h1  *ngIf="project">Project Details for {{ project.title }}</h1>
+          </div>
+          <div class="col-md-3 offset-md-3 text-right" style="margin-top: 20px;">
+            <button *ngIf="student == true" class="btn btn-primary" type="button" (click)="open()">Apply for Project</button>
+            <button *ngIf="ansatt == true && project.status == 'pending'" class="btn btn-success" type="button" (click)="approveProject()">Approve</button>
+            <button *ngIf="ansatt == true && project.status == 'pending'" class="btn btn-danger" type="button" (click)="rejectProject()">Reject</button>
+            <button *ngIf="ansatt == true" class="btn btn-primary" type="button">Edit Project</button>    
+          </div>
+        </div>
     </div>
+
+    <modal #rejectModal>
+        <modal-header [show-close]="true">
+          <h4 class="modal-title">Why are you rejecting this project?</h4>
+        </modal-header>
+        <modal-body>
+          <div class="form-group">
+            <label for="mail"></label>
+            <input type="text" class="form-control" id="mailfield" value="" disabled>
+            <input type="text" class="form-control" style="margin-top:10px;" id="subject" value="" placeholder="Subject">
+            <textarea id="mailtext" class="form-control" rows="7" cols="50" style="margin-top:10px;" placeholder="Reject reason here"></textarea>
+          </div>
+        </modal-body>
+        <modal-footer>
+          <button type="button" class="btn btn-primary" (click)="rejectClose()">Send & Submit</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" (click)="cancel()">Cancel</button>
+        </modal-footer>
+      </modal>
       <modal #modal>
         <modal-header [show-close]="true">
           <h4 class="modal-title">Apply for this project:</h4>

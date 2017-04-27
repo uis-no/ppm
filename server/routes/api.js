@@ -49,7 +49,8 @@ var Project = require('../models/project.ts');
 
 router.route('/sendMail')
   .post((req, res) => {
-    Mail.sendMail(req.body.mail, req.body.subject, req.body.bodyText);
+    var body = 'You received a message from ' + req.user.eduPersonPrincipalName + ':\n' + req.body.bodyText;
+    Mail.sendMail(req.body.mail, req.body.subject, body);
     return res.status(200).send('Mail sent.');
   });
 
@@ -147,6 +148,7 @@ router.route('/projects/:_id/submission')
           // reads the input as it writes the output
           .pipe(writeStream);
           // saves the id reference of child file to parent project
+          project.status = 'delivered';
           project.submission = readStream.id;
           project.save();
       });

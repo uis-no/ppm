@@ -35,6 +35,7 @@
           <button type="button" class="btn btn-default" data-dismiss="modal" (click)="cancel()">Cancel</button>
         </modal-footer>
       </modal>
+
       <modal #modal>
         <modal-header [show-close]="true">
           <h4 class="modal-title">Apply for this project:</h4>
@@ -52,23 +53,29 @@
           <button type="button" class="btn btn-default" data-dismiss="modal" (click)="dismiss()">Cancel</button>
         </modal-footer>
       </modal>
+
 <div class="panel-body">
       <div [innerHTML]="md.convert(project.description)"></div>
       <div>
-        <p id="info"> Course: {{ project.course._id }} </p>
-
-        <p id="info"> Year: {{ project.course.year }} </p>
-
 
         <p id="info">Status: <span class="label"
             [class.label-success]="project.status == 'unassigned' || project.status == 'assigned' || project.status == 'delivered'"
             [class.label-danger]="project.status == 'rejected'"
             [class.label-default]="project.status == 'pending'">{{ project.status }}</span></p>
 
+        <p id="info"> Course: {{ project.course._id }} </p>
+
+        <p id="info"> Year: {{ project.course.year }} </p>
+
+
+        
+
         <a *ngIf="project.file" class="info" (click)="downloadSubmission(project._id)">Open submission</a>
       </div>
 
       <div id="respdiv">
+
+        <p *ngIf="project.proposer.length <= 0" class="responsibles"><strong>Proposer:</strong></p>
         <p *ngFor="let proposer of project.proposer" class="responsibles">
           <strong>Proposer:</strong> <br> 
           <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ proposer._id.name }} <br> 
@@ -78,17 +85,17 @@
           </button>
         </p>
 
-
-        <p *ngFor="let responsible of project.responsible" class="responsibles">
+        <p *ngIf="!project.responsible" class="responsibles"><strong>Responsible:</strong></p>
+        <p *ngIf="project.responsible"class="responsibles">
           <strong>Responsible:</strong> <br> 
-          <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ responsible._id.name }} <br> 
-          <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> {{ responsible._id.mobile }}<br> 
-          <button (click)="mailOpen(responsible._id.mail)" id="mailto">
-            <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ responsible._id.mail }} <br>
+          <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ project.responsible._id.name }} <br> 
+          <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> {{ project.responsible._id.mobile }}<br> 
+          <button (click)="mailOpen(project.responsible._id.mail)" id="mailto">
+            <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ project.responsible._id.mail }} <br>
           </button>
         </p>
 
-
+        <p *ngIf="project.advisor.length <= 0" class="responsibles"><strong>Advisor:</strong></p>
         <p *ngFor="let advisor of project.advisor" class="responsibles">
           <strong>Advisor:</strong> <br> 
           <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ advisor._id.name }} <br> 
@@ -98,7 +105,7 @@
           </button>
         </p>
 
-
+        <p *ngIf="project.examiner.length <= 0" class="responsibles"><strong>Examiner:</strong></p>
         <p *ngFor="let examiner of project.examiner" class="responsibles">
           <strong>Examiner:</strong> <br> 
           <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ examiner._id.name }} <br> 
@@ -108,7 +115,29 @@
           </button>
         </p>
 
-        <p *ngIf="!project.examiner"> Examiner: None assigned </p>
+        <div *ngIf="project.advisor.length <= 0 || !project.responsible || project.examiner.length <= 0" class="col-md-9 offset-md-3 text-right">
+          <button *ngIf="ansatt==true" class="btn btn-primary" (click)="addPeopleModal.open()">Add people</button>
+        </div>
+
+        <modal #addPeopleModal>
+          <modal-header [show-close]="true">
+             <h4 class="modal-title">Add responsible/advisor/examiner for this project:</h4>
+          </modal-header>
+          <modal-body>
+            <div class="form-group">
+               <input autofocus type="text" class="form-control" id="respText" style="margin-top:10px;" placeholder="Add responsible" value="" [ngbTypeahead]="searchResponsibles"> 
+               <button type="button" class="btn btn-default" (click)="addResp()" style="margin-top:10px;">Add</button>
+               <input autofocus type="text" class="form-control" id="advisortext" style="margin-top:10px;" placeholder="Add advisor" value="" [ngbTypeahead]="searchAdvisors">
+               <button type="button" class="btn btn-default" (click)="addAdvisor()" style="margin-top:10px;">Add</button>
+               <input autofocus type="text" class="form-control" id="examinertext" style="margin-top:10px;" placeholder="Add Examiner" value="" [ngbTypeahead]="searchEmployees">
+               <button type="button" class="btn btn-default" (click)="addExaminer()" style="margin-top:10px;">Add</button>
+            </div>              
+          </modal-body>
+          <modal-footer>
+             <button type="button" class="btn btn-primary" (click)="submit()">Done</button>
+             <button type="button" class="btn btn-default" data-dismiss="modal" (click)="addPeopleCancel()">Cancel</button>
+          </modal-footer>
+        </modal>
 
       </div>
       <br>

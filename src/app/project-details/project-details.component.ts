@@ -10,6 +10,10 @@ import { FileUploader } from 'ng2-file-upload';
 import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
 import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 
+import { CompaniesService} from '../services/companies.service';
+import { Company } from '../interfaces/company.interface';
+import { EmployeesService } from '../services/employee.service';
+import { Employee } from '../interfaces/employee.interface';
 import { StudentsService } from '../services/students.service';
 import { Student } from '../interfaces/student.interface';
 import 'rxjs/add/operator/map';
@@ -23,7 +27,7 @@ import { MailService } from '../services/mail.service';
   selector: 'project-details',
   templateUrl: './project-details.component.html',
   styleUrls: ['./project-details.component.css'],
-  providers: [ProjectsService, FileService, MarkdownService, LoginService, StudentsService, MailService]
+  providers: [ProjectsService, FileService, MarkdownService, LoginService, StudentsService, MailService, EmployeesService, CompaniesService]
 })
 
 
@@ -43,9 +47,14 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   public fileOverBase(e:any):void {
     this.hasBaseDropZoneOver = e;
   }
-
+  
+  companies: Company[];
+  employees: Employee[];
+  responsibleNames: string[] = [];
+  advisorNames: string[] = [];
   students: Student[];
   studentNames: string[] = [];
+  employeeNames: string[] = [];
 
   project: Project;
   private sub: any;
@@ -67,7 +76,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   constructor(private projectsService: ProjectsService, private fileService: FileService,
     private md: MarkdownService, private route: ActivatedRoute, private loginService: LoginService,
-    private studentsService: StudentsService, private mailService: MailService) {
+    private studentsService: StudentsService, private mailService: MailService, 
+    private employeeService: EmployeesService, private companiesService: CompaniesService) {
     
     this.user = this.loginService.getUser().then((user) => {
       this.user = user;
@@ -97,9 +107,31 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         this.project = project;
         console.log(project.submission);
         this.output = this.md.convert(this.project.description);
+        console.log(project.responsible._id);
       });
       
       //this.fileService.getFile(this.getid).then();
+
+      this.companiesService
+      .getAllCompanies()
+      .then((companies: Company[]) => {
+        this.companies = companies.map((company) => {
+          this.responsibleNames.push(company.name);
+          this.advisorNames.push(company.name);
+          return company;
+        })
+      })
+
+      this.employeeService
+      .getAllEmployees()
+      .then((employees: Employee[]) => {
+        this.employees = employees.map((employee) => {
+          this.employeeNames.push(employee.name);
+          this.responsibleNames.push(employee.name);
+          this.advisorNames.push(employee.name);
+          return employee;
+        });
+      });
 
 
       this.studentsService
@@ -169,8 +201,26 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   }
 
 
+  searchResponsibles = (text$: Observable<string>) =>
+    text$
+      .debounceTime(200)
+      .distinctUntilChanged()
+      .map(term => term.length < 2 ? []
+        : this.responsibleNames.filter(v => new RegExp(term, 'gi').test(v)).splice(0, 10));
 
+  searchAdvisors = (text$: Observable<string>) =>
+    text$
+      .debounceTime(200)
+      .distinctUntilChanged()
+      .map(term => term.length < 2 ? []
+        : this.advisorNames.filter(v => new RegExp(term, 'gi').test(v)).splice(0, 10));
 
+  searchEmployees = (text$: Observable<string>) =>
+    text$
+      .debounceTime(200)
+      .distinctUntilChanged()
+      .map(term => term.length < 2 ? []
+        : this.employeeNames.filter(v => new RegExp(term, 'gi').test(v)).splice(0, 10));
 
   searchStudents = (text$: Observable<string>) =>
     text$
@@ -216,6 +266,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
     rejectClose(){
       this.project.status = 'rejected';
+      this.projectsService.updateProject(this.project);
       this.mail = (<HTMLInputElement>document.getElementById("mailfield")).value;
       var subject = (<HTMLInputElement>document.getElementById("subject")).value;
       var text = (<HTMLInputElement>document.getElementById("mailtext")).value;
@@ -228,6 +279,123 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       (<HTMLInputElement>document.getElementById("subject")).value = "";
       (<HTMLInputElement>document.getElementById("mailtext")).value = "";
       this.modal.close();
+    }
+    
+
+    responsibleFound = false;
+    
+
+    @ViewChild('addPeopleModal')
+      addPeopleModal: ModalComponent;
+
+    addResp() {
+      this.project.responsible = {role: null, _id: null};
+      var promises: Promise<any>[] = [];
+      var resps: string;
+      if ((<HTMLInputElement>document.getElementById("respText")).value != "") {
+        resps = (<HTMLInputElement>document.getElementById("respText")).value;
+        (<HTMLInputElement>document.getElementById("respText")).value = "";
+
+
+        this.project.responsible._id = resps;
+        promises.push(this.employeeService.getEmployee(this.project.responsible._id)
+          .then((employee: Employee) => {
+            if (employee != null) {
+              this.responsibleFound = true;
+              this.project.responsible.role = 'Employee';
+              this.project.responsible._id = employee._id;
+              
+            }
+          }));
+
+        if (this.responsibleFound == false) {
+          promises.push(this.companiesService.getCompany(this.project.responsible._id)
+            .then((company: Company) => {
+              if (company != null) {
+                this.responsibleFound = true;
+                this.project.responsible.role = 'Company';
+                this.project.responsible._id = company._id;
+               
+              }
+            }));
+
+
+        }
+        
+      } else {  }
+
+    }
+    
+    addAdvisor(){
+      this.project.advisor[0] = {role: null, _id: null};
+      var promises: Promise<any>[] = [];
+      var advisors: string;
+      if ((<HTMLInputElement>document.getElementById("advisortext")).value != ""){
+        advisors = ((<HTMLInputElement>document.getElementById("advisortext")).value);
+        (<HTMLInputElement>document.getElementById("advisortext")).value = "";
+      }else{}
+      
+      
+      this.project.advisor[0]._id = advisors;
+      for (let key in this.project.advisor) {
+      promises.push(this.employeeService.getEmployee(this.project.advisor[key]._id)
+                          .then((employee: Employee) => {
+                            if (employee != null) {
+                              this.responsibleFound = true;
+                              this.project.advisor[key].role = 'Employee';
+                              this.project.advisor[key]._id = employee._id;
+                              
+                            }
+      }));
+
+      if (this.responsibleFound == false) {
+        promises.push(this.companiesService.getCompany(this.project.advisor[key]._id)
+                            .then((company: Company) => {
+                              if (company != null) {
+                                this.responsibleFound = true;
+                                this.project.advisor[key].role = 'Company';
+                                this.project.advisor[key]._id = company._id;
+                                
+                              }
+        }));
+      }
+      
+    }
+    }
+
+    addExaminer(){
+      this.project.examiner[0] = {role: null, _id: null};
+      var promises: Promise<any>[] = [];
+      var advisors: string;
+      if ((<HTMLInputElement>document.getElementById("examinertext")).value != ""){
+        advisors = ((<HTMLInputElement>document.getElementById("examinertext")).value);
+        (<HTMLInputElement>document.getElementById("examinertext")).value = "";
+      }else{}
+      
+      
+      this.project.examiner[0]._id = advisors;
+      for (let key in this.project.examiner) {
+      promises.push(this.employeeService.getEmployee(this.project.examiner[key]._id)
+                          .then((employee: Employee) => {
+                            if (employee != null) {
+                              this.responsibleFound = true;
+                              this.project.examiner[key].role = 'Employee';
+                              this.project.examiner[key]._id = employee._id;
+                              
+                            }
+      }));
+        
+      
+    }
+    }
+
+    submit(){
+      this.projectsService.updateProject(this.project);
+      this.addPeopleModal.close();
+    }
+
+    addPeopleCancel(){
+        this.addPeopleModal.close();
     }
 
 }

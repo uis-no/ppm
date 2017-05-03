@@ -15,7 +15,7 @@ var project = new Schema({
 
   status : String,
   // TODO: change user to _id if needed
-  responsible : [ { role: String, _id: { type: String, refPath: 'responsible.role' } } ],
+  responsible :  { role: String, _id: { type: String, refPath: 'responsible.role' } } ,
 
   advisor : [ { role: String, _id: { type: String, refPath: 'advisor.role' } } ],
 

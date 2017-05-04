@@ -6,6 +6,7 @@ import { Project } from '../interfaces/project.interface';
 import { LoginService } from '../services/passport.service';
 import { MarkdownService } from '../services/markdown.service';
 import { FileUploader } from 'ng2-file-upload';
+import { MailService } from '../services/mail.service';
 
 import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
 import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
@@ -21,7 +22,6 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import {Observable} from 'rxjs/Observable';
 
-import { MailService } from '../services/mail.service';
 
 @Component({
   selector: 'project-details',
@@ -35,6 +35,7 @@ import { MailService } from '../services/mail.service';
 
 export class ProjectDetailsComponent implements OnInit, OnDestroy {
   private id: number = 0;
+  private mailFormat: any = {};
 
   private blob: any;
 
@@ -47,7 +48,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   public fileOverBase(e:any):void {
     this.hasBaseDropZoneOver = e;
   }
-  
+
   companies: Company[];
   employees: Employee[];
   responsibleNames: string[] = [];
@@ -76,9 +77,9 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   constructor(private projectsService: ProjectsService, private fileService: FileService,
     private md: MarkdownService, private route: ActivatedRoute, private loginService: LoginService,
-    private studentsService: StudentsService, private mailService: MailService, 
+    private studentsService: StudentsService, private mailService: MailService,
     private employeeService: EmployeesService, private companiesService: CompaniesService) {
-    
+
     this.user = this.loginService.getUser().then((user) => {
       this.user = user;
       //console.log(this.user.eduPersonAffiliation[0]);
@@ -100,7 +101,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   private groups: any[] = [];
   //private studs: any[] = [];
-  
+
   // Reads the url and grabs the id and makes a call to the service to get the project based on id
   ngOnInit() {
       this.projectsService.getProject(this.getid).then((project: Project) => {
@@ -110,23 +111,20 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         this.project.applied.forEach((idx)=>{
           var studs: Student[] = [];
             idx.forEach((student)=>{
-              
+
               this.studentsService.getStudentByID(student).then((stud: Student) => {
-                
+
                 if (stud){
                   studs.push(stud);
                 }
-                
-              });              
+
+              });
             });
             this.groups.push(studs);
-              
+
         });
         console.log(this.project);
       });
-      
-      
-      //this.fileService.getFile(this.getid).then();
 
       this.companiesService
       .getAllCompanies()
@@ -159,7 +157,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           });
         });
 
-      
+
   }
 
   ngOnDestroy() {
@@ -176,7 +174,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     }
     this.project.status = 'assigned';
     this.projectsService.updateProject(this.project);
-    
+
   }
 
   addApplicants(){
@@ -184,7 +182,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     this.applicants.push((<HTMLInputElement>document.getElementById("textbox")).value);
     (<HTMLInputElement>document.getElementById("textbox")).value = "";
     }else{}
-    
+
   }
 
   @ViewChild('modal')
@@ -204,7 +202,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   close() {
     var promises: Promise<any>[] = [];
-    
+
     this.project.applied.push(this.applicants);
     for (let key1 in this.project.applied) {
       for (let key in this.project.applied[key1]) {
@@ -220,7 +218,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       this.projectsService.updateProject(this.project);
     });
 
-    
+
 
     this.modal.close();
     this.applicants = [];
@@ -298,6 +296,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       var subject = (<HTMLInputElement>document.getElementById("subject")).value;
       var text = (<HTMLInputElement>document.getElementById("mailtext")).value;
       this.mailService.sendMail(this.mail, subject, text);
+      this.projectsService.updateProject(this.project);
       this.rejectModal.close()
     }
 
@@ -307,10 +306,10 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       (<HTMLInputElement>document.getElementById("mailtext")).value = "";
       this.modal.close();
     }
-    
+
 
     responsibleFound = false;
-    
+
 
     @ViewChild('addPeopleModal')
       addPeopleModal: ModalComponent;
@@ -331,7 +330,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
               this.responsibleFound = true;
               this.project.responsible.role = 'Employee';
               this.project.responsible._id = employee._id;
-              
+
             }
           }));
 
@@ -342,17 +341,17 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
                 this.responsibleFound = true;
                 this.project.responsible.role = 'Company';
                 this.project.responsible._id = company._id;
-               
+
               }
             }));
 
 
         }
-        
+
       } else {  }
 
     }
-    
+
     addAdvisor(){
       this.project.advisor[0] = {role: null, _id: null};
       var promises: Promise<any>[] = [];
@@ -361,8 +360,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         advisors = ((<HTMLInputElement>document.getElementById("advisortext")).value);
         (<HTMLInputElement>document.getElementById("advisortext")).value = "";
       }else{}
-      
-      
+
+
       this.project.advisor[0]._id = advisors;
       for (let key in this.project.advisor) {
       promises.push(this.employeeService.getEmployee(this.project.advisor[key]._id)
@@ -371,7 +370,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
                               this.responsibleFound = true;
                               this.project.advisor[key].role = 'Employee';
                               this.project.advisor[key]._id = employee._id;
-                              
+
                             }
       }));
 
@@ -382,11 +381,11 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
                                 this.responsibleFound = true;
                                 this.project.advisor[key].role = 'Company';
                                 this.project.advisor[key]._id = company._id;
-                                
+
                               }
         }));
       }
-      
+
     }
     }
 
@@ -398,8 +397,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         advisors = ((<HTMLInputElement>document.getElementById("examinertext")).value);
         (<HTMLInputElement>document.getElementById("examinertext")).value = "";
       }else{}
-      
-      
+
+
       this.project.examiner[0]._id = advisors;
       for (let key in this.project.examiner) {
       promises.push(this.employeeService.getEmployee(this.project.examiner[key]._id)
@@ -408,11 +407,11 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
                               this.responsibleFound = true;
                               this.project.examiner[key].role = 'Employee';
                               this.project.examiner[key]._id = employee._id;
-                              
+
                             }
       }));
-        
-      
+
+
     }
     }
 

@@ -28,6 +28,7 @@
     "body-parser": "^1.15.2",
     "core-js": "^2.4.1",
     "cors": "^2.8.2",
+    "dotenv": "^4.0.0",
     "express": "^4.14.0",
     "express-handlebars": "^3.0.0",
     "express-jwt": "^5.1.0",
@@ -45,6 +46,7 @@
     "passport-saml": "^0.15.0",
     "prismjs": "^1.6.0",
     "rxjs": "5.0.1",
+    "tinymce": "^4.5.7",
     "ts-helpers": "^1.1.1",
     "xlsx": "^0.9.12",
     "zone.js": "^0.6.23"

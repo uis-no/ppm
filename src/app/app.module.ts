@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
-
 import { FileUploadModule } from 'ng2-file-upload';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -12,16 +11,16 @@ import { AUTH_PROVIDERS }      from 'angular2-jwt';
 import { AuthGuard } from './auth.guard';
 import { Auth } from './auth.service';
 
-
 import { AppComponent } from './app.component';
 
 import { HomepageComponent } from './homepage/homepage.component';
 
+import { AddProjectComponent } from './add-project/add-project.component';
+import { TinyEditorComponent } from './add-project/tiny-editor.component';
 
 import { MarkdownDirective } from './directives/markdown.directive';
 
 import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
-
 // Services
 import { LoginService } from './services/passport.service';
 import { EmployeesService } from './services/employee.service';
@@ -29,9 +28,6 @@ import { ProjectsService } from './services/projects.service';
 import { StudentsService } from './services/students.service';
 import { FileService } from './services/file.service';
 import { MailService } from './services/mail.service';
-
-
-import { AddProjectComponent } from './add-project/add-project-employee.component';
 
 // Controllers
 import { ProjectsComponent } from './projects/projects.component';
@@ -87,8 +83,7 @@ const ROUTES = [
     AddProjectComponent,
     ProjectDetailsComponent,
     MarkdownDirective,
-    MarkdownDirective
-
+    TinyEditorComponent
   ],
   imports: [
     BrowserModule,
@@ -96,8 +91,8 @@ const ROUTES = [
     FormsModule,
     HttpModule,
     RouterModule.forRoot(ROUTES),
-    NgbModule.forRoot(),
     Ng2Bs3ModalModule,
+    NgbModule.forRoot()
   ],
   providers: [EmployeesService, ProjectsService, StudentsService, AUTH_PROVIDERS, AuthGuard, Auth, LoginService, FileService, MailService],
   bootstrap: [AppComponent]

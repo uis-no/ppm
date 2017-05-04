@@ -119,6 +119,8 @@
           <button *ngIf="ansatt==true" class="btn btn-primary" (click)="addPeopleModal.open()">Add people</button>
         </div>
 
+
+
         <modal #addPeopleModal>
           <modal-header [show-close]="true">
              <h4 class="modal-title">Add responsible/advisor/examiner for this project:</h4>
@@ -141,15 +143,28 @@
 
       </div>
       <br>
-      <div id="studentdiv" *ngIf="project.student.length > 0 && project.status == 'assigned'">
+      <div id="studentdiv" *ngIf="project.assigned.length > 0 && project.status == 'assigned'">
         <p style="font-weight: bold;" >Students:</p>
-          <p *ngFor="let student of project.student" class="students"> 
+          <p *ngFor="let student of project.assigned" class="students"> 
             <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ student.name }} <br> 
             <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> {{ student.mobile }} <br> 
             <button (click)="mailOpen(student.mail)" id="mailto">
               <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ student.mail }} <br>
             </button>
           </p>
+      </div>
+
+
+      <div id="studentdiv" *ngIf="project.applied.length > 0 && project.status == 'unassigned'">
+          <p style="font-weight: bold;"> Applicants to this project:</p>
+          <div *ngFor="let group of groups" class="students" style="min-height: 60px;">
+              <p *ngFor="let person of group">
+                <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{person.name}}
+              </p>
+                <button class="btn btn-primary" (click)="assign(group)" id="assignGroup" style="bottom: 0;">Assign this group</button>
+                <br>
+                <br>
+          </div><br>
       </div>
 
 
@@ -160,7 +175,6 @@
         <modal-body>
           <div class="form-group">
             <label for="mail"></label>
-            <input type="text" class="form-control" id="mailfield" value="" disabled>
             <input type="text" class="form-control" id="subject" value="" placeholder="Subject">
             <textarea id="mailtext" class="form-control" rows="7" cols="50" style="margin-top:10px;" placeholder="Write your mail here"></textarea>
           </div>

@@ -25,12 +25,10 @@
           <h1 *ngIf="student == true">My Project</h1>
           <h1 *ngIf="employee == true">Projects for processing</h1>
         </div>
-        <div>
-          <ul *ngIf="employee == true" class="nav nav-pills">
-            <li><button class="btn btn-primary" (click)="renderTabState(100)">All</button></li>
-            <li><button class="btn btn-primary" (click)="renderTabState(0)">Pending</button></li>
-            <li><button class="btn btn-primary" (click)="renderTabState(1)">Assigned</button></li>
-          </ul>
+        <div *ngIf="employee == true" class="btn-group">
+          <button class="btn btn-primary" (click)="renderTabState(100)">All</button>
+          <button class="btn btn-primary" (click)="renderTabState(0)">Pending</button>
+          <button class="btn btn-primary" (click)="renderTabState(1)">Assigned</button>
         </div>
         <div *ngIf="student == true">
             <div *ngIf="myProject" class="panel" [class.panel-success]="myProject.status == 'assigned' || myProject.status == 'unassigned'"
@@ -58,7 +56,7 @@
                 <div class="panel-heading">
                   <p class="panel-title panel-primary">{{project.title}}</p>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body d-inline-block">
                   <p>Status: <span class="label"
                     [class.label-success]="project.status == 'assigned' || project.status == 'unassigned'"
                     [class.label-default]="project.status == 'pending'">{{project.status}}</span></p>
@@ -82,7 +80,10 @@
           <button class="btn btn-primary btn-margin" (click)="auth.logout()" *ngIf="auth.authenticated()">Log Out</button>
         </div>
         <div class="panel panel-info">
-          <div class="panel-heading"><h4>Deadlines</h4></div>
+          <div class="panel-heading col">
+            <h4>Deadlines</h4>
+            <span class="glyphicon glyphicon-cog" (click)="updateDeadlines()"></span>
+          </div>
           <!--<div class="panel-body"><p ngFor="let deadline of deadlines">{{deadline}}</p></div>-->
           <div class="panel-body">
             <h4>For faculty</h4>

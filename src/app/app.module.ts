@@ -58,6 +58,11 @@ const ROUTES = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'app-homepage/project-details/:id/edit',
+    component: AddProjectComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'new-project',
     component: AddProjectComponent,
     canActivate: [AuthGuard]
@@ -66,6 +71,11 @@ const ROUTES = [
     path: 'projects/project-details/:id',
     component: ProjectDetailsComponent,
     canActivate: [AuthGuard]
+  },
+  {
+    path:'projects/project-details/:id/edit',
+    component: AddProjectComponent,
+    canactivate: [AuthGuard]
   }
 ];
 

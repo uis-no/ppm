@@ -170,8 +170,21 @@ router.route('/company')
 
   // create new company
   .post((req, res) => {
-    var obj = req.body;
-    var company = new Company(obj);
+
+    // increments id to a new company
+    Company.find((err, companies) => {
+      var obj = req.body;
+      var company = new Company(obj);
+
+      var id = 0;
+      companies.forEach((c) => {
+        if (id < parseInt(c._id)) {
+          id = parseInt(c._id);
+        }
+      });
+      company._id = String(id + 1);
+
+
     company.save((err) => {
       if (err) {
         res.status(500).send(err);
@@ -179,7 +192,8 @@ router.route('/company')
         res.status(200).json({ message: 'Your company has been created.'});
       }
     });
-  });
+  })
+});
 
 
 

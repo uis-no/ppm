@@ -416,20 +416,29 @@ router.route('/projects/:_id')
     .populate('advisor._id')
     .populate('examiner._id')
     .populate('student')
+    .populate('assigned')
     .populate('file');
   })
 
   // update a project by id
   .put((req, res) => {
     var obj = req.body;
-    var project = new Project(obj);
-
-    Project.findOneAndUpdate({ _id : project._id }, project,
-        (err) =>{
+    var resProject = new Project(obj);
+    Project.findOne({ _id : resProject._id }, (err, project) =>{
       if (err) {
         res.status(500).send(err);
       } else {
-      res.status(200).json({ message: 'Your project has been updated.'});
+        if ( req.user.eduPersonAffiliation.includes('student') && (resProject.status == 'assigned' && project.status == 'unassigned')){
+          return res.send('Unauthorized access!');
+        } else {
+          Project.findOneAndUpdate({ _id: resProject}, resProject, (err) => {
+            if (err) {
+              return res.send(err);
+            } else {
+              return res.status(200).json({ message: 'Your project has been updated.'});
+            }
+          });
+        }      
       }
     });
   })
@@ -484,6 +493,19 @@ router.route('/student/:name')
   // get a student by name
   .get((req, res) => {
     Student.findOne({ name : req.params.name }, (err, student) => {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.status(200).json(student);
+      }
+    });
+  });
+
+  router.route('/student/byid/:_id')
+  // get a student by id
+  .get((req, res) => {
+    console.log(req.params._id);
+    Student.findOne({ _id : req.params._id }, (err, student) => {
       if (err) {
         res.status(500).send(err);
       } else {

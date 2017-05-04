@@ -98,17 +98,33 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-
-
+  private groups: any[] = [];
+  //private studs: any[] = [];
+  
   // Reads the url and grabs the id and makes a call to the service to get the project based on id
   ngOnInit() {
-
       this.projectsService.getProject(this.getid).then((project: Project) => {
         this.project = project;
         console.log(project.submission);
         this.output = this.md.convert(this.project.description);
-        console.log(project.responsible._id);
+        this.project.applied.forEach((idx)=>{
+          var studs: Student[] = [];
+            idx.forEach((student)=>{
+              
+              this.studentsService.getStudentByID(student).then((stud: Student) => {
+                
+                if (stud){
+                  studs.push(stud);
+                }
+                
+              });              
+            });
+            this.groups.push(studs);
+              
+        });
+        console.log(this.project);
       });
+      
       
       //this.fileService.getFile(this.getid).then();
 
@@ -154,20 +170,31 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     window.location.href = 'http://localhost:3000/api/projects/' + id + '/submission';
   }
 
+  assign(group: any[]){
+    for(var stud in group){
+      this.project.assigned.push(group[stud])
+    }
+    this.project.status = 'assigned';
+    this.projectsService.updateProject(this.project);
+    
+  }
+
   addApplicants(){
     if ((<HTMLInputElement>document.getElementById("textbox")).value != ""){
     this.applicants.push((<HTMLInputElement>document.getElementById("textbox")).value);
     (<HTMLInputElement>document.getElementById("textbox")).value = "";
     }else{}
-    console.log(this.applicants)
+    
   }
 
   @ViewChild('modal')
     modal: ModalComponent;
 
   open(){
-    this.applicants.push(this.user.eduPersonPrincipalName);
-    this.modal.open();
+    this.studentsService.getStudentByID(this.user.mail).then((student: Student) => {
+        this.applicants.push(student.name);
+        this.modal.open();
+    });
   }
 
   dismiss(){
@@ -177,7 +204,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   close() {
     var promises: Promise<any>[] = [];
-    console.log(this.applicants)
+    
     this.project.applied.push(this.applicants);
     for (let key1 in this.project.applied) {
       for (let key in this.project.applied[key1]) {
@@ -193,7 +220,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       this.projectsService.updateProject(this.project);
     });
 
-    console.log(this.project);
+    
 
     this.modal.close();
     this.applicants = [];

@@ -61,7 +61,7 @@ router.route('/projects/notify/:_id')
         if (err) {
           res.status(500).send(err);
         } else {
-          if (project.status == 'assigned' && project.file) {
+          if (project.status == 'delivered' && project.file) {
             Employee.findOne({ user: project.examiner.user }, (err, examiner) => {
               Mail.sendMail(examiner.mail, 'Project submission of ' + project.title + ' is ready for evaluation',
               'Go to http:localhost:3000/projects/' + project._id + '/submission to download file');
@@ -115,6 +115,7 @@ router.route('/projects/:_id/submission')
               return res.send(err);
             } else {
               var readStream = gfs.createReadStream(file);
+              // this will stream the file directly to the browser, adobe has a nice browser handler for pdfs
               console.log(readStream.pipe(res));
               //readStream.pipe(res);
             }
@@ -207,6 +208,30 @@ router.route('/course')
       }
       res.status(200).json(courses);
     })
+  });
+
+router.route('/course/:_id')
+  .get((req, res) => {
+    Course.findOne({_id: req.params._id}, (err, course) => {
+      if (err) {
+        return res.status(500).send(err);
+      } else {
+        return res.status(200).json(course);
+      }
+    });
+  })
+  .put((req, res) => {
+    if (req.user.eduPersonAffiliation.includes('employee')) {
+      var obj = req.body;
+      var course = new Course(obj);
+      Course.findOneAndUpdate({_id: req.params._id}, course, (err) => {
+        if (err) {
+          return res.status(500).send(err);
+        } else {
+          return res.status(200).send(req.params._id + 'has been updated');
+        }
+      });
+    }
   });
 
 router.route('/employee')
@@ -341,7 +366,7 @@ router.route('/projects')
           .populate('responsible._id')
           .populate('advisor._id')
           .populate('examiner._id')
-          .populate('student')
+          .populate('student');
         }
       });
 

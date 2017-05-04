@@ -6,6 +6,7 @@ import { Project } from '../interfaces/project.interface';
 import { LoginService } from '../services/passport.service';
 import { MarkdownService } from '../services/markdown.service';
 import { FileUploader } from 'ng2-file-upload';
+import { MailService } from '../services/mail.service';
 
 import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
 import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
@@ -17,7 +18,6 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import {Observable} from 'rxjs/Observable';
 
-import { MailService } from '../services/mail.service';
 
 @Component({
   selector: 'project-details',
@@ -31,6 +31,7 @@ import { MailService } from '../services/mail.service';
 
 export class ProjectDetailsComponent implements OnInit, OnDestroy {
   private id: number = 0;
+  private mailFormat: any = {};
 
   private blob: any;
 
@@ -68,7 +69,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   constructor(private projectsService: ProjectsService, private fileService: FileService,
     private md: MarkdownService, private route: ActivatedRoute, private loginService: LoginService,
     private studentsService: StudentsService, private mailService: MailService) {
-    
+
     this.user = this.loginService.getUser().then((user) => {
       this.user = user;
       //console.log(this.user.eduPersonAffiliation[0]);
@@ -98,7 +99,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         console.log(project.submission);
         this.output = this.md.convert(this.project.description);
       });
-      
+
       //this.fileService.getFile(this.getid).then();
 
 
@@ -111,7 +112,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           });
         });
 
-      
+
   }
 
   ngOnDestroy() {
@@ -182,7 +183,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   @ViewChild('mailToModal')
     mailToModal: ModalComponent;
-  
+
   mail: String;
 
   mailOpen(mail){
@@ -220,6 +221,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       var subject = (<HTMLInputElement>document.getElementById("subject")).value;
       var text = (<HTMLInputElement>document.getElementById("mailtext")).value;
       this.mailService.sendMail(this.mail, subject, text);
+      this.projectsService.updateProject(this.project);
       this.rejectModal.close()
     }
 

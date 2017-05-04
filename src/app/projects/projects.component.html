@@ -1,11 +1,9 @@
-<div>
-  <ul class="nav nav-pills">
-    <li><button class="btn btn-primary" (click)="renderTabState(100)">All</button></li>
-    <li><button class="btn btn-primary" (click)="renderTabState(0)">Pending</button></li>
-    <li><button class="btn btn-primary" (click)="renderTabState(1)">Unassigned</button></li>
-    <li><button class="btn btn-primary" (click)="renderTabState(2)">Assigned</button></li>
-    <li><button class="btn btn-primary" (click)="renderTabState(3)">Rejected</button></li>
-  </ul>
+<div class="btn-group">
+  <button class="btn btn-primary" (click)="renderTabState(100)">All</button>
+  <button class="btn btn-primary" (click)="renderTabState(0)">Pending</button>
+  <button class="btn btn-primary" (click)="renderTabState(1)">Unassigned</button>
+  <button class="btn btn-primary" (click)="renderTabState(2)">Assigned</button>
+  <button class="btn btn-primary" (click)="renderTabState(3)">Rejected</button>
 </div>
 
 <div class="container">

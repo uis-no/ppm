@@ -13,7 +13,7 @@
             <button *ngIf="student == true" class="btn btn-primary" type="button" (click)="open()">Apply for Project</button>
             <button *ngIf="ansatt == true && project.status == 'pending'" class="btn btn-success" type="button" (click)="approveProject()">Approve</button>
             <button *ngIf="ansatt == true && project.status == 'pending'" class="btn btn-danger" type="button" (click)="rejectProject()">Reject</button>
-            <button *ngIf="ansatt == true" class="btn btn-primary" type="button" [routerLink]="['edit']">Edit Project</button>
+            <button *ngIf="ansatt == true || project.proposer._id == this.user._id" class="btn btn-primary" type="button" [routerLink]="['edit']">Edit Project</button>
           </div>
         </div>
     </div>
@@ -146,7 +146,7 @@
         <p style="font-weight: bold;" >Students:</p>
           <p *ngFor="let student of project.assigned" class="students">
             <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ student.name }} <br>
-            <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> {{ student.mobile }} <br> 
+            <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> {{ student.mobile }} <br>
             <button (click)="mailOpen(student.mail)" id="mailto">
               <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ student.mail }} <br>
             </button>

@@ -13,7 +13,7 @@
             <button *ngIf="student == true" class="btn btn-primary" type="button" (click)="open()">Apply for Project</button>
             <button *ngIf="ansatt == true && project.status == 'pending'" class="btn btn-success" type="button" (click)="approveProject()">Approve</button>
             <button *ngIf="ansatt == true && project.status == 'pending'" class="btn btn-danger" type="button" (click)="rejectProject()">Reject</button>
-            <button *ngIf="ansatt == true" class="btn btn-primary" type="button">Edit Project</button>    
+            <button *ngIf="ansatt == true || project.proposer._id == this.user._id" class="btn btn-primary" type="button">Edit Project</button>    
           </div>
         </div>
     </div>

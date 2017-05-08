@@ -75,7 +75,7 @@
 
       <div id="respdiv">
 
-        <p *ngIf="project.proposer.length <= 0" class="responsibles"><strong>Proposer:</strong></p>
+      <div *ngIf="project.proposer[0]._id != null">
         <p *ngFor="let proposer of project.proposer" class="responsibles">
           <strong>Proposer:</strong> <br> 
           <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ proposer._id.name }} <br> 
@@ -84,8 +84,10 @@
             <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ proposer._id.mail }} <br>
           </button>
         </p>
+      </div>
 
-        <p *ngIf="!project.responsible" class="responsibles"><strong>Responsible:</strong></p>
+        <p *ngIf="project.responsible._id == null" class="responsibles"><strong>Responsible:</strong></p>
+        <div *ngIf="project.responsible._id != null">
         <p *ngIf="project.responsible"class="responsibles">
           <strong>Responsible:</strong> <br> 
           <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ project.responsible._id.name }} <br> 
@@ -94,8 +96,10 @@
             <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ project.responsible._id.mail }} <br>
           </button>
         </p>
+        </div>
 
-        <p *ngIf="project.advisor.length <= 0" class="responsibles"><strong>Advisor:</strong></p>
+        <p *ngIf="project.advisor[0]._id == null" class="responsibles"><strong>Advisor:</strong></p>
+        <div *ngIf="project.advisor[0]._id != null">
         <p *ngFor="let advisor of project.advisor" class="responsibles">
           <strong>Advisor:</strong> <br> 
           <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ advisor._id.name }} <br> 
@@ -104,8 +108,10 @@
             <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ advisor._id.mail }} <br>
           </button>
         </p>
+        </div>
 
-        <p *ngIf="project.examiner.length <= 0" class="responsibles"><strong>Examiner:</strong></p>
+        <p *ngIf="project.examiner._id == null" class="responsibles"><strong>Examiner:</strong></p>
+        <div *ngIf="project.examiner._id != null">
         <p *ngFor="let examiner of project.examiner" class="responsibles">
           <strong>Examiner:</strong> <br> 
           <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ examiner._id.name }} <br> 
@@ -114,8 +120,9 @@
             <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ examiner._id.mail }} <br>
           </button>
         </p>
+        </div>
 
-        <div *ngIf="project.advisor.length <= 0 || !project.responsible || project.examiner.length <= 0" class="col-md-9 offset-md-3 text-right">
+        <div *ngIf="project.advisor._id == null|| project.responsible._id._id == null || project.examiner._id == null" class="col-md-9 offset-md-3 text-right">
           <button *ngIf="ansatt==true" class="btn btn-primary" (click)="addPeopleModal.open()">Add people</button>
         </div>
 

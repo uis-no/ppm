@@ -7,9 +7,9 @@ const bodyParser = require('body-parser');
 const exphbs  = require('express-handlebars');
 const mongoose = require('mongoose');
 
-var url = config.db.connection;
+var url = process.env.MONGDBURL || config.db.connection;
 
-//const parser = require('./server/parser.ts');
+
 
 // Get our routes
 const api = require('./server/routes/api');
@@ -31,6 +31,8 @@ var db = mongoose.connect(url, { server: { socketOptions: {auto_reconnect: true,
     console.log(err);
   }
   console.log('Connected to database!');
+  //const parser = require('./server/parser.ts');
+  //const ranking = require('./server/ranking.ts');
 });
 
 mongoose.connection.on('disconnected', () => {

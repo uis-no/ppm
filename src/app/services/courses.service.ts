@@ -16,6 +16,13 @@ export class CoursesService {
                         .catch(this.handleError);
   }
 
+  getCourse(id: string): Promise<Course> {
+    return this.http.get(`/api/course/${id}`)
+                    .toPromise()
+                    .then(res => res.json() as Course)
+                    .catch(this.handleError);
+  }
+
   private handleError (error: any) {
     let errMsg = (error.message) ? error.message :
     error.status ? `${error.status} - ${error.statusText}` : 'Server error';

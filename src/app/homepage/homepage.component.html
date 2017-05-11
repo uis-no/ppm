@@ -1,18 +1,13 @@
 <div class="container row">
   <div class="panel panel-default login-container text-center col-md-12" *ngIf="(myAuth == false && !auth.authenticated()) || (myAuth == false && auth.authenticated())">
-    <!--<div class="panel-heading">
-      <h4>Welcome to Jarida, a project proposal manager in association with the University of Stavanger</h4>
-    </div>-->
     <div class="panel-body">
       <p>Log in to get started.</p>
       <button class="btn btn-primary btn-margin" (click)="toFeide()">Log on using Feide</button>
-      <p></p>
-      <div *ngIf="myAuth == false" class="col">
+      <!--<div *ngIf="myAuth == false" class="col">
         <p *ngIf="!auth.authenticated()">or</p>
         <button class="btn btn-primary btn-margin" (click)="auth.login()" *ngIf="!auth.authenticated()">Log In using Auth0</button>
         <button class="btn btn-primary btn-margin" (click)="auth.logout()" *ngIf="auth.authenticated()">Log out from Auth0</button>
-
-      </div>
+      </div>-->
     </div>
   </div>
   <div></div>
@@ -31,7 +26,7 @@
           <button class="btn btn-primary" (click)="renderTabState(1)">Assigned</button>
         </div>
         <div *ngIf="student == true">
-            <div *ngIf="myProject" class="panel" [class.panel-success]="myProject.status == 'assigned' || myProject.status == 'unassigned'"
+            <div *ngIf="myProject" class="panel" [class.panel-success]="myProject.status == 'assigned' || myProject.status == 'unassigned' || myProject.status == 'delivered'"
             [class.panel-danger]="myProject.status == 'rejected'"
             [class.panel-default]="myProject.status == 'pending'"
             [routerLink]="['project-details/', myProject._id]">
@@ -40,7 +35,7 @@
               </div>
               <div class="panel-body">
                 <p>Status: <span class="label" [class.label-danger]="myProject.status == 'rejected'"
-                  [class.label-success]="myProject.status == 'unassigned' || myProject.status == 'assigned'"
+                  [class.label-success]="myProject.status == 'unassigned' || myProject.status == 'assigned' || myProject.status == 'delivered'"
                   [class.label-default]="myProject.status == 'pending'">{{myProject.status}}</span></p>
               </div>
             </div>
@@ -50,15 +45,14 @@
           <div *ngFor="let project of projects">
             <div *ngIf="tabTitle == project.status || tabTitle == 'All'">
               <div class="panel"
-              [class.panel-success]="project.status == 'assigned' || project.status == 'unassigned'"
-              [class.panel-default]="project.status == 'pending'"
-              [routerLink]="['project-details/', project._id]">
+              [class.panel-success]="project.status == 'assigned' || project.status == 'unassigned' || project.status == 'delivered'"
+              [class.panel-default]="project.status == 'pending'">
                 <div class="panel-heading">
                   <p class="panel-title panel-primary">{{project.title}}</p>
                 </div>
-                <div class="panel-body d-inline-block">
+                <div class="panel-body d-inline-block" [routerLink]="['project-details/', project._id]">
                   <p>Status: <span class="label"
-                    [class.label-success]="project.status == 'assigned' || project.status == 'unassigned'"
+                    [class.label-success]="project.status == 'assigned' || project.status == 'unassigned' || project.status == 'delivered'"
                     [class.label-default]="project.status == 'pending'">{{project.status}}</span></p>
                     <button *ngIf="project.submission" (click)="notify(project._id)" class="btn btn-primary">Notify Examiner</button>
                 </div>
@@ -82,9 +76,7 @@
         <div class="panel panel-info">
           <div class="panel-heading col">
             <h4>Deadlines</h4>
-            <span class="glyphicon glyphicon-cog" (click)="updateDeadlines()"></span>
           </div>
-          <!--<div class="panel-body"><p ngFor="let deadline of deadlines">{{deadline}}</p></div>-->
           <div class="panel-body">
             <h4>For faculty</h4>
             <p>Post projects: 15.10.2017</p>

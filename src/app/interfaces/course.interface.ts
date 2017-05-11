@@ -5,9 +5,8 @@ export class Course {
   deadlines: {
     instituteSuggest: Date,
     studentSuggest: Date,
-    apply: Date,
-    accept: Date,
-    start: Date,
-    submit: Date
+    studentApply: Date,
+    studentAccept: Date,
+    studentSubmit: Date
   };
 }

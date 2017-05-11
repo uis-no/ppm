@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { CompaniesService} from '../services/companies.service';
 import { CoursesService } from '../services/courses.service';
 import { EmployeesService } from '../services/employee.service';
@@ -85,9 +86,12 @@ export class AddProjectComponent implements OnInit {
     assigned: []
   };
 
+  private sub: any;
+
   constructor(private companiesService: CompaniesService, private coursesService: CoursesService,
               private employeeService: EmployeesService, private projectsService: ProjectsService,
-              private studentsService: StudentsService, private loginService: LoginService) { }
+              private studentsService: StudentsService, private route: ActivatedRoute,
+              private loginService: LoginService) { }
 
 
 
@@ -103,6 +107,8 @@ export class AddProjectComponent implements OnInit {
         });
       }
     });
+
+    this.getProject();
 
     this.coursesService
       .getAllCourses()
@@ -146,7 +152,25 @@ export class AddProjectComponent implements OnInit {
 
   }
 
+  // Parses url to get project based on id
+  getProject() {
+    this.sub = this.route.params.subscribe((params) => {
+      var id = Number.parseInt(params['id']);
+      if (!isNaN(id)) {
+        this.projectsService.getProject(id).then((project) => {
+          this.project = project;
+          this.project.proposer._id = project.proposer._id;
 
+          console.log(this.project);
+        });
+      }
+    });
+  }
+
+  updateProject() {
+    this.project.description = this.editorComponent.content;
+    this.projectsService.updateProject(this.project).then(() => {this.submitted = true;});
+  }
 
   // Create/POST project
   createProject() {
@@ -167,7 +191,7 @@ export class AddProjectComponent implements OnInit {
     if (isCompanyProposer == true) {
       this.newCompanyProposer._id = '0';
       this.newCompanyProposer.name = this.project.proposer._id;
-      externalPromise.push(this.companiesService.createCompany(this.newCompanyProposer).then(() => {}));
+      promises.push(this.companiesService.createCompany(this.newCompanyProposer).then(() => {}));
     }
 
     // Create external advisors
@@ -176,7 +200,7 @@ export class AddProjectComponent implements OnInit {
         if (this.newCompanyAdvisors[key].mobile != '') {
           this.newCompanyAdvisors[key]._id = '0';
           this.newCompanyAdvisors[key].name = this.project.advisor[key]._id;
-          externalPromise.push(this.companiesService.createCompany(this.newCompanyAdvisors[key]).then(() => {}));
+          promises.push(this.companiesService.createCompany(this.newCompanyAdvisors[key]).then(() => {}));
         };
       };
     };
@@ -190,6 +214,7 @@ export class AddProjectComponent implements OnInit {
                               proposerFound = true;
                               this.project.proposer.role = 'Employee';
                               this.project.proposer._id = employee._id;
+                              return this.project;
                             }
       }));
 
@@ -200,6 +225,7 @@ export class AddProjectComponent implements OnInit {
                                 proposerFound = true;
                                 this.project.proposer.role = 'Student';
                                 this.project.proposer._id = student._id;
+                                return this.project;
                               }
         }));
       }
@@ -211,6 +237,7 @@ export class AddProjectComponent implements OnInit {
                                 proposerFound = true;
                                 this.project.proposer.role = 'Company';
                                 this.project.proposer._id = company._id;
+                                return this.project;
                               }
         }));
       }
@@ -225,6 +252,7 @@ export class AddProjectComponent implements OnInit {
                                 responsibleFound = true;
                                 this.project.advisor[key].role = 'Employee';
                                 this.project.advisor[key]._id = employee._id;
+                                return this.project;
                               }
         }));
 
@@ -235,56 +263,54 @@ export class AddProjectComponent implements OnInit {
                                   responsibleFound = true;
                                   this.project.advisor[key].role = 'Company';
                                   this.project.advisor[key]._id = company._id;
+                                  return this.project;
                                 }
           }));
         }
       }
 
-    });
-
-
-
-    // Populate Responsible
-    promises.push(this.employeeService.getEmployee(this.project.responsible._id)
-                        .then((employee: Employee) => {
-                          if (employee != null) {
-                            responsibleFound = true;
-                            this.project.responsible.role = 'Employee';
-                            this.project.responsible._id = employee._id;
-                          }
-    }));
-
-    if (responsibleFound == false) {
-      promises.push(this.companiesService.getCompany(this.project.responsible._id)
-                          .then((company: Company) => {
-                            if (company != null) {
+      // Populate Responsible
+      promises.push(this.employeeService.getEmployee(this.project.responsible._id)
+                          .then((employee: Employee) => {
+                            if (employee != null) {
                               responsibleFound = true;
-                              this.project.responsible.role = 'Company';
-                              this.project.responsible._id = company._id;
+                              this.project.responsible.role = 'Employee';
+                              this.project.responsible._id = employee._id;
+                              return this.project;
                             }
       }));
-    }
+
+      if (responsibleFound == false) {
+        promises.push(this.companiesService.getCompany(this.project.responsible._id)
+                            .then((company: Company) => {
+                              if (company != null) {
+                                responsibleFound = true;
+                                this.project.responsible.role = 'Company';
+                                this.project.responsible._id = company._id;
+                                return this.project;
+                              }
+        }));
+      }
 
 
 
-    // Populate Students
-    for (let key in this.project.student) {
-      promises.push(this.studentsService.getStudent(this.project.student[key])
-                          .then((student: Student) => {
-                            if (student != null) {
-                              this.project.student[key] = student._id;
-                            }
-      }));
-    }
+      // Populate Students
+      for (let key in this.project.student) {
+        promises.push(this.studentsService.getStudent(this.project.student[key])
+                            .then((student: Student) => {
+                              if (student != null) {
+                                this.project.student[key] = student._id;
+                                return this.project;
+                              }
+        }));
+      }
 
-    // make sure promises finish before creating/POSTing project
-    Promise.all(promises).then(() => {
-      this.createProject();
+      // make sure promises finish before creating/POSTing project
+      Promise.all(promises).then(() => {
+        this.createProject();
+      });
     });
-
   }
-
-
 
   searchProposers = (text$: Observable<string>) =>
     text$

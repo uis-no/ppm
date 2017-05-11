@@ -65,6 +65,7 @@ router.route('/projects/notify/:_id')
             Employee.findOne({ user: project.examiner.user }, (err, examiner) => {
               Mail.sendMail(examiner.mail, 'Project submission of ' + project.title + ' is ready for evaluation',
               'Go to http:localhost:3000/projects/' + project._id + '/submission to download file');
+
               return res.status(200).send('Mail sent to ' + examiner.name);
             });
           } else {
@@ -126,32 +127,41 @@ router.route('/projects/:_id/submission')
   })
   .post((req, res) => {
     var gfs = new Gridfs(db.db, mongoDriver);
+    var date = new Date();
     Project.findOne({ _id : req.params._id }, (err, project) => {
       /* multer's upload uploads a file to a tmp folder on disk, we use
         gridfs-stream and fs to read the file here and write it to the database,
         we then delete the file from the tmp folder
       */
-      upload(req, res, (err) => {
-        var writeStream = gfs.createWriteStream({
-          filename: req.file.originalname
-        });
+      Course.findOne({ _id: project.course }, (err, course) => {
+        if (!course.deadlines.studentSubmit) {
+          return res.status(500).send("Submission date has not yet been set.");
+        } else if (Date.parse(course.deadlines.studentSubmit) > Date.parse(date)) {
+          return res.send("Late submission!");
+        } else {
+          upload(req, res, (err) => {
+            var writeStream = gfs.createWriteStream({
+              filename: req.file.originalname
+            });
 
-        var readStream = fs.createReadStream('tmp/' + req.file.filename)
-        // Deletes file from client tmp folder
-          .on("end", () => {
-            fs.unlink("tmp/" + req.file.filename, (err) => {
-              res.status(200).json(readStream.id);
-            })
-          })
-          .on("err", () => {
-            res.send("error uploading file");
-          })
-          // reads the input as it writes the output
-          .pipe(writeStream);
-          // saves the id reference of child file to parent project
-          project.status = 'delivered';
-          project.submission = readStream.id;
-          project.save();
+            var readStream = fs.createReadStream('tmp/' + req.file.filename)
+            // Deletes file from client tmp folder
+              .on("end", () => {
+                fs.unlink("tmp/" + req.file.filename, (err) => {
+                  res.status(200).json(readStream.id);
+                })
+              })
+              .on("err", () => {
+                res.send("error uploading file");
+              })
+              // reads the input as it writes the output
+              .pipe(writeStream);
+              // saves the id reference of child file to parent project
+              project.status = 'delivered';
+              project.submission = readStream.id;
+              project.save();
+          });
+        }
       });
     });
   });
@@ -171,18 +181,40 @@ router.route('/company')
 
   // create new company
   .post((req, res) => {
-    var obj = req.body;
-    var company = new Company(obj);
-    company.save((err) => {
-      if (err) {
-        res.status(500).send(err);
-      } else {
-        res.status(200).json({ message: 'Your company has been created.'});
-      }
+    // increments id to a new company
+    Company.find((err, companies) => {
+      var obj = req.body;
+      var company = new Company(obj);
+
+      var id = 0;
+      companies.forEach((c) => {
+        if (id < parseInt(c._id)) {
+          id = parseInt(c._id);
+        }
+      });
+      company._id = String(id + 1);
+
+
+      company.save((err) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          res.status(200).json({ message: 'Your company has been created.'});
+        }
+      });
     });
   });
 
-
+  router.route('/company/:name')
+    .get((req,res) => {
+      Company.findOne({ name: req.params.name }, (err, company) => {
+        if (err) {
+          return res.send(err);
+        } else {
+          return res.json(company);
+        }
+      });
+    });
 
 router.route('/course')
   // get all courses
@@ -385,6 +417,8 @@ router.route('/projects')
   .post((req, res) => {
     var obj = req.body;
     var project = new Project(obj);
+    var date = new Date();
+    project.Created = date;
 
     // increments id to a new project
     Project.find((err, projects) => {
@@ -396,30 +430,35 @@ router.route('/projects')
       });
       project._id = id + 1;
 
-      if(req.user.eduPersonAffiliation.includes('employee')) {
-        console.log(project.student);
-        if (project.student[0]) {
-          project.status = 'assigned'
-        } else {
+      Course.findOne({ _id: project.course }, (err, course) => {
+        // creates a project with status unassigned for employees
+        if(req.user.eduPersonAffiliation.includes('employee')) {
           project.status = 'unassigned'
+          project.save((err) => {
+            if (err) {
+              res.status(500).send(err);
+            } else {
+              res.status(200).json({ message: 'Your project has been created.'});
+            }
+          });
+        } else {
+          // checks if student is submitting a project late or not.
+          if (course.deadlines.studentSuggest) {
+            return res.status(500).send("The server could not find a date.");
+          } else if (Date.parse(course.deadlines.studentSuggest) < Date.parse(project.created)) {
+            return res.send("the deadline for creating projects has passed");
+          } else {
+            project.status = 'pending';
+            project.save((err) => {
+              if (err) {
+                res.status(500).send(err);
+              } else {
+                res.status(200).json({ message: 'Your project has been created.'});
+              }
+            });
+          }
         }
-        project.save((err) => {
-          if (err) {
-            res.status(500).send(err);
-          } else {
-            res.status(200).json({ message: 'Your project has been created.'});
-          }
-        });
-      } else {
-        project.status = 'pending';
-        project.save((err) => {
-          if (err) {
-            res.status(500).send(err);
-          } else {
-            res.status(200).json({ message: 'Your project has been created.'});
-          }
-        });
-      }
+      });
     });
   });
 
@@ -463,7 +502,7 @@ router.route('/projects/:_id')
               return res.status(200).json({ message: 'Your project has been updated.'});
             }
           });
-        }      
+        }
       }
     });
   })
@@ -538,7 +577,5 @@ router.route('/student/:name')
       }
     });
   });
-
-
 
 module.exports = router;

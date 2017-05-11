@@ -13,10 +13,10 @@ var course = new Schema({
   deadlines: {
     instituteSuggest: Date,
     studentSuggest: Date,
-    apply: Date,
-    accept: Date,
-    start: Date,
-    submit: Date
+    studentApply: Date,
+    studentAccept: Date,
+    studentStart: Date,
+    studentSubmit: Date
   }
 });
 

@@ -100,14 +100,16 @@
 
         <p *ngIf="project.advisor[0]._id == null" class="responsibles"><strong>Advisor:</strong></p>
         <div *ngIf="project.advisor[0]._id != null">
-        <p *ngFor="let advisor of project.advisor" class="responsibles">
+        <div *ngFor="let advisor of project.advisor">
+        <p *ngIf="advisor._id != null" class="responsibles">          
           <strong>Advisor:</strong> <br> 
           <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ advisor._id.name }} <br> 
           <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> {{ advisor._id.mobile }} <br> 
           <button (click)="mailOpen(advisor._id.mail)" id="mailto">
             <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ advisor._id.mail }} <br>
-          </button>
+          </button>          
         </p>
+        </div>
         </div>
 
         <p *ngIf="project.examiner._id == null" class="responsibles"><strong>Examiner:</strong></p>

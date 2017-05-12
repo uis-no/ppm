@@ -3,3 +3,6 @@
 
 declare var System: any;
 declare module "marked";
+declare module "bootstrap-markdown";
+declare var tinymce: any;
+

@@ -2,8 +2,8 @@ const config = require('../config/config.js');
 const nodemailer = require('nodemailer');
 
 // TODO: set this up as an environment variables
-const user = config.mail.user;
-const pass = config.mail.pass;
+const user = process.env.MAILUSER || config.mail.user;
+const pass = process.env.MAILPASS || config.mail.pass;
 
 
 

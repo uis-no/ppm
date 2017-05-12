@@ -47,6 +47,13 @@ var Student = require('../models/student.ts');
 var File = require('../models/file.ts');
 var Project = require('../models/project.ts');
 
+router.route('/sendMail')
+  .post((req, res) => {
+    var body = 'You received a message from ' + req.user.eduPersonPrincipalName + ':\n' + req.body.bodyText;
+    Mail.sendMail(req.body.mail, req.body.subject, body);
+    return res.status(200).send('Mail sent.');
+  });
+
 router.route('/projects/notify/:_id')
   .get((req,res) => {
     if(req.user.eduPersonAffiliation.includes('employee')) {
@@ -54,10 +61,11 @@ router.route('/projects/notify/:_id')
         if (err) {
           res.status(500).send(err);
         } else {
-          if (project.status == 'assigned' && project.file) {
+          if (project.status == 'delivered' && project.file) {
             Employee.findOne({ user: project.examiner.user }, (err, examiner) => {
               Mail.sendMail(examiner.mail, 'Project submission of ' + project.title + ' is ready for evaluation',
               'Go to http:localhost:3000/projects/' + project._id + '/submission to download file');
+
               return res.status(200).send('Mail sent to ' + examiner.name);
             });
           } else {
@@ -104,13 +112,13 @@ router.route('/projects/:_id/submission')
       } else {
         if (project.submission) {
           File.findOne({ _id : project.submission }, (err, file) => {
-            console.log(file);
             if (err) {
               return res.send(err);
             } else {
               var readStream = gfs.createReadStream(file);
-              console.log(readStream);
-              readStream.pipe(res);
+              // this will stream the file directly to the browser, adobe has a nice browser handler for pdfs
+              console.log(readStream.pipe(res));
+              //readStream.pipe(res);
             }
           });
         }
@@ -119,31 +127,41 @@ router.route('/projects/:_id/submission')
   })
   .post((req, res) => {
     var gfs = new Gridfs(db.db, mongoDriver);
+    var date = new Date();
     Project.findOne({ _id : req.params._id }, (err, project) => {
       /* multer's upload uploads a file to a tmp folder on disk, we use
         gridfs-stream and fs to read the file here and write it to the database,
         we then delete the file from the tmp folder
       */
-      upload(req, res, (err) => {
-        var writeStream = gfs.createWriteStream({
-          filename: req.file.originalname
-        });
+      Course.findOne({ _id: project.course }, (err, course) => {
+        if (!course.deadlines.studentSubmit) {
+          return res.status(500).send("Submission date has not yet been set.");
+        } else if (Date.parse(course.deadlines.studentSubmit) > Date.parse(date)) {
+          return res.send("Late submission!");
+        } else {
+          upload(req, res, (err) => {
+            var writeStream = gfs.createWriteStream({
+              filename: req.file.originalname
+            });
 
-        var readStream = fs.createReadStream('tmp/' + req.file.filename)
-        // Deletes file from client tmp folder
-          .on("end", () => {
-            fs.unlink("tmp/" + req.file.filename, (err) => {
-              res.status(200).json(readStream.id);
-            })
-          })
-          .on("err", () => {
-            res.send("error uploading file");
-          })
-          // reads the input as it writes the output
-          .pipe(writeStream);
-          // saves the id reference of child file to parent project
-          project.submission = readStream.id;
-          project.save();
+            var readStream = fs.createReadStream('tmp/' + req.file.filename)
+            // Deletes file from client tmp folder
+              .on("end", () => {
+                fs.unlink("tmp/" + req.file.filename, (err) => {
+                  res.status(200).json(readStream.id);
+                })
+              })
+              .on("err", () => {
+                res.send("error uploading file");
+              })
+              // reads the input as it writes the output
+              .pipe(writeStream);
+              // saves the id reference of child file to parent project
+              project.status = 'delivered';
+              project.submission = readStream.id;
+              project.save();
+          });
+        }
       });
     });
   });
@@ -163,18 +181,40 @@ router.route('/company')
 
   // create new company
   .post((req, res) => {
-    var obj = req.body;
-    var company = new Company(obj);
-    company.save((err) => {
-      if (err) {
-        res.status(500).send(err);
-      } else {
-        res.status(200).json({ message: 'Your company has been created.'});
-      }
+    // increments id to a new company
+    Company.find((err, companies) => {
+      var obj = req.body;
+      var company = new Company(obj);
+
+      var id = 0;
+      companies.forEach((c) => {
+        if (id < parseInt(c._id)) {
+          id = parseInt(c._id);
+        }
+      });
+      company._id = String(id + 1);
+
+
+      company.save((err) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          res.status(200).json({ message: 'Your company has been created.'});
+        }
+      });
     });
   });
 
-
+  router.route('/company/:name')
+    .get((req,res) => {
+      Company.findOne({ name: req.params.name }, (err, company) => {
+        if (err) {
+          return res.send(err);
+        } else {
+          return res.json(company);
+        }
+      });
+    });
 
 router.route('/course')
   // get all courses
@@ -186,6 +226,30 @@ router.route('/course')
       }
       res.status(200).json(courses);
     })
+  });
+
+router.route('/course/:_id')
+  .get((req, res) => {
+    Course.findOne({_id: req.params._id}, (err, course) => {
+      if (err) {
+        return res.status(500).send(err);
+      } else {
+        return res.status(200).json(course);
+      }
+    });
+  })
+  .put((req, res) => {
+    if (req.user.eduPersonAffiliation.includes('employee')) {
+      var obj = req.body;
+      var course = new Course(obj);
+      Course.findOneAndUpdate({_id: req.params._id}, course, (err) => {
+        if (err) {
+          return res.status(500).send(err);
+        } else {
+          return res.status(200).send(req.params._id + 'has been updated');
+        }
+      });
+    }
   });
 
 router.route('/employee')
@@ -320,7 +384,7 @@ router.route('/projects')
           .populate('responsible._id')
           .populate('advisor._id')
           .populate('examiner._id')
-          .populate('student')
+          .populate('student');
         }
       });
 
@@ -353,6 +417,8 @@ router.route('/projects')
   .post((req, res) => {
     var obj = req.body;
     var project = new Project(obj);
+    var date = new Date();
+    project.Created = date;
 
     // increments id to a new project
     Project.find((err, projects) => {
@@ -364,30 +430,35 @@ router.route('/projects')
       });
       project._id = id + 1;
 
-      if(req.user.eduPersonAffiliation.includes('employee')) {
-        console.log(project.student);
-        if (project.student[0]) {
-          project.status = 'assigned'
-        } else {
+      Course.findOne({ _id: project.course }, (err, course) => {
+        // creates a project with status unassigned for employees
+        if(req.user.eduPersonAffiliation.includes('employee')) {
           project.status = 'unassigned'
+          project.save((err) => {
+            if (err) {
+              res.status(500).send(err);
+            } else {
+              res.status(200).json({ message: 'Your project has been created.'});
+            }
+          });
+        } else {
+          // checks if student is submitting a project late or not.
+          if (course.deadlines.studentSuggest) {
+            return res.status(500).send("The server could not find a date.");
+          } else if (Date.parse(course.deadlines.studentSuggest) < Date.parse(project.created)) {
+            return res.send("the deadline for creating projects has passed");
+          } else {
+            project.status = 'pending';
+            project.save((err) => {
+              if (err) {
+                res.status(500).send(err);
+              } else {
+                res.status(200).json({ message: 'Your project has been created.'});
+              }
+            });
+          }
         }
-        project.save((err) => {
-          if (err) {
-            res.status(500).send(err);
-          } else {
-            res.status(200).json({ message: 'Your project has been created.'});
-          }
-        });
-      } else {
-        project.status = 'pending';
-        project.save((err) => {
-          if (err) {
-            res.status(500).send(err);
-          } else {
-            res.status(200).json({ message: 'Your project has been created.'});
-          }
-        });
-      }
+      });
     });
   });
 
@@ -409,19 +480,31 @@ router.route('/projects/:_id')
     .populate('advisor._id')
     .populate('examiner._id')
     .populate('student')
+    .populate('assigned')
+    .populate('file');
   })
 
   // update a project by id
   .put((req, res) => {
     var obj = req.body;
-    var project = new Project(obj);
-
-    Project.findOneAndUpdate({ _id : project._id }, project,
-        (err) =>{
+    var resProject = new Project(obj);
+    Project.findOne({ _id : resProject._id }, (err, project) =>{
       if (err) {
         res.status(500).send(err);
       } else {
-      res.status(200).json({ message: 'Your project has been updated.'});
+        if ( req.user.eduPersonAffiliation.includes('student') && (resProject.status == 'assigned' && project.status == 'unassigned')){
+          return res.send('Unauthorized access!');
+        } else if(req.user.eduPersonAffiliation.includes('employee') && (resProject.status == 'assigned' && project.status == 'unassigned') && resProject.assigned[0] == null){
+          return res.send('No students to assign the project to');
+        } else {
+          Project.findOneAndUpdate({ _id: resProject}, resProject, (err) => {
+            if (err) {
+              return res.send(err);
+            } else {
+              return res.status(200).json({ message: 'Your project has been updated.'});
+            }
+          });
+        }
       }
     });
   })
@@ -484,6 +567,17 @@ router.route('/student/:name')
     });
   });
 
-
+  router.route('/student/byid/:_id')
+  // get a student by id
+  .get((req, res) => {
+    console.log(req.params._id);
+    Student.findOne({ _id : req.params._id }, (err, student) => {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.status(200).json(student);
+      }
+    });
+  });
 
 module.exports = router;

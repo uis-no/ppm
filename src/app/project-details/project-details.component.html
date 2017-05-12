@@ -5,13 +5,37 @@
       [class.panel-success]="project.status == 'unassigned' || project.status == 'assigned'"
       [class.panel-danger]="project.status == 'rejected'">
     <div class="panel-heading">
-      <h1  *ngIf="project">Project Details for {{ project.title }}</h1>
-
-
-
-      <button *ngIf="student == true" class="btn btn-default" id="applyEdit" type="button" (click)="open()">Apply for Project</button>
-      <button *ngIf="ansatt == true" class="btn btn-defaul" id="applyEdit" type="button">Edit Project</button>
+       <div class="row">
+          <div class="col-md-9">
+            <h1  *ngIf="project">Details for {{ project.title }}</h1>
+          </div>
+          <div class="col-md-3 offset-md-3 text-right" style="margin-top: 20px;">
+            <button *ngIf="student == true" class="btn btn-primary" type="button" (click)="open()">Apply for Project</button>
+            <button *ngIf="ansatt == true && project.status == 'pending'" class="btn btn-success" type="button" (click)="approveProject()">Approve</button>
+            <button *ngIf="ansatt == true && project.status == 'pending'" class="btn btn-danger" type="button" (click)="rejectProject()">Reject</button>
+            <button *ngIf="ansatt == true || project.proposer._id == this.user._id" class="btn btn-primary" type="button" [routerLink]="['edit']">Edit Project</button>
+          </div>
+        </div>
     </div>
+
+    <modal #rejectModal>
+        <modal-header [show-close]="true">
+          <h4 class="modal-title">Why are you rejecting this project?</h4>
+        </modal-header>
+        <modal-body>
+          <div class="form-group">
+            <label for="mail"></label>
+            <input type="text" class="form-control" id="mailfield" value="" disabled>
+            <input type="text" class="form-control" style="margin-top:10px;" id="subject" value="" placeholder="Subject">
+            <textarea id="mailtext" class="form-control" rows="7" cols="50" style="margin-top:10px;" placeholder="Reject reason here"></textarea>
+          </div>
+        </modal-body>
+        <modal-footer>
+          <button type="button" class="btn btn-primary" (click)="rejectClose()">Send & Submit</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" (click)="cancel()">Cancel</button>
+        </modal-footer>
+      </modal>
+
       <modal #modal>
         <modal-header [show-close]="true">
           <h4 class="modal-title">Apply for this project:</h4>
@@ -29,69 +53,150 @@
           <button type="button" class="btn btn-default" data-dismiss="modal" (click)="dismiss()">Cancel</button>
         </modal-footer>
       </modal>
+
 <div class="panel-body">
       <div [innerHTML]="md.convert(project.description)"></div>
       <div>
+
+        <p id="info">Status: <span class="label"
+            [class.label-success]="project.status == 'unassigned' || project.status == 'assigned' || project.status == 'delivered'"
+            [class.label-danger]="project.status == 'rejected'"
+            [class.label-default]="project.status == 'pending'">{{ project.status }}</span></p>
+
         <p id="info"> Course: {{ project.course._id }} </p>
 
         <p id="info"> Year: {{ project.course.year }} </p>
 
 
-        <p id="info">Status: <span class="label"
-            [class.label-success]="project.status == 'unassigned' || project.status == 'assigned'"
-            [class.label-danger]="project.status == 'rejected'"
-            [class.label-default]="project.status == 'pending'">{{ project.status }}</span></p>
+
+
+        <a *ngIf="project.file" class="info" (click)="downloadSubmission(project._id)">Open submission</a>
       </div>
 
       <div id="respdiv">
+
+      <div *ngIf="project.proposer[0]._id != null">
         <p *ngFor="let proposer of project.proposer" class="responsibles">
           <strong>Proposer:</strong> <br>
-          <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ proposer._id.name }} <br>
-          <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> {{ proposer._id.mobile }} <br>
-          <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ proposer._id.mail }} <br>
+          <span class="glyphicon glyphicon-user" aria-hidden="true"></span> <span *ngIf="proposer._id.name  != null">{{ proposer._id.name }}</span> <br>
+          <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> <span *ngIf="proposer._id.mobile">{{ proposer._id.mobile }}</span> <br>
+          <button (click)="mailOpen(proposer._id.mail)" id="mailto">
+            <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <span *ngIf="proposer._id.mail">{{ proposer._id.mail }}</span> <br>
+          </button>
         </p>
+      </div>
 
-
-        <p *ngFor="let responsible of project.responsible" class="responsibles">
+        <p *ngIf="project.responsible._id == null" class="responsibles"><strong>Responsible:</strong></p>
+        <div *ngIf="project.responsible._id != null">
+        <p *ngIf="project.responsible"class="responsibles">
           <strong>Responsible:</strong> <br>
-          <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ responsible._id.name }} <br>
-          <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> {{ responsible._id.mobile }}<br>
-          <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ responsible._id.mail }} <br>
+          <span class="glyphicon glyphicon-user" aria-hidden="true"></span> <span *ngIf="project.responsible._id.name  != null">{{ project.responsible._id.name }}</span> <br>
+          <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> <span *ngIf="project.responsible._id.mobile">{{ project.responsible._id.mobile }}</span><br>
+          <button (click)="mailOpen(project.responsible._id.mail)" id="mailto">
+            <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <span *ngIf="project.responsible._id.mail">{{ project.responsible._id.mail }}</span> <br>
+          </button>
         </p>
+        </div>
 
-
-        <p *ngFor="let advisor of project.advisor" class="responsibles">
+        <p *ngIf="project.advisor[0]._id == null" class="responsibles"><strong>Advisor:</strong></p>
+        <div *ngFor="let advisor of project.advisor" class="responsibles">
+        <p *ngIf="advisor._id != null">
+          <span>
           <strong>Advisor:</strong> <br>
-          <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ advisor._id.name }} <br>
-          <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> {{ advisor._id.mobile }} <br>
-          <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ advisor._id.mail }} <br>
+          <span class="glyphicon glyphicon-user" aria-hidden="true"></span> <span *ngIf="advisor._id.name  != null">{{ advisor._id.name }}</span> <br>
+          <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> <span *ngIf="advisor._id.mobile">{{ advisor._id.mobile }}</span> <br>
+          <button *ngIf="advisor._id.mail" (click)="mailOpen(advisor._id.mail)" id="mailto">
+            <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ advisor._id.mail }} <br>
+          </button>
+        </span>
         </p>
+        </div>
 
-
+        <p *ngIf="project.examiner._id == null" class="responsibles"><strong>Examiner:</strong></p>
+        <div *ngIf="project.examiner._id != null">
         <p *ngFor="let examiner of project.examiner" class="responsibles">
           <strong>Examiner:</strong> <br>
-          <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ examiner._id.name }} <br>
-          <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> {{ examiner._id.mobile }} <br>
-          <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ examiner._id.mail }} <br>
+          <span class="glyphicon glyphicon-user" aria-hidden="true"></span> <span *ngIf="examiner._id.name  != null">{{ examiner._id.name }}</span> <br>
+          <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> <span *ngIf="examiner._id.mobile">{{ examiner._id.mobile }}</span> <br>
+          <button *ngIf="examiner._id.mail" (click)="mailOpen(examiner._id.mail)" id="mailto">
+            <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ examiner._id.mail }} <br>
+          </button>
         </p>
+        </div>
 
-        <p *ngIf="!project.examiner"> Examiner: None assigned </p>
+        <div *ngIf="project.advisor._id == null|| project.responsible._id._id == null || project.examiner._id == null" class="col-md-9 offset-md-3 text-right">
+          <button *ngIf="ansatt==true" class="btn btn-primary" (click)="addPeopleModal.open()">Add people</button>
+        </div>
+
+
+
+        <modal #addPeopleModal>
+          <modal-header [show-close]="true">
+             <h4 class="modal-title">Add responsible/advisor/examiner for this project:</h4>
+          </modal-header>
+          <modal-body>
+            <div class="form-group">
+               <input autofocus type="text" class="form-control" id="respText" style="margin-top:10px;" placeholder="Add responsible" value="" [ngbTypeahead]="searchResponsibles">
+               <button type="button" class="btn btn-default" (click)="addResp()" style="margin-top:10px;">Add</button>
+               <input autofocus type="text" class="form-control" id="advisortext" style="margin-top:10px;" placeholder="Add advisor" value="" [ngbTypeahead]="searchAdvisors">
+               <button type="button" class="btn btn-default" (click)="addAdvisor()" style="margin-top:10px;">Add</button>
+               <input autofocus type="text" class="form-control" id="examinertext" style="margin-top:10px;" placeholder="Add Examiner" value="" [ngbTypeahead]="searchEmployees">
+               <button type="button" class="btn btn-default" (click)="addExaminer()" style="margin-top:10px;">Add</button>
+            </div>
+          </modal-body>
+          <modal-footer>
+             <button type="button" class="btn btn-primary" (click)="submit()">Done</button>
+             <button type="button" class="btn btn-default" data-dismiss="modal" (click)="addPeopleCancel()">Cancel</button>
+          </modal-footer>
+        </modal>
 
       </div>
       <br>
-      <div id="studentdiv">
-        <p style="font-weight: bold">Students:</p>
-          <p *ngFor="let student of project.student" class="students">
-            <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ student.name }} <br>
-            <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> {{ student.mobile }} <br>
-            <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ student.mail }} <br>
-</p>
+      <div id="studentdiv" *ngIf="project.assigned.length > 0 && project.status == 'assigned'">
+        <p style="font-weight: bold;" >Students:</p>
+          <p *ngFor="let student of project.assigned" class="students">
+            <span class="glyphicon glyphicon-user" aria-hidden="true"></span> <span *ngIf="student.name != null">{{ student.name }}</span> <br>
+            <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> <span *ngIf="student.mobile">{{ student.mobile }}</span> <br>
+            <button *ngIf="student.mail" (click)="mailOpen(student.mail)" id="mailto">
+              <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {{ student.mail }} <br>
+            </button>
+          </p>
+      </div>
 
+
+      <div id="studentdiv" *ngIf="project.applied.length > 0 && project.status == 'unassigned'">
+          <p style="font-weight: bold;"> Applicants to this project:</p>
+          <div *ngFor="let group of groups" class="students" style="min-height: 60px;">
+              <p *ngFor="let person of group">
+                <span class="glyphicon glyphicon-user" aria-hidden="true"></span><span *ngIf="person.name != null"> {{person.name}}</span>
+              </p>
+                <button class="btn btn-primary" (click)="assign(group)" id="assignGroup" style="bottom: 0;">Assign this group</button>
+                <br>
+                <br>
+          </div><br>
+      </div>
+
+
+ <modal #mailToModal>
+        <modal-header [show-close]="true">
+          <h4 class="modal-title">Send mail:</h4>
+        </modal-header>
+        <modal-body>
+          <div class="form-group">
+            <label for="mail"></label>
+            <input type="text" class="form-control" id="subject" value="" placeholder="Subject">
+            <textarea id="mailtext" class="form-control" rows="7" cols="50" style="margin-top:10px;" placeholder="Write your mail here"></textarea>
+          </div>
+        </modal-body>
+        <modal-footer>
+          <button type="button" class="btn btn-primary" (click)="sendMail()">Send</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" (click)="mailToModal.close()">Cancel</button>
+        </modal-footer>
+      </modal>
 </div>
 </div>
 </div>
-</div>
-<div *ngIf="!project.submission">
+<div *ngIf="!project.submission && student == true && user.eduPersonPrincipalName == project.assigned">
   <div ng2FileDrop name="uploadedFile" (fileOver)="fileOverBase($event)" [uploader]="uploader" type="file" style="border: dotted 3px lightgray; height: 64px;">Drop your submission here</div>
 <div>
 

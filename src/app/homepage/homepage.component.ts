@@ -4,6 +4,7 @@ import { LoginService } from '../services/passport.service';
 import { ProjectsService } from '../services/projects.service';
 import { Project } from '../interfaces/project.interface';
 
+
 @Component({
   selector: 'app-homepage',
   templateUrl: './homepage.component.html',
@@ -11,6 +12,7 @@ import { Project } from '../interfaces/project.interface';
   styleUrls: ['./homepage.component.css']
 })
 export class HomepageComponent implements OnInit {
+
   myAuth: boolean = false;
   user: any = {};
   projects: Project[];
@@ -22,7 +24,8 @@ export class HomepageComponent implements OnInit {
   tabState = 0;
   tabTitle= 'All';
 
-  constructor(private auth: Auth, private loginService: LoginService, private projectsService: ProjectsService) { }
+  constructor(private auth: Auth, private loginService: LoginService,
+    private projectsService: ProjectsService) { }
 
   ngOnInit() {
     this.loginService.getAuth().then(auth => {
@@ -34,7 +37,6 @@ export class HomepageComponent implements OnInit {
           if (this.student == true) {
             this.projectsService.getMyProject().then((project: Project) => {
               this.myProject = project;
-              console.log(this.myProject);
               return this.myProject;
             });
           }
@@ -49,6 +51,10 @@ export class HomepageComponent implements OnInit {
         });
       }
     });
+
+  }
+
+  updateDeadlines() {
 
   }
 

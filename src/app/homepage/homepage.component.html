@@ -67,28 +67,24 @@
     <div class="col-md-3 col-md-offset-1">
       <div *ngIf="auth.authenticated() || myAuth == true" class="panel panel-info">
         <div class="panel-heading">Logged in as {{user.mail}}</div>
-        <div *ngIf="student == true" class="panel-body">
-          <p>{{user.email}}</p>
-          <p>{{user.eduPersonPrincipalName}}</p>
-          <button *ngIf="myAuth == true" (click)="logoutFromFeide()">Log out from Feide</button>
-          <button class="btn btn-primary btn-margin" (click)="auth.logout()" *ngIf="auth.authenticated()">Log Out</button>
-        </div>
-        <div class="panel panel-info">
-          <div class="panel-heading col">
-            <h4>Deadlines</h4>
-          </div>
-          <div class="panel-body">
-            <h4>For faculty</h4>
-            <p>Post projects: 15.10.2017</p>
-            <p>Announce assigned projects: 15.12.2017</p>
+        
+          <div class="panel panel-info">
+            <div class="panel-heading col">
+              <h4>Deadlines</h4>
+            </div>
+            <div class="panel-body">
+              <h4>For faculty</h4>
+              <p>Post projects: 15.10.2017</p>
+              <p>Announce assigned projects: 15.12.2017</p>
 
-            <h4>For students</h4>
-            <p>Suggest project: 15.11.2017</p>
-            <p>Apply for projects: 15.12.2017</p>
-            <p>Accept project: 01.01.2018</p>
-            <p>Submit project: 15.05.2018</p>
+              <h4>For students</h4>
+              <p>Suggest project: 15.11.2017</p>
+              <p>Apply for projects: 15.12.2017</p>
+              <p>Accept project: 01.01.2018</p>
+              <p>Submit project: 15.05.2018</p>
+            </div>
           </div>
-        </div>
+
       </div>
     </div>
   </div>

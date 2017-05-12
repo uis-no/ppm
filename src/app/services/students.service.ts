@@ -24,6 +24,13 @@ export class StudentsService {
                         .catch(this.handleError);
   }
 
+  getStudentByID(_id: string): Promise<Student> {
+        return this.http.get(`/api/student/byid/${_id}`)
+                        .toPromise()
+                        .then(res => res.json() as Student)
+                        .catch(this.handleError);
+  }
+
   // Add new Student
   createStudent(newStudent: Student): Promise<Student> {
         return this.http.post('/api/student', newStudent)

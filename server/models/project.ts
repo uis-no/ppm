@@ -14,8 +14,8 @@ var project = new Schema({
   proposer : [ { role: String, _id: { type: String, refPath: 'proposer.role' } } ],
 
   status : String,
-  
-  responsible : [ { role: String, _id: { type: String, refPath: 'responsible.role' } } ],
+
+  responsible :  { role: String, _id: { type: String, refPath: 'responsible.role' } } ,
 
   advisor : [ { role: String, _id: { type: String, refPath: 'advisor.role' } } ],
 

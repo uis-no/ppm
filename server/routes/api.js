@@ -494,6 +494,8 @@ router.route('/projects/:_id')
       } else {
         if ( req.user.eduPersonAffiliation.includes('student') && (resProject.status == 'assigned' && project.status == 'unassigned')){
           return res.send('Unauthorized access!');
+        } else if(req.user.eduPersonAffiliation.includes('employee') && (resProject.status == 'assigned' && project.status == 'unassigned') && resProject.assigned[0] == null){
+          return res.send('No students to assign the project to');
         } else {
           Project.findOneAndUpdate({ _id: resProject}, resProject, (err) => {
             if (err) {

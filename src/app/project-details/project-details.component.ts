@@ -123,7 +123,6 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
             this.groups.push(studs);
 
         });
-        console.log(this.project);
       });
 
       this.companiesService

@@ -300,6 +300,7 @@ export class AddProjectComponent implements OnInit {
                             .then((student: Student) => {
                               if (student != null) {
                                 this.project.student[key] = student._id;
+                                this.project.applied[0].push(student._id);
                                 return this.project;
                               }
         }));

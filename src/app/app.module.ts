@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 import { FileUploadModule } from 'ng2-file-upload';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { AUTH_PROVIDERS }      from 'angular2-jwt';
+//import { AUTH_PROVIDERS }      from 'angular2-jwt';
 import { AuthGuard } from './auth.guard';
 import { Auth } from './auth.service';
 
@@ -94,7 +94,7 @@ const ROUTES = [
     Ng2Bs3ModalModule,
     NgbModule.forRoot()
   ],
-  providers: [EmployeesService, ProjectsService, StudentsService, AUTH_PROVIDERS, AuthGuard, Auth, LoginService, FileService, MailService],
+  providers: [EmployeesService, ProjectsService, StudentsService, AuthGuard, Auth, LoginService, FileService, MailService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -20,12 +20,10 @@
           <h1 *ngIf="student == true">My Projects</h1>
           <h1 *ngIf="employee == true">Projects for processing</h1>
         </div>
-        <div>
-          <ul *ngIf="employee == true" class="btn-group">
-            <li><button class="btn btn-primary" (click)="renderTabState(100)">All</button></li>
-            <li><button class="btn btn-primary" (click)="renderTabState(0)">Pending</button></li>
-            <li><button class="btn btn-primary" (click)="renderTabState(1)">Assigned</button></li>
-          </ul>
+        <div *ngIf="employee == true" class="btn-group">
+          <button class="btn btn-primary" (click)="renderTabState(100)">All</button>
+          <button class="btn btn-primary" (click)="renderTabState(0)">Pending</button>
+          <button class="btn btn-primary" (click)="renderTabState(1)">Delivered</button>
         </div>
         <div *ngIf="student == true">
           <div *ngFor="let project of myProject">

@@ -22,7 +22,6 @@
             [class.label-success]="project.status == 'unassigned' || project.status == 'assigned'"
             [class.label-danger]="project.status == 'rejected'"
             [class.label-default]="project.status == 'pending'">{{ project.status }}</span> </p>
-          <div [innerHTML]="md.convert(project.description)"></div>
           <p *ngIf="project.course._id"> Course: {{ project.course._id }} </p>
           <p> Year: {{ project.course.year }} </p>
           <p *ngFor="let proposer of project.proposer"> Proposer: <span *ngIf="proposer._id">{{ proposer._id.name }}</span> </p>

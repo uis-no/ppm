@@ -24,8 +24,6 @@ var strategy = new SamlStrategy(
     return done(null, profile);
   })
 
-var metadata = strategy.generateServiceProviderMetadata();
-
   passport.serializeUser(function (user, done) {
     done(null, user);
   });

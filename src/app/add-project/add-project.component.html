@@ -5,8 +5,10 @@
 
 <div *ngIf="project">
 
+
   <form (ngSubmit)="populateSchema(companyproposer.checked, companyadvisor1.checked, companyadvisor2?.checked,
                                     companyadvisor3?.checked)" #heroForm="ngForm" class="form-horizontal">
+
     <div class="form-group">
       <label for="course" class="control-label col-md-3">Course</label>
       <div class="col-md-9">

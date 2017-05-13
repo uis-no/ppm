@@ -106,7 +106,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   ngOnInit() {
       this.projectsService.getProject(this.getid).then((project: Project) => {
         this.project = project;
-        console.log(project.submission);
+        console.log(typeof project.applied[0]);
         this.output = this.md.convert(this.project.description);
         this.project.applied.forEach((idx)=>{
           var studs: Student[] = [];

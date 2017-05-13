@@ -17,28 +17,32 @@
     <div class="col-md-8">
       <div>
         <div>
-          <h1 *ngIf="student == true">My Project</h1>
+          <h1 *ngIf="student == true">My Projects</h1>
           <h1 *ngIf="employee == true">Projects for processing</h1>
         </div>
-        <div *ngIf="employee == true" class="btn-group">
-          <button class="btn btn-primary" (click)="renderTabState(100)">All</button>
-          <button class="btn btn-primary" (click)="renderTabState(0)">Pending</button>
-          <button class="btn btn-primary" (click)="renderTabState(1)">Assigned</button>
+        <div>
+          <ul *ngIf="employee == true" class="btn-group">
+            <li><button class="btn btn-primary" (click)="renderTabState(100)">All</button></li>
+            <li><button class="btn btn-primary" (click)="renderTabState(0)">Pending</button></li>
+            <li><button class="btn btn-primary" (click)="renderTabState(1)">Assigned</button></li>
+          </ul>
         </div>
         <div *ngIf="student == true">
-            <div *ngIf="myProject" class="panel" [class.panel-success]="myProject.status == 'assigned' || myProject.status == 'unassigned' || myProject.status == 'delivered'"
-            [class.panel-danger]="myProject.status == 'rejected'"
-            [class.panel-default]="myProject.status == 'pending'"
-            [routerLink]="['project-details/', myProject._id]">
+          <div *ngFor="let project of myProject">
+            <div *ngIf="project" class="panel" [class.panel-success]="project.status == 'assigned' || project.status == 'unassigned' || project.status == 'delivered'"
+            [class.panel-danger]="project.status == 'rejected'"
+            [class.panel-default]="project.status == 'pending'"
+            [routerLink]="['project-details/', project._id]">
               <div class="panel-heading">
-                <p class="panel-title panel-primary">{{myProject.title}}</p>
+                <p class="panel-title panel-primary">{{project.title}}</p>
               </div>
               <div class="panel-body">
-                <p>Status: <span class="label" [class.label-danger]="myProject.status == 'rejected'"
-                  [class.label-success]="myProject.status == 'unassigned' || myProject.status == 'assigned' || myProject.status == 'delivered'"
-                  [class.label-default]="myProject.status == 'pending'">{{myProject.status}}</span></p>
+                <p>Status: <span class="label" [class.label-danger]="project.status == 'rejected'"
+                  [class.label-success]="project.status == 'unassigned' || project.status == 'assigned' || project.status == 'delivered'"
+                  [class.label-default]="project.status == 'pending'">{{project.status}}</span></p>
               </div>
             </div>
+          </div>
           <div *ngIf="!myProject"><p>You haven't been assigned to a project yet, go to projects to apply for one.</p></div>
         </div>
         <div *ngIf="employee == true">
@@ -67,23 +71,20 @@
     <div class="col-md-3 col-md-offset-1">
       <div *ngIf="auth.authenticated() || myAuth == true" class="panel panel-info">
         <div class="panel-heading">Logged in as {{user.mail}}</div>
-          <div class="panel panel-info">
-            <div class="panel-heading col">
-              <h4>Deadlines</h4>
-            </div>
-            <div class="panel-body">
-              <h4>For faculty</h4>
-              <p>Post projects: 15.10.2017</p>
-              <p>Announce assigned projects: 15.12.2017</p>
+        <div class="panel panel-info">
+          <div class="panel-heading"><h4>Deadlines</h4></div>
+          <div class="panel-body">
+            <h4>For faculty</h4>
+            <p>Post projects: 15.10.2017</p>
+            <p>Announce assigned projects: 15.12.2017</p>
 
-              <h4>For students</h4>
-              <p>Suggest project: 15.11.2017</p>
-              <p>Apply for projects: 15.12.2017</p>
-              <p>Accept project: 01.01.2018</p>
-              <p>Submit project: 15.05.2018</p>
-            </div>
+            <h4>For students</h4>
+            <p>Suggest project: 15.11.2017</p>
+            <p>Apply for projects: 15.12.2017</p>
+            <p>Accept project: 01.01.2018</p>
+            <p>Submit project: 15.05.2018</p>
           </div>
-
+        </div>
       </div>
     </div>
   </div>

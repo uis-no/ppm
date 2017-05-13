@@ -26,10 +26,10 @@ export class ProjectsService {
                         .catch(this.handleError);
   }
 
-  getMyProject(): Promise<Project> {
+  getMyProject(): Promise<Project[]> {
     return this.http.get('/api/my_project')
                     .toPromise()
-                    .then(res => res.json() as Project)
+                    .then(res => res.json() as Project[])
                     .catch(this.handleError);
   }
 

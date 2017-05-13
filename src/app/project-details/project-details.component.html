@@ -10,7 +10,7 @@
             <h1  *ngIf="project">Details for {{ project.title }}</h1>
           </div>
           <div class="col-md-3 offset-md-3 text-right" style="margin-top: 20px;">
-            <button *ngIf="student == true" class="btn btn-primary" type="button" (click)="open()">Apply for Project</button>
+            <button *ngIf="student == true && !project.assigned" class="btn btn-primary" type="button" (click)="open()">Apply for Project</button>
             <button *ngIf="ansatt == true && project.status == 'pending'" class="btn btn-success" type="button" (click)="approveProject()">Approve</button>
             <button *ngIf="ansatt == true && project.status == 'pending'" class="btn btn-danger" type="button" (click)="rejectProject()">Reject</button>
             <button *ngIf="ansatt == true || project.proposer._id == this.user._id" class="btn btn-primary" type="button" [routerLink]="['edit']">Edit Project</button>
@@ -162,7 +162,6 @@
             </button>
           </p>
       </div>
-
 
       <div id="studentdiv" *ngIf="project.applied.length > 0 && project.status == 'unassigned'">
           <p style="font-weight: bold;"> Applicants to this project:</p>

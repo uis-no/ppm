@@ -1,7 +1,11 @@
 {
   "name": "Jarida",
   "description": "A thesis manager for bachelors, masters, etc. Automates the process of proposing, applying and delivering theses",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "engines": {
+    "node": "6.9.3",
+    "npm": "3.10.10"
+  },
   "license": "MIT",
   "angular-cli": {},
   "scripts": {
@@ -10,7 +14,8 @@
     "test": "ng test",
     "pree2e": "webdriver-manager update",
     "e2e": "protractor",
-    "build": "ng build && nodemon server.js"
+    "build": "ng build && nodemon server.js",
+    "postinstall": "ng build && nodemon server.js --aot -prod"
   },
   "private": true,
   "dependencies": {

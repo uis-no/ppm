@@ -334,16 +334,14 @@ router.route('/my_project')
         if(err) {
           return res.status(500).send(err);
         } else {
-          console.log(student);
           Project
           // finds all the projects that are approved or projects related to the student by email
-          .findOne({$or:[{ student: student._id }, { proposer: student.name } ] }, (err, project) => {
-            console.log(typeof project);
-            console.log(project);
+          .find({$or:[{ assigned: student._id }, { proposer: student.name } ] }, (err, projects) => {
+            console.log(projects);
             if (err) {
               return res.status(500).send(err);
             } else {
-              return res.status(200).json(project);
+              return res.status(200).json(projects);
             }
           })
           .populate('course')

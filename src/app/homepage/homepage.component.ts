@@ -16,7 +16,7 @@ export class HomepageComponent implements OnInit {
   myAuth: boolean = false;
   user: any = {};
   projects: Project[];
-  myProject: Project;
+  myProject: Project[];
 
   employee: boolean = false;
   student: boolean = false;
@@ -35,9 +35,10 @@ export class HomepageComponent implements OnInit {
           this.user = user;
           user.eduPersonAffiliation.includes('student') ? this.student = true : this.employee = true;
           if (this.student == true) {
-            this.projectsService.getMyProject().then((project: Project) => {
-              this.myProject = project;
-              return this.myProject;
+            this.projectsService.getMyProject().then((projects: Project[]) => {
+              this.myProject = projects.map((project) => {
+                return project;
+              });
             });
           }
           if (this.employee == true) {

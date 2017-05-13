@@ -5,8 +5,18 @@
 
 <div *ngIf="project">
 
+<<<<<<< Updated upstream:src/app/add-project/add-project.component.html
   <form (ngSubmit)="populateSchema(companyproposer.checked, companyadvisor1.checked, companyadvisor2?.checked,
                                     companyadvisor3?.checked)" #heroForm="ngForm" class="form-horizontal">
+=======
+
+
+  <form (ngSubmit)="populateSchema(companyproposer.checked)"
+          #heroForm="ngForm" class="form-horizontal">
+
+
+
+>>>>>>> Stashed changes:src/app/add-project/add-project-employee.component.html
     <div class="form-group">
       <label for="course" class="control-label col-md-3">Course</label>
       <div class="col-md-9">
@@ -52,6 +62,7 @@
       </div>
 
       <label for="proposer-mobile" class="control-label sr-only"></label>
+<<<<<<< Updated upstream:src/app/add-project/add-project.component.html
       <div class="col-md-3">
         <input #proposermobile *ngIf="companyproposer.checked == true" (keyup)="0" type="text"
                 class="form-control" id="proposer-mobile" name="proposer-mobile"
@@ -60,6 +71,16 @@
 
       <label for="proposer-mail" class="control-label sr-only"></label>
       <div class="col-md-6">
+=======
+      <div class="col-md-2 col-md-offset-3">
+        <input #proposermobile *ngIf="companyproposer.checked == true" (keyup)="0" type="text"
+                class="form-control" id="proposer-mobile" name="proposer-mobile"
+                  [(ngModel)]="company.mobile" placeholder="Mobile" required>
+      </div>
+
+      <label for="proposer-mail" class="control-label sr-only"></label>
+      <div class="col-md-7">
+>>>>>>> Stashed changes:src/app/add-project/add-project-employee.component.html
         <input #proposermail *ngIf="companyproposer.checked == true" (keyup)="0" type="email"
                 class="form-control" id="proposer-mail" name="proposer-mail"
                 [(ngModel)]="newCompanyProposer.mail" placeholder="Mail" required>
@@ -90,6 +111,7 @@
         </div>
       </label>
 
+<<<<<<< Updated upstream:src/app/add-project/add-project.component.html
       <label for="advisor-name1" class="control-label sr-only"></label>
       <div class="col-md-9">
         <div class="input-group">
@@ -97,6 +119,13 @@
                   class="form-control" id="advisor-name1" name="advisor-name1"
                   [(ngModel)]="project.advisor[0]._id" placeholder="Name" [ngbTypeahead]="searchAdvisors">
           <input *ngIf="employee == true" value="{{proposername.value}}" type="search"
+=======
+      <label class="control-label col-md-3">Advisor</label>
+      <div class="col-md-9">
+        <div class="input-group">
+          <label for="advisor-name1" class="control-label sr-only"></label>
+          <input value="{{responsiblename.value}}" type="search"
+>>>>>>> Stashed changes:src/app/add-project/add-project-employee.component.html
                   class="form-control" id="advisor-name1" name="advisor-name1"
                   [(ngModel)]="project.advisor[0]._id" placeholder="Name" [ngbTypeahead]="searchAdvisors" required>
           <div class="input-group-addon button-group-addon">
@@ -199,6 +228,10 @@
       <label for="student1" class="control-label sr-only"></label>
       <div class="col-md-9">
         <div class="input-group">
+<<<<<<< Updated upstream:src/app/add-project/add-project.component.html
+=======
+          <label for="student1" class="control-label sr-only"></label>
+>>>>>>> Stashed changes:src/app/add-project/add-project-employee.component.html
           <input type="search" class="form-control" id="student1" name="student1"
                   [(ngModel)]="project.student[0]" placeholder="Name (If pre-assigned)" [ngbTypeahead]="searchStudents">
           <div class="input-group-addon button-group-addon">
@@ -214,6 +247,10 @@
       <label for="student2" class="control-label sr-only"></label>
       <div *ngIf="studentCount >= 2" class="col-md-9 col-md-offset-3">
         <div class="input-group">
+<<<<<<< Updated upstream:src/app/add-project/add-project.component.html
+=======
+          <label for="student2" class="control-label sr-only"></label>
+>>>>>>> Stashed changes:src/app/add-project/add-project-employee.component.html
           <input type="search" class="form-control" id="student2" name="student2"
                   [(ngModel)]="project.student[1]" placeholder="Name (If pre-assigned)" [ngbTypeahead]="searchStudents">
           <div class="input-group-addon button-group-addon">
@@ -229,6 +266,10 @@
       <label for="student3" class="control-label sr-only"></label>
       <div *ngIf="studentCount >= 3" class="col-md-9 col-md-offset-3">
         <div class="input-group">
+<<<<<<< Updated upstream:src/app/add-project/add-project.component.html
+=======
+          <label for="student3" class="control-label sr-only"></label>
+>>>>>>> Stashed changes:src/app/add-project/add-project-employee.component.html
           <input type="search" class="form-control" id="student3" name="student3"
                   [(ngModel)]="project.student[2]" placeholder="Name (If pre-assigned)" [ngbTypeahead]="searchStudents">
           <div class="input-group-addon button-group-addon">

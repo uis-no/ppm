@@ -36,6 +36,9 @@ import {Observable} from 'rxjs/Observable';
 export class ProjectDetailsComponent implements OnInit, OnDestroy {
   private id: number = 0;
   private mailFormat: any = {};
+  private isNotified: boolean = false;
+  private isExaminerNotified: boolean = false;
+  private isAssigned: boolean = false;
 
   private blob: any;
 
@@ -59,7 +62,6 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   project: Project;
   private sub: any;
-  //id: string;
 
   private get getid(): number {
     return this.id;
@@ -82,7 +84,6 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
     this.user = this.loginService.getUser().then((user) => {
       this.user = user;
-      //console.log(this.user.eduPersonAffiliation[0]);
       if(this.user.eduPersonAffiliation.includes('employee')){
             this.ansatt = true;
       }else if(this.user.eduPersonAffiliation.includes('student')){
@@ -106,7 +107,6 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   ngOnInit() {
       this.projectsService.getProject(this.getid).then((project: Project) => {
         this.project = project;
-        console.log(typeof project.applied[0]);
         this.output = this.md.convert(this.project.description);
         this.project.applied.forEach((idx)=>{
           var studs: Student[] = [];
@@ -122,6 +122,13 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
             });
             this.groups.push(studs);
 
+        });
+
+        // displays file dropzone if user is assigned to the project
+        this.project.assigned.forEach((s) => {
+          if (s['mail'] == this.user.mail ) {
+            this.isAssigned = true;
+          }
         });
       });
 
@@ -156,7 +163,6 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           });
         });
 
-
   }
 
   ngOnDestroy() {
@@ -165,6 +171,13 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   downloadSubmission(id) {
     window.location.href = 'http://localhost:3000/api/projects/' + id + '/submission';
+  }
+
+  notifyExaminer(id: number) {
+    this.projectsService.notifyExaminer(this.project._id).then(()=> {
+      this.isNotified == true;
+      this.isExaminerNotified == true;
+    });
   }
 
   assign(group: any[]){
@@ -270,6 +283,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     var subject = (<HTMLInputElement>document.getElementById("subject")).value;
     var text = (<HTMLInputElement>document.getElementById("mailtext")).value;
     this.mailService.sendMail(this.mail, subject, text);
+    this.isNotified = true;
     this.mailToModal.close();
   }
 

@@ -1,4 +1,5 @@
 <div class="container" *ngIf="project">
+  <div *ngIf="isNotified == true"><h3>A mail have been sent.</h3></div>
   <div class ="row">
     <div class="panel"
       [class.panel-default]="project.status == 'pending'"
@@ -13,6 +14,7 @@
             <button *ngIf="student == true && !project.assigned" class="btn btn-primary" type="button" (click)="open()">Apply for Project</button>
             <button *ngIf="ansatt == true && project.status == 'pending'" class="btn btn-success" type="button" (click)="approveProject()">Approve</button>
             <button *ngIf="ansatt == true && project.status == 'pending'" class="btn btn-danger" type="button" (click)="rejectProject()">Reject</button>
+            <button *ngIf="ansatt == true && project.submission && isExaminerNotified == false" class="btn btn-primary" type="button" (click)="notifyExaminer()">Notify Examiner</button>
             <button *ngIf="ansatt == true || project.proposer._id == this.user._id" class="btn btn-primary" type="button" [routerLink]="['edit']">Edit Project</button>
           </div>
         </div>
@@ -195,7 +197,7 @@
 </div>
 </div>
 </div>
-<div *ngIf="!project.submission && student == true && user.eduPersonPrincipalName == project.assigned">
+<div *ngIf="!project.submission && student == true && isAssigned == true">
   <div ng2FileDrop name="uploadedFile" (fileOver)="fileOverBase($event)" [uploader]="uploader" type="file" style="border: dotted 3px lightgray; height: 64px;">Drop your submission here</div>
 <div>
 

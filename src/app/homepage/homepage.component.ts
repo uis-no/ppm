@@ -63,7 +63,7 @@ export class HomepageComponent implements OnInit {
     if (tabState == 0) {
       this.tabTitle = 'pending';
     } else if (tabState == 1) {
-      this.tabTitle = 'assigned';
+      this.tabTitle = 'delivered';
     } else {
       this.tabTitle = 'All';
     }

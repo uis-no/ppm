@@ -16,7 +16,8 @@ var strategy = new SamlStrategy(
     issuer: 'http://localhost:3000/feide/metadata',
     logoutUrl: 'https://idp-test.feide.no/simplesaml/saml2/idp/SingleLogoutService.php',
     logoutCallbackUrl: 'http://localhost:3000/logout',
-    identifierFormat: 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient'
+    identifierFormat: 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient',
+    acceptedClockSkewMs: 60 * 1000
   },
 
   function(profile, done) {

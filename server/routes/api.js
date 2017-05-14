@@ -64,7 +64,7 @@ router.route('/projects/notify/:_id')
           if (project.status == 'delivered' && project.file) {
             Employee.findOne({ user: project.examiner.user }, (err, examiner) => {
               Mail.sendMail(examiner.mail, 'Project submission of ' + project.title + ' is ready for evaluation',
-              'Go to http:localhost:3000/projects/' + project._id + '/submission to download file');
+              'Go to http:localhost:3000/api/projects/' + project._id + '/submission to download file');
 
               return res.status(200).send('Mail sent to ' + examiner.name);
             });

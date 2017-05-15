@@ -9,13 +9,14 @@
   "license": "MIT",
   "angular-cli": {},
   "scripts": {
-    "start": "ng serve --proxy-config proxy.conf.json",
+    "start": "node server.js",
     "lint": "tslint \"src/**/*.ts\"",
     "test": "ng test",
     "pree2e": "webdriver-manager update",
     "e2e": "protractor",
     "build": "ng build && nodemon server.js",
-    "postinstall": "ng build && nodemon server.js --aot -prod"
+    "preinstall": "npm install -g @angular/cli@latest",
+    "postinstall": "ng build"
   },
   "private": true,
   "dependencies": {

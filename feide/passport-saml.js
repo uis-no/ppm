@@ -11,11 +11,11 @@ var fs = require('fs');
 
 var strategy = new SamlStrategy(
   {
-    callbackUrl: 'http://localhost:3000/login/callback',
+    callbackUrl: 'https://fast-beyond-86797.herokuapp.com/login/callback',
     entryPoint: 'https://idp-test.feide.no/simplesaml/saml2/idp/SSOService.php',
-    issuer: 'http://localhost:3000/feide/metadata',
+    issuer: 'https://fast-beyond-86797.herokuapp.com/feide/metadata',
     logoutUrl: 'https://idp-test.feide.no/simplesaml/saml2/idp/SingleLogoutService.php',
-    logoutCallbackUrl: 'http://localhost:3000/logout',
+    logoutCallbackUrl: 'https://fast-beyond-86797.herokuapp.com/logout',
     identifierFormat: 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient',
     acceptedClockSkewMs: 60 * 1000
   },

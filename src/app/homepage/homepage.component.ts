@@ -74,11 +74,11 @@ export class HomepageComponent implements OnInit {
   }
 
   toFeide() {
-    window.location.href = 'http://localhost:3000/login';
+    window.location.href = 'https://fast-beyond-86797.herokuapp.com/login';
   }
 
   logoutFromFeide() {
-    window.location.href = 'http://localhost:3000/logout';
+    window.location.href = 'https://fast-beyond-86797.herokuapp.com/logout';
   }
 
 }

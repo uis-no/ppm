@@ -96,7 +96,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
     this.sub = this.route.params.subscribe(params =>  {
       this.setid = Number.parseInt(params['id']);
-      this.uploader.setOptions({ url: 'http://localhost:3000/api/projects/' + this.getid + '/submission' });
+      this.uploader.setOptions({ url: 'https://fast-beyond-86797.herokuapp.com/api/projects/' + this.getid + '/submission' });
     });
   }
 
@@ -170,7 +170,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   }
 
   downloadSubmission(id) {
-    window.location.href = 'http://localhost:3000/api/projects/' + id + '/submission';
+    window.location.href = 'https://fast-beyond-86797.herokuapp.com/api/projects/' + id + '/submission';
   }
 
   notifyExaminer(id: number) {

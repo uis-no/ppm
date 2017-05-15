@@ -20,6 +20,8 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/cli": "^1.0.1",
+    "@angular/compiler-cli": "^4.0.0",
     "@angular/common": "^4.0.0",
     "@angular/compiler": "^4.0.0",
     "@angular/core": "^4.0.0",
@@ -55,11 +57,10 @@
     "ts-helpers": "^1.1.1",
     "rxjs": "5.1.0",
     "xlsx": "^0.9.12",
-    "zone.js": "^0.8.4"
+    "zone.js": "^0.8.4",
+    "typescript": "~2.1.0"
   },
   "devDependencies": {
-    "@angular/cli": "^1.0.1",
-    "@angular/compiler-cli": "^4.0.0",
     "@types/jasmine": "2.5.38",
     "@types/node": "~6.0.60",
     "codelyzer": "~2.0.0",
@@ -76,7 +77,6 @@
     "required-loader": "^1.1.11",
     "ts-node": "~2.0.0",
     "tslint": "~4.5.0",
-    "typescript": "~2.1.0",
     "webdriver-manager": "10.2.5"
   }
 }

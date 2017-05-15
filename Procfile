@@ -1,1 +1,1 @@
-web: ng build && nodemon server.js
+web: node server.js

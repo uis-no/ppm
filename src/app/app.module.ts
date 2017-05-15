@@ -9,7 +9,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 //import { AUTH_PROVIDERS }      from 'angular2-jwt';
 import { AuthGuard } from './auth.guard';
-import { Auth } from './auth.service';
+//import { Auth } from './auth.service';
 
 import { AppComponent } from './app.component';
 
@@ -94,7 +94,7 @@ const ROUTES = [
     Ng2Bs3ModalModule,
     NgbModule.forRoot()
   ],
-  providers: [EmployeesService, ProjectsService, StudentsService, AuthGuard, Auth, LoginService, FileService, MailService],
+  providers: [EmployeesService, ProjectsService, StudentsService, AuthGuard, LoginService, FileService, MailService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

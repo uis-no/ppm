@@ -32,7 +32,7 @@
             [class.panel-default]="project.status == 'pending'"
             [routerLink]="['project-details/', project._id]">
               <div class="panel-heading">
-                <p class="panel-title panel-primary">{{project.title}}</p>
+                <p *ngIf="project.title" class="panel-title panel-primary">{{project.title}}</p>
               </div>
               <div class="panel-body">
                 <p>Status: <span class="label" [class.label-danger]="project.status == 'rejected'"

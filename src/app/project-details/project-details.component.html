@@ -165,7 +165,7 @@
           </p>
       </div>
 
-      <div id="studentdiv" *ngIf="project.applied.length > 0 && project.status == 'unassigned'">
+      <div id="studentdiv" *ngIf="project.applied.length > 0 && project.status == 'unassigned' && employee == true">
           <p style="font-weight: bold;"> Applicants to this project:</p>
           <div *ngFor="let group of groups" class="students" style="min-height: 60px;">
               <p *ngFor="let person of group">

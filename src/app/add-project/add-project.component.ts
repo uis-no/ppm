@@ -308,7 +308,11 @@ export class AddProjectComponent implements OnInit {
 
       // make sure promises finish before creating/POSTing project
       Promise.all(promises).then(() => {
-        this.createProject();
+        if (this.project._id) {
+          this.updateProject();
+        } else {
+          this.createProject();
+        }
       });
     });
   }

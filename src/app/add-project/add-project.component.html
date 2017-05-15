@@ -244,7 +244,8 @@
 
 
 
-    <button type="submit" class="btn btn-primary btn-block" [disabled]="!heroForm.form.valid">Create Project</button>
+    <button *ngIf="!project._id" type="submit" class="btn btn-primary btn-block" [disabled]="!heroForm.form.valid">Create Project</button>
+    <button *ngIf="project._id" type="submit" class="btn btn-primary btn-block" [disabled]="!heroForm.form.valid">Edit Project</button>
 
   </form>
 

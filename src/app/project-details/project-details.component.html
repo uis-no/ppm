@@ -15,7 +15,7 @@
             <button *ngIf="ansatt == true && project.status == 'pending'" class="btn btn-success" type="button" (click)="approveProject()">Approve</button>
             <button *ngIf="ansatt == true && project.status == 'pending'" class="btn btn-danger" type="button" (click)="rejectProject()">Reject</button>
             <button *ngIf="ansatt == true && project.submission && isExaminerNotified == false" class="btn btn-primary" type="button" (click)="notifyExaminer()">Notify Examiner</button>
-            <button *ngIf="ansatt == true || project.proposer._id == this.user._id && project.status == 'unassigned'" class="btn btn-primary" type="button" [routerLink]="['edit']">Edit Project</button>
+            <button *ngIf="ansatt == true || project.proposer._id.mail == this.user.mail && project.status == 'unassigned'" class="btn btn-primary" type="button" [routerLink]="['edit']">Edit Project</button>
           </div>
         </div>
     </div>

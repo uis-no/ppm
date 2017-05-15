@@ -334,9 +334,11 @@ router.route('/my_project')
         if(err) {
           return res.status(500).send(err);
         } else {
+          console.log("student id:");
+          console.log(student._id);
           Project
           // finds all the projects that are approved or projects related to the student by email
-          .find({$or:[{ assigned: student._id }, { proposer: student.name } ] }, (err, projects) => {
+          .find({$or:[{ assigned: student._id }, { proposer: student._id } ] }, (err, projects) => {
             console.log(projects);
             if (err) {
               return res.status(500).send(err);

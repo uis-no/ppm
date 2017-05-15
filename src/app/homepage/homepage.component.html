@@ -44,19 +44,21 @@
           <div *ngIf="!myProject"><p>You haven't been assigned to a project yet, go to projects to apply for one.</p></div>
         </div>
         <div *ngIf="employee == true">
-          <div *ngFor="let project of projects">
-            <div *ngIf="tabTitle == project.status || tabTitle == 'All'">
-              <div class="panel"
-              [class.panel-success]="project.status == 'assigned' || project.status == 'unassigned' || project.status == 'delivered'"
-              [class.panel-default]="project.status == 'pending'">
-                <div class="panel-heading">
-                  <p class="panel-title panel-primary">{{project.title}}</p>
-                </div>
-                <div class="panel-body d-inline-block" [routerLink]="['project-details/', project._id]">
-                  <p>Status: <span class="label"
-                    [class.label-success]="project.status == 'assigned' || project.status == 'unassigned' || project.status == 'delivered'"
-                    [class.label-default]="project.status == 'pending'">{{project.status}}</span></p>
-                    <button *ngIf="project.submission" (click)="notify(project._id)" class="btn btn-primary">Notify Examiner</button>
+          <div *ngIf="projects">
+            <div *ngFor="let project of projects">
+              <div *ngIf="tabTitle == project.status || tabTitle == 'All'">
+                <div class="panel"
+                [class.panel-success]="project.status == 'assigned' || project.status == 'unassigned' || project.status == 'delivered'"
+                [class.panel-default]="project.status == 'pending'">
+                  <div class="panel-heading">
+                    <p class="panel-title panel-primary">{{project.title}}</p>
+                  </div>
+                  <div class="panel-body d-inline-block" [routerLink]="['project-details/', project._id]">
+                    <p>Status: <span class="label"
+                      [class.label-success]="project.status == 'assigned' || project.status == 'unassigned' || project.status == 'delivered'"
+                      [class.label-default]="project.status == 'pending'">{{project.status}}</span></p>
+                      <button *ngIf="project.submission" (click)="notify(project._id)" class="btn btn-primary">Notify Examiner</button>
+                  </div>
                 </div>
               </div>
             </div>

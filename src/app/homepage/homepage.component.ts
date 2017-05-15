@@ -15,8 +15,8 @@ export class HomepageComponent implements OnInit {
 
   myAuth: boolean = false;
   user: any = {};
-  projects: Project[] = [];
-  myProject: Project[] = [];
+  projects: Project[];
+  myProject: Project[];
 
   employee: boolean = false;
   student: boolean = false;
